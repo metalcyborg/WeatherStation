@@ -91,7 +91,7 @@ public class CitySearchPresenterTest {
     }
 
     @Test
-    public void findCityByName() {
+    public void findCitiesByName() {
         String partOfTheName = "Abc";
         mPresenter.findCitiesByPartOfTheName(partOfTheName);
 
