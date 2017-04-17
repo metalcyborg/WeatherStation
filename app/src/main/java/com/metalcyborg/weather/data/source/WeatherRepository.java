@@ -34,4 +34,19 @@ public class WeatherRepository implements WeatherDataSource {
 
         return mInstance;
     }
+
+    @Override
+    public boolean isCityDataLoaded() {
+        return false;
+    }
+
+    @Override
+    public void loadCityData(LoadCityDataCallback callback) {
+
+    }
+
+    @Override
+    public void loadWeatherData(LoadWeatherListCallback callback) {
+
+    }
 }

@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.citylist;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -25,6 +26,16 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     @Override
     public void start() {
+
+    }
+
+    @Override
+    public void addNewCity() {
+        mView.showCitySearch();
+    }
+
+    @Override
+    public void result(int requestCode, int resultCode, Bundle extras) {
 
     }
 }

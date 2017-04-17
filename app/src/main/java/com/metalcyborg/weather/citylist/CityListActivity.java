@@ -10,6 +10,7 @@ import com.metalcyborg.weather.R;
 
 public class CityListActivity extends AppCompatActivity {
 
+    public static final int REQUEST_CITY_SEARCH = 1;
     private CityListPresenter mPresenter;
 
     @Override
