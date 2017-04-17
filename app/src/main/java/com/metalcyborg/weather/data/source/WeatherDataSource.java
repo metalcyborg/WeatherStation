@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.data.source;
 
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
@@ -17,6 +18,10 @@ public interface WeatherDataSource {
         void onError();
     }
 
+    interface FindCityListCallback {
+        void onDataFound(List<City> cityList);
+    }
+
     interface LoadWeatherListCallback {
 
         void onDataLoaded(List<Weather> weatherData);
@@ -31,9 +36,13 @@ public interface WeatherDataSource {
         void onError();
     }
 
-    boolean isCityDataLoaded();
+    boolean isCitiesDataLoaded();
 
-    void loadCityData(LoadCityDataCallback callback);
+    void addCitiesData(LoadCityDataCallback callback);
 
     void loadWeatherData(LoadWeatherListCallback callback);
+
+    void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback);
+
+    void addNewCityToWeatherList(City city);
 }

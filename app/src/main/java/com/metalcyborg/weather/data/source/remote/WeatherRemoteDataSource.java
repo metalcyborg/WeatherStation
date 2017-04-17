@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.data.source.remote;
 
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 /**
@@ -24,5 +25,30 @@ public class WeatherRemoteDataSource implements WeatherDataSource {
         }
 
         return mInstance;
+    }
+
+    @Override
+    public boolean isCitiesDataLoaded() {
+        return false;
+    }
+
+    @Override
+    public void addCitiesData(LoadCityDataCallback callback) {
+
+    }
+
+    @Override
+    public void loadWeatherData(LoadWeatherListCallback callback) {
+
+    }
+
+    @Override
+    public void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback) {
+
+    }
+
+    @Override
+    public void addNewCityToWeatherList(City city) {
+
     }
 }

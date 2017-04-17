@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.data.City;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,5 +46,40 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
     public void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
+
+    @Override
+    public void setProgressVisibility(boolean visibility) {
+
+    }
+
+    @Override
+    public void setSearchActionVisibility(boolean visibility) {
+
+    }
+
+    @Override
+    public void showErrorMessage() {
+
+    }
+
+    @Override
+    public void showTypeCityNameMessage() {
+
+    }
+
+    @Override
+    public void showCityList(List<City> cityList) {
+
+    }
+
+    @Override
+    public void showWeatherList() {
+
     }
 }

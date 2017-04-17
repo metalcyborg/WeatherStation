@@ -2,6 +2,7 @@ package com.metalcyborg.weather.citysearch;
 
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -24,6 +25,16 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     @Override
     public void start() {
+
+    }
+
+    @Override
+    public void findCitiesByPartOfTheName(String partOfTheName) {
+
+    }
+
+    @Override
+    public void addCityToWeatherList(City city) {
 
     }
 }

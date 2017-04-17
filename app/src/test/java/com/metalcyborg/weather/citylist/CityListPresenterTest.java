@@ -29,9 +29,6 @@ public class CityListPresenterTest {
     @Mock
     private CityListContract.View mView;
 
-    @Captor
-    private ArgumentCaptor<WeatherDataSource.LoadCityDataCallback> mCityDataCallbackCaptor;
-
     @Before
     public void setupPresenter() {
         MockitoAnnotations.initMocks(this);

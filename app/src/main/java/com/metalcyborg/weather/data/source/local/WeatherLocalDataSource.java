@@ -3,6 +3,7 @@ package com.metalcyborg.weather.data.source.local;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -30,5 +31,30 @@ public class WeatherLocalDataSource implements WeatherDataSource {
         }
 
         return mInstance;
+    }
+
+    @Override
+    public boolean isCitiesDataLoaded() {
+        return false;
+    }
+
+    @Override
+    public void addCitiesData(LoadCityDataCallback callback) {
+
+    }
+
+    @Override
+    public void loadWeatherData(LoadWeatherListCallback callback) {
+
+    }
+
+    @Override
+    public void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback) {
+
+    }
+
+    @Override
+    public void addNewCityToWeatherList(City city) {
+
     }
 }
