@@ -57,7 +57,7 @@ public class CitySearchPresenterTest {
 
     @Test
     public void addCitiesDataToModel() {
-        when(mRepository.isCitiesDataLoaded()).thenReturn(false);
+        when(mRepository.isCitiesDataAdded()).thenReturn(false);
 
         mPresenter.start();
 
@@ -75,7 +75,7 @@ public class CitySearchPresenterTest {
 
     @Test
     public void addCitiesDataToModel_error() {
-        when(mRepository.isCitiesDataLoaded()).thenReturn(false);
+        when(mRepository.isCitiesDataAdded()).thenReturn(false);
 
         mPresenter.start();
 

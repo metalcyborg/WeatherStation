@@ -36,7 +36,7 @@ public interface WeatherDataSource {
         void onError();
     }
 
-    boolean isCitiesDataLoaded();
+    boolean isCitiesDataAdded();
 
     void addCitiesData(LoadCityDataCallback callback);
 

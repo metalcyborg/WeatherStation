@@ -34,7 +34,7 @@ public class WeatherLocalDataSource implements WeatherDataSource {
     }
 
     @Override
-    public boolean isCitiesDataLoaded() {
+    public boolean isCitiesDataAdded() {
         return false;
     }
 

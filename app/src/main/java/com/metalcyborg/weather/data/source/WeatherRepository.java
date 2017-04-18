@@ -5,6 +5,8 @@ import android.support.annotation.NonNull;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.Weather;
 
+import java.util.List;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
@@ -37,13 +39,23 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public boolean isCitiesDataLoaded() {
-        return false;
+    public boolean isCitiesDataAdded() {
+        return mLocalDataSource.isCitiesDataAdded();
     }
 
     @Override
-    public void addCitiesData(LoadCityDataCallback callback) {
+    public void addCitiesData(final LoadCityDataCallback callback) {
+        mLocalDataSource.addCitiesData(new LoadCityDataCallback() {
+            @Override
+            public void onDataLoaded() {
+                callback.onDataLoaded();
+            }
 
+            @Override
+            public void onError() {
+                callback.onError();
+            }
+        });
     }
 
     @Override
@@ -52,12 +64,17 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback) {
-
+    public void findCitiesByPartOfTheName(String partOfTheName, final FindCityListCallback callback) {
+        mLocalDataSource.findCitiesByPartOfTheName(partOfTheName, new FindCityListCallback() {
+            @Override
+            public void onDataFound(List<City> cityList) {
+                callback.onDataFound(cityList);
+            }
+        });
     }
 
     @Override
     public void addNewCityToWeatherList(City city) {
-
+        mLocalDataSource.addNewCityToWeatherList(city);
     }
 }

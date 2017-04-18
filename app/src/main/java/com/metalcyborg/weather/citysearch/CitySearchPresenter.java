@@ -27,7 +27,7 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     @Override
     public void start() {
-        if (!mRepository.isCitiesDataLoaded()) {
+        if (!mRepository.isCitiesDataAdded()) {
             addCitiesDataToRepository();
         }
     }
