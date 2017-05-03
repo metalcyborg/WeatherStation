@@ -37,6 +37,11 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
     }
 
     @Override
+    public void stop() {
+
+    }
+
+    @Override
     public void findCitiesByPartOfTheName(String partOfTheName) {
         mRepository.findCitiesByPartOfTheName(partOfTheName,
                 new WeatherDataSource.FindCityListCallback() {

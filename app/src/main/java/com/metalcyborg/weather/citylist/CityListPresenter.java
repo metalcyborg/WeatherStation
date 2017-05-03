@@ -26,6 +26,16 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     @Override
     public void start() {
+        if(mRepository.isCitiesDataAdded()) {
+
+        } else {
+            // Check service running
+
+        }
+    }
+
+    @Override
+    public void stop() {
 
     }
 
@@ -36,6 +46,11 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     @Override
     public void result(int requestCode, int resultCode, Bundle extras) {
+
+    }
+
+    @Override
+    public void onParseServiceBinded() {
 
     }
 }

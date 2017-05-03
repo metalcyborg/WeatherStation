@@ -26,4 +26,9 @@ public class DetailPresenter implements DetailContract.Presenter {
     public void start() {
 
     }
+
+    @Override
+    public void stop() {
+
+    }
 }

@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
+import com.metalcyborg.weather.data.Weather;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -61,6 +64,12 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.stop();
+    }
+
+    @Override
     public void showCitySearch() {
         Intent intent = new Intent(getActivity(), CitySearchActivity.class);
         startActivityForResult(intent, CityListActivity.REQUEST_CITY_SEARCH);
@@ -72,12 +81,57 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
-    public void showProgress() {
+    public void setProgressVisibility(boolean visibility) {
 
     }
 
     @Override
-    public void hideProgress() {
+    public void setParseCitiesDataMessageVisibility(boolean visibility) {
+
+    }
+
+    @Override
+    public void setParseErrorMessageVisibility(boolean visibility) {
+
+    }
+
+    @Override
+    public void setFabVisibility(boolean visibility) {
+
+    }
+
+    @Override
+    public void showWeatherList(List<Weather> weatherList) {
+
+    }
+
+    @Override
+    public void bindParseService() {
+
+    }
+
+    @Override
+    public void unbindParseService() {
+
+    }
+
+    @Override
+    public boolean isServiceRunning() {
+        return false;
+    }
+
+    @Override
+    public void parseCitiesData() {
+
+    }
+
+    @Override
+    public void registerParseCompleteListener(CityListContract.ParseCompleteListener listener) {
+
+    }
+
+    @Override
+    public void unregisterParseCompleteListener(CityListContract.ParseCompleteListener listener) {
 
     }
 
