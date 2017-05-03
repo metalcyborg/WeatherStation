@@ -3,11 +3,7 @@ package com.metalcyborg.weather.data.source.remote;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
-/**
- * Created by root on 14.04.17.
- */
-
-public class WeatherRemoteDataSource implements WeatherDataSource {
+public class WeatherRemoteDataSource implements RemoteDataSource {
 
     private static volatile WeatherRemoteDataSource mInstance;
 
@@ -28,27 +24,7 @@ public class WeatherRemoteDataSource implements WeatherDataSource {
     }
 
     @Override
-    public boolean isCitiesDataAdded() {
-        return false;
-    }
-
-    @Override
-    public void addCitiesData(LoadCityDataCallback callback) {
-
-    }
-
-    @Override
-    public void loadWeatherData(LoadWeatherListCallback callback) {
-
-    }
-
-    @Override
-    public void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback) {
-
-    }
-
-    @Override
-    public void addNewCityToWeatherList(City city) {
+    public void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback) {
 
     }
 }

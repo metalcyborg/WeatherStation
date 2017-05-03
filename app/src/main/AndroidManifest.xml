@@ -20,6 +20,11 @@
         </activity>
         <activity android:name=".citysearch.CitySearchActivity">
         </activity>
+
+        <service
+            android:name=".citysearch.ParseCitiesService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

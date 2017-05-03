@@ -3,33 +3,29 @@ package com.metalcyborg.weather.data.source;
 import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.data.City;
-import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Created by root on 14.04.17.
- */
-
 public class WeatherRepository implements WeatherDataSource {
 
     private static volatile WeatherRepository mInstance;
     private WeatherDataSource mLocalDataSource;
-    private WeatherDataSource mRemoteDataSource;
+    private RemoteDataSource mRemoteDataSource;
 
     private WeatherRepository(@NonNull WeatherDataSource localDataSource,
-                              @NonNull WeatherDataSource remoteDataSource) {
+                              @NonNull RemoteDataSource remoteDataSource) {
         mLocalDataSource = checkNotNull(localDataSource);
         mRemoteDataSource = checkNotNull(remoteDataSource);
     }
 
     public static WeatherRepository getInstance(WeatherDataSource localDataSource,
-                                         WeatherDataSource remoteDataSource) {
-        if(mInstance == null) {
+                                                RemoteDataSource remoteDataSource) {
+        if (mInstance == null) {
             synchronized (WeatherRepository.class) {
-                if(mInstance == null) {
+                if (mInstance == null) {
                     mInstance = new WeatherRepository(localDataSource, remoteDataSource);
                 }
             }
@@ -41,6 +37,11 @@ public class WeatherRepository implements WeatherDataSource {
     @Override
     public boolean isCitiesDataAdded() {
         return mLocalDataSource.isCitiesDataAdded();
+    }
+
+    @Override
+    public void setCitiesDataAdded() {
+        mLocalDataSource.setCitiesDataAdded();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.data.source.local;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.annotation.NonNull;
 
@@ -15,13 +16,18 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class WeatherLocalDataSource implements WeatherDataSource {
 
+    private static final String NAME = "com.metalcyborg.weather.SharedPreferences";
+    private static final String KEY_CITIES_DATA_ADDED = "com.metalcyborg.weather.key.CitiesDataAdded";
     private static volatile WeatherLocalDataSource mInstance;
+
     private Context mContext;
     private WeatherDatabaseHelper mDatabaseHelper;
+    private SharedPreferences mSharedPreferences;
 
     private WeatherLocalDataSource(@NonNull Context context) {
         mContext = checkNotNull(context);
         mDatabaseHelper = new WeatherDatabaseHelper(context);
+        mSharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
     }
 
     public static WeatherLocalDataSource getInstance(Context context) {
@@ -38,7 +44,14 @@ public class WeatherLocalDataSource implements WeatherDataSource {
 
     @Override
     public boolean isCitiesDataAdded() {
-        return false;
+        return mSharedPreferences.getBoolean(KEY_CITIES_DATA_ADDED, false);
+    }
+
+    @Override
+    public void setCitiesDataAdded() {
+        mSharedPreferences.edit()
+                .putBoolean(KEY_CITIES_DATA_ADDED, true)
+                .apply();
     }
 
     @Override

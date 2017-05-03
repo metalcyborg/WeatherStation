@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.source.WeatherRepository;
 
 import java.util.List;
 
@@ -15,10 +16,10 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CitySearchPresenter implements CitySearchContract.Presenter {
 
-    private WeatherDataSource mRepository;
+    private WeatherRepository mRepository;
     private CitySearchContract.View mView;
 
-    public CitySearchPresenter(@NonNull WeatherDataSource repository,
+    public CitySearchPresenter(@NonNull WeatherRepository repository,
                                @NonNull CitySearchContract.View view) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
@@ -29,6 +30,9 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
     public void start() {
         if (!mRepository.isCitiesDataAdded()) {
             addCitiesDataToRepository();
+        } else {
+            // Check ParseCitiesService running
+
         }
     }
 

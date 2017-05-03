@@ -2,12 +2,13 @@ package com.metalcyborg.weather.data;
 
 
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 /**
  * Created by metalcyborg on 16.04.17.
  */
 
-public class FakeWeatherRemoteDataSource implements WeatherDataSource {
+public class FakeWeatherRemoteDataSource implements RemoteDataSource {
 
     private static volatile FakeWeatherRemoteDataSource mInstance;
 
@@ -24,5 +25,10 @@ public class FakeWeatherRemoteDataSource implements WeatherDataSource {
             }
         }
         return mInstance;
+    }
+
+    @Override
+    public void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback) {
+
     }
 }

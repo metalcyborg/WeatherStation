@@ -38,6 +38,8 @@ public interface WeatherDataSource {
 
     boolean isCitiesDataAdded();
 
+    void setCitiesDataAdded();
+
     void addCitiesData(LoadCityDataCallback callback);
 
     void loadWeatherData(LoadWeatherListCallback callback);
