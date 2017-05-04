@@ -73,6 +73,7 @@ public class CityListPresenterTest {
 
         mPresenter.start();
 
+        verify(mView).setFabVisibility(true);
         verify(mView).setProgressVisibility(true);
         verifyWeatherDataLoading();
     }
@@ -82,7 +83,6 @@ public class CityListPresenterTest {
         mLoadWeatherListCallbackCaptor.getValue().onDataLoaded(WEATHER_LIST);
 
         verify(mView).showWeatherList(WEATHER_LIST);
-        verify(mView).setFabVisibility(true);
 
         // Data loading error
         mLoadWeatherListCallbackCaptor.getValue().onError();
@@ -132,6 +132,7 @@ public class CityListPresenterTest {
         verify(mView).stopServiceInteractions();
         verify(mRepository).setCitiesDataAdded();
         verify(mView).setParseCitiesDataMessageVisibility(false);
+        verify(mView).setFabVisibility(true);
         verifyWeatherDataLoading();
     }
 

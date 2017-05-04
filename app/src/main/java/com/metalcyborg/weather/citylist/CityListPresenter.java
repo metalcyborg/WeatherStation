@@ -31,6 +31,7 @@ public class CityListPresenter implements CityListContract.Presenter {
     public void start() {
         mView.setProgressVisibility(true);
         if(mRepository.isCitiesDataAdded()) {
+            mView.setFabVisibility(true);
             loadWeatherData();
         } else {
             mView.bindParseService();
@@ -63,6 +64,7 @@ public class CityListPresenter implements CityListContract.Presenter {
                 mView.stopServiceInteractions();
                 mRepository.setCitiesDataAdded();
                 mView.setParseCitiesDataMessageVisibility(false);
+                mView.setFabVisibility(true);
                 loadWeatherData();
             }
 
@@ -89,7 +91,6 @@ public class CityListPresenter implements CityListContract.Presenter {
             public void onDataLoaded(List<Weather> weatherData) {
                 mView.showWeatherList(weatherData);
                 mView.setProgressVisibility(false);
-                mView.setFabVisibility(true);
             }
 
             @Override

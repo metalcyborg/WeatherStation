@@ -109,7 +109,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void setFabVisibility(boolean visibility) {
-        mFab.setVisibility(View.VISIBLE);
+        mFab.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     @Override
