@@ -96,6 +96,11 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
+    public void setWeatherLoadingErrorMessageVisibility(boolean visibility) {
+
+    }
+
+    @Override
     public void setFabVisibility(boolean visibility) {
 
     }
@@ -113,6 +118,11 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public void unbindParseService() {
 
+    }
+
+    @Override
+    public boolean isBindedWithParseService() {
+        return false;
     }
 
     @Override

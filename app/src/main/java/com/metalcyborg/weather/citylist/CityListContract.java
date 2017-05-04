@@ -32,6 +32,8 @@ public interface CityListContract {
 
         void setParseErrorMessageVisibility(boolean visibility);
 
+        void setWeatherLoadingErrorMessageVisibility(boolean visibility);
+
         void setFabVisibility(boolean visibility);
 
         void showWeatherList(List<Weather> weatherList);
@@ -39,6 +41,8 @@ public interface CityListContract {
         void bindParseService();
 
         void unbindParseService();
+
+        boolean isBindedWithParseService();
 
         boolean isServiceRunning();
 

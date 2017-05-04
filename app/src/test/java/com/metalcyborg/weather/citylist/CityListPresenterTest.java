@@ -12,10 +12,13 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.verification.VerificationMode;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,17 +77,21 @@ public class CityListPresenterTest {
 
         mPresenter.start();
 
+        verify(mView).setProgressVisibility(true);
         verifyWeatherDataLoading();
     }
 
     private void verifyWeatherDataLoading() {
-        verify(mView).setProgressVisibility(true);
         verify(mRepository).loadWeatherData(mLoadWeatherListCallbackCaptor.capture());
         mLoadWeatherListCallbackCaptor.getValue().onDataLoaded(WEATHER_LIST);
 
         verify(mView).showWeatherList(WEATHER_LIST);
-        verify(mView).setProgressVisibility(false);
         verify(mView).setFabVisibility(true);
+
+        // Data loading error
+        mLoadWeatherListCallbackCaptor.getValue().onError();
+        verify(mView, times(2)).setProgressVisibility(false);
+        verify(mView).setWeatherLoadingErrorMessageVisibility(true);
     }
 
     @Test
@@ -93,6 +100,7 @@ public class CityListPresenterTest {
 
         mPresenter.onParseServiceBinded();
 
+        verify(mView).setProgressVisibility(true);
         verify(mView).registerParseCompleteListener(mParseCompleteListenerCaptor.capture());
         verify(mView).parseCitiesData();
         verifyParseComplete();
@@ -115,15 +123,19 @@ public class CityListPresenterTest {
 
         mPresenter.onParseServiceBinded();
 
+        verify(mView).setProgressVisibility(true);
+        verify(mView).setParseCitiesDataMessageVisibility(true);
         verify(mView).registerParseCompleteListener(mParseCompleteListenerCaptor.capture());
         verifyParseComplete();
     }
 
     private void verifyParseComplete() {
-        verify(mView).setProgressVisibility(true);
         verify(mView).setParseCitiesDataMessageVisibility(true);
 
         mParseCompleteListenerCaptor.getValue().onParseComplete();
+        verify(mView).unregisterParseCompleteListener(mParseCompleteListenerCaptor.getValue());
+        verify(mView).unbindParseService();
+        verify(mRepository).setCitiesDataAdded();
         verify(mView).setParseCitiesDataMessageVisibility(false);
         verifyWeatherDataLoading();
     }
@@ -133,6 +145,8 @@ public class CityListPresenterTest {
         verify(mView).setParseCitiesDataMessageVisibility(true);
 
         mParseCompleteListenerCaptor.getValue().onParseError();
+        verify(mView).unregisterParseCompleteListener(mParseCompleteListenerCaptor.getValue());
+        verify(mView).unbindParseService();
         verify(mView).setParseCitiesDataMessageVisibility(false);
         verify(mView).setParseErrorMessageVisibility(true);
     }
@@ -145,7 +159,9 @@ public class CityListPresenterTest {
     }
 
     @Test
-    public void stopService() {
+    public void stopPresenter() {
+        when(mView.isBindedWithParseService()).thenReturn(true);
+
         mPresenter.stop();
         verify(mView).unregisterParseCompleteListener(mParseCompleteListenerCaptor.capture());
         verify(mView).unbindParseService();
