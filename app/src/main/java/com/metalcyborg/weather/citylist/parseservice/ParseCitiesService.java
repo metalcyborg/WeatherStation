@@ -1,4 +1,4 @@
-package com.metalcyborg.weather.citysearch;
+package com.metalcyborg.weather.citylist.parseservice;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -26,7 +25,14 @@ public class ParseCitiesService extends IntentService {
     private static final String TAG = "ParseCitiesService";
 
     private volatile boolean mRunning = false;
-    private IBinder mBinder = new MyBinder();
+    private IBinder mBinder = new ParseBinder();
+    private CompleteListener mCompleteListener;
+
+    public interface CompleteListener {
+        void onParseComplete();
+
+        void onParseError();
+    }
 
     public ParseCitiesService() {
         super("ParseCitiesService");
@@ -76,9 +82,11 @@ public class ParseCitiesService extends IntentService {
             CityData[] cityDatas = gson.fromJson(jsonReader, CityData[].class);
 
             Log.d(TAG, "handleActionFoo: cityDatas length: " + cityDatas.length);
+            mCompleteListener.onParseComplete();
             mRunning = false;
         } catch (IOException e) {
             e.printStackTrace();
+            mCompleteListener.onParseError();
         } finally {
             if(is != null) {
                 try {
@@ -109,16 +117,24 @@ public class ParseCitiesService extends IntentService {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return new MyBinder();
+        return mBinder;
     }
 
     public synchronized boolean isRunning() {
         return mRunning;
     }
 
-    class MyBinder extends Binder {
+    public class ParseBinder extends Binder {
         public ParseCitiesService getService() {
             return ParseCitiesService.this;
+        }
+
+        public void registerParseCompleteListener(CompleteListener listener) {
+            mCompleteListener = listener;
+        }
+
+        public void unregisterParseCompleteListener() {
+            mCompleteListener = null;
         }
     }
 }

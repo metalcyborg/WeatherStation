@@ -40,17 +40,13 @@ public interface CityListContract {
 
         void bindParseService();
 
-        void unbindParseService();
-
-        boolean isBindedWithParseService();
-
         boolean isServiceRunning();
 
         void parseCitiesData();
 
         void registerParseCompleteListener(ParseCompleteListener listener);
 
-        void unregisterParseCompleteListener(ParseCompleteListener listener);
+        void stopServiceInteractions();
     }
 
     interface Presenter extends BasePresenter {
@@ -58,6 +54,6 @@ public interface CityListContract {
 
         void result(int requestCode, int resultCode, Bundle extras);
 
-        void onParseServiceBinded();
+        void onParseServiceBound();
     }
 }

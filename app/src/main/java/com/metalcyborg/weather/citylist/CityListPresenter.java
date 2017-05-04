@@ -2,7 +2,6 @@ package com.metalcyborg.weather.citylist;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -19,7 +18,6 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     private WeatherDataSource mRepository;
     private CityListContract.View mView;
-    private CityListContract.ParseCompleteListener mParseCompleteListener;
 
     public CityListPresenter(@NonNull WeatherDataSource repository,
                              @NonNull CityListContract.View view) {
@@ -41,13 +39,7 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     @Override
     public void stop() {
-        if(mParseCompleteListener != null) {
-            mView.unregisterParseCompleteListener(mParseCompleteListener);
-        }
-
-        if(mView.isBindedWithParseService()) {
-            mView.unbindParseService();
-        }
+        mView.stopServiceInteractions();
     }
 
     @Override
@@ -61,15 +53,14 @@ public class CityListPresenter implements CityListContract.Presenter {
     }
 
     @Override
-    public void onParseServiceBinded() {
+    public void onParseServiceBound() {
         mView.setProgressVisibility(true);
 
-        mParseCompleteListener = new CityListContract.ParseCompleteListener() {
+        CityListContract.ParseCompleteListener parseCompleteListener =
+                new CityListContract.ParseCompleteListener() {
             @Override
             public void onParseComplete() {
-                mView.unregisterParseCompleteListener(mParseCompleteListener);
-                mView.unbindParseService();
-                mParseCompleteListener = null;
+                mView.stopServiceInteractions();
                 mRepository.setCitiesDataAdded();
                 mView.setParseCitiesDataMessageVisibility(false);
                 loadWeatherData();
@@ -77,15 +68,13 @@ public class CityListPresenter implements CityListContract.Presenter {
 
             @Override
             public void onParseError() {
-                mView.unregisterParseCompleteListener(mParseCompleteListener);
-                mView.unbindParseService();
-                mParseCompleteListener = null;
+                mView.stopServiceInteractions();
                 mView.setParseCitiesDataMessageVisibility(false);
                 mView.setParseErrorMessageVisibility(true);
             }
         };
 
-        mView.registerParseCompleteListener(mParseCompleteListener);
+        mView.registerParseCompleteListener(parseCompleteListener);
         mView.setParseCitiesDataMessageVisibility(true);
 
         if(!mView.isServiceRunning()) {

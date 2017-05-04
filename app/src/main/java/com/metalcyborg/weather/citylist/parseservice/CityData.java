@@ -1,4 +1,4 @@
-package com.metalcyborg.weather.citysearch;
+package com.metalcyborg.weather.citylist.parseservice;
 
 import com.google.gson.annotations.SerializedName;
 

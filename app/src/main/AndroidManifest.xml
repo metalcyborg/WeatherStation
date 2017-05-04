@@ -22,7 +22,7 @@
         </activity>
 
         <service
-            android:name=".citysearch.ParseCitiesService"
+            android:name=".citylist.parseservice.ParseCitiesService"
             android:exported="false">
         </service>
     </application>

@@ -1,8 +1,11 @@
 package com.metalcyborg.weather.citylist;
 
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.Weather;
 
@@ -20,8 +24,11 @@ import java.util.List;
  */
 public class CityListFragment extends Fragment implements CityListContract.View {
 
+    private static final String CITY_LIST_ZIP_NAME = "cityList";
     private CityListContract.Presenter mPresenter;
     private FloatingActionButton mFab;
+    private ServiceConnection mServiceConnection;
+    private ParseCitiesService.ParseBinder mServiceBinder;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -102,7 +109,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void setFabVisibility(boolean visibility) {
-
+        mFab.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -112,37 +119,63 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void bindParseService() {
+        mServiceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                mServiceBinder = (ParseCitiesService.ParseBinder) service;
+                mPresenter.onParseServiceBound();
+            }
 
-    }
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+                mServiceBinder = null;
+                mServiceConnection = null;
+            }
+        };
 
-    @Override
-    public void unbindParseService() {
-
-    }
-
-    @Override
-    public boolean isBindedWithParseService() {
-        return false;
+        ParseCitiesService.bind(getActivity().getApplicationContext(), mServiceConnection);
     }
 
     @Override
     public boolean isServiceRunning() {
+        if(mServiceBinder != null) {
+            return mServiceBinder.getService().isRunning();
+        }
+
         return false;
     }
 
     @Override
     public void parseCitiesData() {
-
+        ParseCitiesService.startActionParse(getActivity().getApplicationContext(),
+                CITY_LIST_ZIP_NAME);
     }
 
     @Override
-    public void registerParseCompleteListener(CityListContract.ParseCompleteListener listener) {
+    public void registerParseCompleteListener(final CityListContract.ParseCompleteListener listener) {
+        if(mServiceBinder == null)
+            return;
 
+        mServiceBinder.registerParseCompleteListener(new ParseCitiesService.CompleteListener() {
+            @Override
+            public void onParseComplete() {
+                listener.onParseComplete();
+            }
+
+            @Override
+            public void onParseError() {
+                listener.onParseError();
+            }
+        });
     }
 
     @Override
-    public void unregisterParseCompleteListener(CityListContract.ParseCompleteListener listener) {
+    public void stopServiceInteractions() {
+        if(mServiceBinder == null || mServiceConnection == null)
+            return;
 
+        mServiceBinder.unregisterParseCompleteListener();
+        ParseCitiesService.unbind(getActivity().getApplicationContext(), mServiceConnection);
     }
 
     @Override
