@@ -4,6 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.content.Context;
 import android.content.ServiceConnection;
+import android.database.sqlite.SQLiteException;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
@@ -12,6 +13,8 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
+import com.metalcyborg.weather.Injection;
+import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -27,6 +30,7 @@ public class ParseCitiesService extends IntentService {
     private volatile boolean mRunning = false;
     private IBinder mBinder = new ParseBinder();
     private CompleteListener mCompleteListener;
+    private WeatherDataSource mRepository;
 
     public interface CompleteListener {
         void onParseComplete();
@@ -36,6 +40,12 @@ public class ParseCitiesService extends IntentService {
 
     public ParseCitiesService() {
         super("ParseCitiesService");
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        mRepository = Injection.provideWeatherRepository(getApplicationContext());
     }
 
     public static void startActionParse(Context context, String zipName) {
@@ -63,12 +73,12 @@ public class ParseCitiesService extends IntentService {
                 mRunning = true;
                 Log.d(TAG, "onHandleIntent: Parse");
                 final String zipName = intent.getStringExtra(EXTRA_ZIP_NAME);
-                handleActionFoo(zipName);
+                handleActionUnzip(zipName);
             }
         }
     }
 
-    private void handleActionFoo(String zipName) {
+    public void handleActionUnzip(String zipName) {
         InputStream is = null;
         GZIPInputStream gis = null;
         try {
@@ -79,12 +89,14 @@ public class ParseCitiesService extends IntentService {
             JsonReader jsonReader = gson.newJsonReader(new InputStreamReader(gis));
             jsonReader.setLenient(true);
 
-            CityData[] cityDatas = gson.fromJson(jsonReader, CityData[].class);
+            CityData[] cityData = gson.fromJson(jsonReader, CityData[].class);
 
-            Log.d(TAG, "handleActionFoo: cityDatas length: " + cityDatas.length);
+            Log.d(TAG, "handleActionUnzip: cityDatas length: " + cityData.length);
+            mRepository.addCitiesData(cityData);
+
             mCompleteListener.onParseComplete();
             mRunning = false;
-        } catch (IOException e) {
+        } catch (IOException | SQLiteException e) {
             e.printStackTrace();
             mCompleteListener.onParseError();
         } finally {
@@ -105,8 +117,6 @@ public class ParseCitiesService extends IntentService {
             }
         }
     }
-
-
 
     @Override
     public void onDestroy() {

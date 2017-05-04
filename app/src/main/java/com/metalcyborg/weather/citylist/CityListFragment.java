@@ -5,6 +5,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -29,6 +30,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private FloatingActionButton mFab;
     private ServiceConnection mServiceConnection;
     private ParseCitiesService.ParseBinder mServiceBinder;
+    private Handler mUiHandler = new Handler();
 
     public CityListFragment() {
         // Required empty public constructor
@@ -128,8 +130,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-                mServiceBinder = null;
-                mServiceConnection = null;
+
             }
         };
 
@@ -159,12 +160,22 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         mServiceBinder.registerParseCompleteListener(new ParseCitiesService.CompleteListener() {
             @Override
             public void onParseComplete() {
-                listener.onParseComplete();
+                mUiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onParseComplete();
+                    }
+                });
             }
 
             @Override
             public void onParseError() {
-                listener.onParseError();
+                mUiHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onParseError();
+                    }
+                });
             }
         });
     }
@@ -176,6 +187,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
         mServiceBinder.unregisterParseCompleteListener();
         ParseCitiesService.unbind(getActivity().getApplicationContext(), mServiceConnection);
+        mServiceBinder = null;
+        mServiceConnection = null;
     }
 
     @Override

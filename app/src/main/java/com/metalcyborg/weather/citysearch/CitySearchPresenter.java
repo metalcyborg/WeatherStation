@@ -61,19 +61,5 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
     private void addCitiesDataToRepository() {
         mView.setProgressVisibility(true);
         mView.setSearchActionVisibility(false);
-        mRepository.addCitiesData(new WeatherDataSource.LoadCityDataCallback() {
-            @Override
-            public void onDataLoaded() {
-                mView.setProgressVisibility(false);
-                mView.setSearchActionVisibility(true);
-                mView.showTypeCityNameMessage();
-            }
-
-            @Override
-            public void onError() {
-                mView.showErrorMessage();
-                mView.setProgressVisibility(false);
-            }
-        });
     }
 }

@@ -60,17 +60,6 @@ public class CitySearchPresenterTest {
         when(mRepository.isCitiesDataAdded()).thenReturn(false);
 
         mPresenter.start();
-
-        // Show progress and hide search action
-        verify(mView).setProgressVisibility(true);
-        verify(mView).setSearchActionVisibility(false);
-        // Parse cities data
-        verify(mRepository).addCitiesData(mCityDataCallbackCaptor.capture());
-        mCityDataCallbackCaptor.getValue().onDataLoaded();
-        // Hide progress and show search action
-        verify(mView).setProgressVisibility(false);
-        verify(mView).setSearchActionVisibility(true);
-        verify(mView).showTypeCityNameMessage();
     }
 
     @Test
@@ -78,16 +67,6 @@ public class CitySearchPresenterTest {
         when(mRepository.isCitiesDataAdded()).thenReturn(false);
 
         mPresenter.start();
-
-        // Show progress and hide search action
-        verify(mView).setProgressVisibility(true);
-        verify(mView).setSearchActionVisibility(false);
-        // Parse cities data
-        verify(mRepository).addCitiesData(mCityDataCallbackCaptor.capture());
-        mCityDataCallbackCaptor.getValue().onError();
-        // Hide progress and show search action
-        verify(mView).showErrorMessage();
-        verify(mView).setProgressVisibility(false);
     }
 
     @Test

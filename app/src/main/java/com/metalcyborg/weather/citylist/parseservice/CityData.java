@@ -20,6 +20,13 @@ public class CityData {
     @SerializedName("coord")
     private Coord mCoord;
 
+    public CityData(int id, String cityName, String countryName, Coord coord) {
+        mId = id;
+        mCityName = cityName;
+        mCountryName = countryName;
+        mCoord = coord;
+    }
+
     public int getId() {
         return mId;
     }
@@ -36,13 +43,18 @@ public class CityData {
         return mCoord;
     }
 
-    public class Coord {
+    public static class Coord {
 
         @SerializedName("lon")
         private double mLon;
 
         @SerializedName("lat")
         private double mLat;
+
+        public Coord(double lon, double lat) {
+            mLon = lon;
+            mLat = lat;
+        }
 
         public double getLon() {
             return mLon;

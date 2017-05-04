@@ -2,6 +2,7 @@ package com.metalcyborg.weather.data.source;
 
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
@@ -45,18 +46,8 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void addCitiesData(final LoadCityDataCallback callback) {
-        mLocalDataSource.addCitiesData(new LoadCityDataCallback() {
-            @Override
-            public void onDataLoaded() {
-                callback.onDataLoaded();
-            }
-
-            @Override
-            public void onError() {
-                callback.onError();
-            }
-        });
+    public void addCitiesData(CityData[] data) {
+        mLocalDataSource.addCitiesData(data);
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.metalcyborg.weather.data.source.local;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
@@ -55,15 +58,38 @@ public class WeatherLocalDataSource implements WeatherDataSource {
     }
 
     @Override
-    public void addCitiesData(LoadCityDataCallback callback) {
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+    public void addCitiesData(CityData[] data) throws SQLiteException {
+        SQLiteDatabase db = null;
+        try {
+            db = mDatabaseHelper.getWritableDatabase();
+            db.beginTransaction();
 
-        // Unzip list of cities
+            for (CityData cityData : data) {
+                ContentValues cv = new ContentValues();
+                cv.put(WeatherPersistenceContract.CityTable.COLUMN_OPEN_WEATHER_ID,
+                        cityData.getId());
+                cv.put(WeatherPersistenceContract.CityTable.COLUMN_CITY_NAME,
+                        cityData.getCityName());
+                cv.put(WeatherPersistenceContract.CityTable.COLUMN_COUNTRY_NAME,
+                        cityData.getCountryName());
+                cv.put(WeatherPersistenceContract.CityTable.COLUMN_LONGITUDE,
+                        cityData.getCoord().getLon());
+                cv.put(WeatherPersistenceContract.CityTable.COLUMN_LATITUDE,
+                        cityData.getCoord().getLat());
+                db.insertOrThrow(WeatherPersistenceContract.CityTable.TABLE_NAME, null,
+                        cv);
+            }
 
-        // Parse list of cities
-
-
-        db.close();
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            throw new SQLiteException("City data insertion error");
+        } finally {
+            if(db != null) {
+                db.endTransaction();
+                db.close();
+            }
+        }
     }
 
     @Override

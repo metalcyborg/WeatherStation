@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.data.source;
 
+import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.local.WeatherLocalDataSource;
 import com.metalcyborg.weather.data.source.remote.WeatherRemoteDataSource;
@@ -19,6 +20,12 @@ import static org.mockito.Mockito.verify;
 
 public class WeatherRepositoryTest {
 
+    private static final CityData[] CITY_DATA = new CityData[2];
+    private static final CityData CITY_DATA_0 = new CityData(0, "City_0", "Country_0",
+            new CityData.Coord(10.0, 20.0));
+    private static final CityData CITY_DATA_1 = new CityData(1, "City_1", "Country_1",
+            new CityData.Coord(20.0, 30.0));
+
     private WeatherRepository mWeatherRepository;
 
     @Mock
@@ -37,6 +44,9 @@ public class WeatherRepositoryTest {
     public void setupWeatherRepository() {
         MockitoAnnotations.initMocks(this);
 
+        CITY_DATA[0] = CITY_DATA_0;
+        CITY_DATA[1] = CITY_DATA_1;
+
         mWeatherRepository = WeatherRepository.getInstance(mLocalDataSource, mRemoteDataSource);
     }
 
@@ -49,9 +59,9 @@ public class WeatherRepositoryTest {
 
     @Test
     public void addCitiesData() {
-        mWeatherRepository.addCitiesData(mLoadCityDataCallback);
+        mWeatherRepository.addCitiesData(CITY_DATA);
 
-        verify(mLocalDataSource).addCitiesData(any(WeatherDataSource.LoadCityDataCallback.class));
+        verify(mLocalDataSource).addCitiesData(CITY_DATA);
     }
 
     @Test
