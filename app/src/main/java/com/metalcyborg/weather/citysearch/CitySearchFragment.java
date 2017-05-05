@@ -13,14 +13,11 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
-import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.City;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -57,8 +54,16 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.cityRecycler);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mCityAdapter = new CityAdapter();
+        mCityAdapter = new CityAdapter(mRecyclerView);
         mRecyclerView.setAdapter(mCityAdapter);
+
+        mCityAdapter.setCityClickListener(new CityAdapter.CityClickListener() {
+            @Override
+            public void onClick(City city) {
+                mPresenter.addCityToWeatherList(city);
+                getActivity().finish();
+            }
+        });
 
         return view;
     }
@@ -131,46 +136,5 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
     @Override
     public void showWeatherList() {
 
-    }
-
-    public class CityAdapter extends RecyclerView.Adapter<CityViewHolder> {
-
-        private List<City> mItems = new ArrayList<>();
-
-        @Override
-        public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_item,
-                    parent, false);
-            return new CityViewHolder(item);
-        }
-
-        @Override
-        public void onBindViewHolder(CityViewHolder holder, int position) {
-            City city = mItems.get(position);
-            holder.mCityName.setText(city.getName());
-            holder.mCountryName.setText(city.getCountry());
-        }
-
-        @Override
-        public int getItemCount() {
-            return mItems.size();
-        }
-
-        public void setCityList(List<City> items) {
-            mItems = items;
-        }
-    }
-
-    public class CityViewHolder extends RecyclerView.ViewHolder {
-
-        private TextView mCityName;
-        private TextView mCountryName;
-
-        public CityViewHolder(View itemView) {
-            super(itemView);
-
-            mCityName = (TextView) itemView.findViewById(R.id.cityName);
-            mCountryName = (TextView) itemView.findViewById(R.id.countryName);
-        }
     }
 }

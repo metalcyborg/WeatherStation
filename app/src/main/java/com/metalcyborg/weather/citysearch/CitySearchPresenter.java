@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.citysearch;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -17,6 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     private static final int QUERY_RESULT_LIMIT = 20;
+    private static final String TAG = "CitySearchPresenter";
     private WeatherRepository mRepository;
     private CitySearchContract.View mView;
 
@@ -50,6 +52,7 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     @Override
     public void addCityToWeatherList(City city) {
+        Log.d(TAG, "addCityToWeatherList: " + city.getName());
         mRepository.addNewCityToWeatherList(city);
         mView.showWeatherList();
     }
