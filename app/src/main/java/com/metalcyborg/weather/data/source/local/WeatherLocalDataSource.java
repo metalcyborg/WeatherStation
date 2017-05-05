@@ -66,17 +66,17 @@ public class WeatherLocalDataSource implements WeatherDataSource {
 
             for (CityData cityData : data) {
                 ContentValues cv = new ContentValues();
-                cv.put(WeatherPersistenceContract.CityTable.COLUMN_OPEN_WEATHER_ID,
+                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID,
                         cityData.getId());
-                cv.put(WeatherPersistenceContract.CityTable.COLUMN_CITY_NAME,
+                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME,
                         cityData.getCityName());
-                cv.put(WeatherPersistenceContract.CityTable.COLUMN_COUNTRY_NAME,
+                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME,
                         cityData.getCountryName());
-                cv.put(WeatherPersistenceContract.CityTable.COLUMN_LONGITUDE,
+                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_LONGITUDE,
                         cityData.getCoord().getLon());
-                cv.put(WeatherPersistenceContract.CityTable.COLUMN_LATITUDE,
+                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_LATITUDE,
                         cityData.getCoord().getLat());
-                db.insertOrThrow(WeatherPersistenceContract.CityTable.TABLE_NAME, null,
+                db.insertOrThrow(WeatherPersistenceContract.FtsCityTable.TABLE_NAME, null,
                         cv);
             }
 

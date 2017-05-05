@@ -1,11 +1,18 @@
 package com.metalcyborg.weather.citysearch;
 
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.City;
@@ -17,6 +24,7 @@ import java.util.List;
  */
 public class CitySearchFragment extends Fragment implements CitySearchContract.View {
 
+    private static final String TAG = "CitySearch";
     private CitySearchContract.Presenter mPresenter;
 
     public CitySearchFragment() {
@@ -28,6 +36,12 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -46,6 +60,29 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
     public void onResume() {
         super.onResume();
         mPresenter.start();
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.city_search, menu);
+
+        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        menu.findItem(R.id.search).expandActionView();
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mPresenter.findCitiesByPartOfTheName(newText);
+                Log.d(TAG, "onQueryTextChange: " + newText);
+                return true;
+            }
+        });
     }
 
     @Override

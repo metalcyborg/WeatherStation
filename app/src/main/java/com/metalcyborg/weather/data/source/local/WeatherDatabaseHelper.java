@@ -20,14 +20,14 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
     private static final String TYPE_FLOAT = " FLOAT";
 
 
-    private static final String CREATE_CITY_TABLE = "CREATE TABLE" +
-            WeatherPersistenceContract.CityTable.TABLE_NAME + " (" +
-            WeatherPersistenceContract.CityTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
-            WeatherPersistenceContract.CityTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.CityTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.CityTable.COLUMN_COUNTRY_NAME + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.CityTable.COLUMN_LONGITUDE + TYPE_FLOAT + COMMA +
-            WeatherPersistenceContract.CityTable.COLUMN_LATITUDE + TYPE_FLOAT +
+    private static final String CREATE_FTS_CITY_TABLE = "CREATE VIRTUAL TABLE" +
+            WeatherPersistenceContract.FtsCityTable.TABLE_NAME + " USING fts3 (" +
+            WeatherPersistenceContract.FtsCityTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_LONGITUDE + TYPE_FLOAT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_LATITUDE + TYPE_FLOAT +
             " )";
 
     public WeatherDatabaseHelper(Context context) {
@@ -36,7 +36,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_CITY_TABLE);
+        db.execSQL(CREATE_FTS_CITY_TABLE);
     }
 
     @Override
