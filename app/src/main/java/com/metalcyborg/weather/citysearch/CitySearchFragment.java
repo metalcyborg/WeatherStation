@@ -1,11 +1,11 @@
 package com.metalcyborg.weather.citysearch;
 
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,11 +13,14 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.City;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.Inflater;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +29,8 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
 
     private static final String TAG = "CitySearch";
     private CitySearchContract.Presenter mPresenter;
+    private RecyclerView mRecyclerView;
+    private CityAdapter mCityAdapter;
 
     public CitySearchFragment() {
         // Required empty public constructor
@@ -48,7 +53,14 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_city_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_city_search, container, false);
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.cityRecycler);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mCityAdapter = new CityAdapter();
+        mRecyclerView.setAdapter(mCityAdapter);
+
+        return view;
     }
 
     @Override
@@ -112,13 +124,53 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
 
     @Override
     public void showCityList(List<City> cityList) {
-        for(City city : cityList) {
-            Log.d(TAG, "showCityList: " + city.getId() + " " + city.getName());
-        }
+        mCityAdapter.setCityList(cityList);
+        mCityAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void showWeatherList() {
 
+    }
+
+    public class CityAdapter extends RecyclerView.Adapter<CityViewHolder> {
+
+        private List<City> mItems = new ArrayList<>();
+
+        @Override
+        public CityViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View item = LayoutInflater.from(parent.getContext()).inflate(R.layout.city_item,
+                    parent, false);
+            return new CityViewHolder(item);
+        }
+
+        @Override
+        public void onBindViewHolder(CityViewHolder holder, int position) {
+            City city = mItems.get(position);
+            holder.mCityName.setText(city.getName());
+            holder.mCountryName.setText(city.getCountry());
+        }
+
+        @Override
+        public int getItemCount() {
+            return mItems.size();
+        }
+
+        public void setCityList(List<City> items) {
+            mItems = items;
+        }
+    }
+
+    public class CityViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mCityName;
+        private TextView mCountryName;
+
+        public CityViewHolder(View itemView) {
+            super(itemView);
+
+            mCityName = (TextView) itemView.findViewById(R.id.cityName);
+            mCountryName = (TextView) itemView.findViewById(R.id.countryName);
+        }
     }
 }
