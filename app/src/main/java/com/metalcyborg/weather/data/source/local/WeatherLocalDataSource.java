@@ -3,13 +3,18 @@ package com.metalcyborg.weather.data.source.local;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -98,8 +103,37 @@ public class WeatherLocalDataSource implements WeatherDataSource {
     }
 
     @Override
-    public void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback) {
+    public void findCitiesByPartOfTheName(String partOfTheName, int count,
+                                          FindCityListCallback callback) {
+        String selection = WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + " MATCH ?";
+        String[] selectionArgs = new String[] { partOfTheName + "*" };
+        String[] columns = new String[] {
+                WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID,
+                WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME,
+                WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME,
+                WeatherPersistenceContract.FtsCityTable.COLUMN_LONGITUDE,
+                WeatherPersistenceContract.FtsCityTable.COLUMN_LATITUDE
+        };
 
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(WeatherPersistenceContract.FtsCityTable.TABLE_NAME);
+
+        Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(), columns,
+                selection, selectionArgs, null, null, null, "" + count);
+
+        List<City> cityList = new ArrayList<>();
+
+        while(cursor.moveToNext()) {
+            City city = new City(
+                    cursor.getString(0), cursor.getString(1), cursor.getString(2),
+                    cursor.getLong(3), cursor.getLong(4)
+            );
+            cityList.add(city);
+        }
+
+        callback.onDataFound(cityList);
+
+        cursor.close();
     }
 
     @Override

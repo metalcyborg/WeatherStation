@@ -16,6 +16,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CitySearchPresenter implements CitySearchContract.Presenter {
 
+    private static final int QUERY_RESULT_LIMIT = 20;
     private WeatherRepository mRepository;
     private CitySearchContract.View mView;
 
@@ -28,12 +29,7 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     @Override
     public void start() {
-        if (!mRepository.isCitiesDataAdded()) {
-            addCitiesDataToRepository();
-        } else {
-            // Check ParseCitiesService running
 
-        }
     }
 
     @Override
@@ -43,7 +39,7 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     @Override
     public void findCitiesByPartOfTheName(String partOfTheName) {
-        mRepository.findCitiesByPartOfTheName(partOfTheName,
+        mRepository.findCitiesByPartOfTheName(partOfTheName, QUERY_RESULT_LIMIT,
                 new WeatherDataSource.FindCityListCallback() {
                     @Override
                     public void onDataFound(List<City> cityList) {

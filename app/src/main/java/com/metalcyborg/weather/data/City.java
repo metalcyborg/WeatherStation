@@ -19,4 +19,24 @@ public class City {
         mLon = lon;
         mLat = lat;
     }
+
+    public String getId() {
+        return mId;
+    }
+
+    public String getName() {
+        return mName;
+    }
+
+    public String getCountry() {
+        return mCountry;
+    }
+
+    public long getLon() {
+        return mLon;
+    }
+
+    public long getLat() {
+        return mLat;
+    }
 }

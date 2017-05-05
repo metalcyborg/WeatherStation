@@ -15,6 +15,7 @@ import org.mockito.MockitoAnnotations;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -74,7 +75,7 @@ public class CitySearchPresenterTest {
         String partOfTheName = "Abc";
         mPresenter.findCitiesByPartOfTheName(partOfTheName);
 
-        verify(mRepository).findCitiesByPartOfTheName(eq(partOfTheName),
+        verify(mRepository).findCitiesByPartOfTheName(eq(partOfTheName), anyInt(),
                 mFindCityListCallbackCaptor.capture());
         mFindCityListCallbackCaptor.getValue().onDataFound(CITIES);
         verify(mView).showCityList(CITIES);

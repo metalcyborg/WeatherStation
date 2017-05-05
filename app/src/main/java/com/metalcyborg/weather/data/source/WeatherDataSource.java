@@ -47,7 +47,7 @@ public interface WeatherDataSource {
 
     void loadWeatherData(LoadWeatherListCallback callback);
 
-    void findCitiesByPartOfTheName(String partOfTheName, FindCityListCallback callback);
+    void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
     void addNewCityToWeatherList(City city);
 }

@@ -56,13 +56,15 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void findCitiesByPartOfTheName(String partOfTheName, final FindCityListCallback callback) {
-        mLocalDataSource.findCitiesByPartOfTheName(partOfTheName, new FindCityListCallback() {
-            @Override
-            public void onDataFound(List<City> cityList) {
-                callback.onDataFound(cityList);
-            }
-        });
+    public void findCitiesByPartOfTheName(String partOfTheName, int count,
+                                          final FindCityListCallback callback) {
+        mLocalDataSource.findCitiesByPartOfTheName(partOfTheName, count,
+                new FindCityListCallback() {
+                    @Override
+                    public void onDataFound(List<City> cityList) {
+                        callback.onDataFound(cityList);
+                    }
+                });
     }
 
     @Override

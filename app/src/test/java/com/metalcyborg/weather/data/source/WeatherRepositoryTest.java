@@ -67,9 +67,11 @@ public class WeatherRepositoryTest {
     @Test
     public void findCitiesByPartOfTheName() {
         String partOfTheName = "Abc";
-        mWeatherRepository.findCitiesByPartOfTheName(partOfTheName, mFindCityListCallback);
+        int queryLimit = 20;
+        mWeatherRepository.findCitiesByPartOfTheName(partOfTheName, queryLimit,
+                mFindCityListCallback);
 
-        verify(mLocalDataSource).findCitiesByPartOfTheName(eq(partOfTheName),
+        verify(mLocalDataSource).findCitiesByPartOfTheName(eq(partOfTheName), eq(queryLimit),
                 any(WeatherDataSource.FindCityListCallback.class));
     }
 

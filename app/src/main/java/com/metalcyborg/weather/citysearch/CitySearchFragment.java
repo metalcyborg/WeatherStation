@@ -112,7 +112,9 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
 
     @Override
     public void showCityList(List<City> cityList) {
-
+        for(City city : cityList) {
+            Log.d(TAG, "showCityList: " + city.getId() + " " + city.getName());
+        }
     }
 
     @Override
