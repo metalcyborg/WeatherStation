@@ -137,7 +137,29 @@ public class WeatherLocalDataSource implements WeatherDataSource {
     }
 
     @Override
-    public void addNewCityToWeatherList(City city) {
+    public void addNewCityToChosenCityList(City city) throws SQLiteException {
+        // TODO: check if city was already added
+        SQLiteDatabase db = null;
+        try {
+            db = mDatabaseHelper.getWritableDatabase();
 
+            ContentValues cv = new ContentValues();
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
+                    city.getId());
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
+                    city.getName());
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
+                    city.getCountry());
+
+            db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
+
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            throw new SQLiteException("Error of insertion to the ChosenCities table");
+        } finally {
+            if(db != null) {
+                db.close();
+            }
+        }
     }
 }

@@ -78,8 +78,8 @@ public class WeatherRepositoryTest {
     @Test
     public void addNewCityToWeatherList() {
         City city = new City("0", "City 0", "Country 0", 100, 200);
-        mWeatherRepository.addNewCityToWeatherList(city);
+        mWeatherRepository.addNewCityToChosenCityList(city);
 
-        verify(mLocalDataSource).addNewCityToWeatherList(city);
+        verify(mLocalDataSource).addNewCityToChosenCityList(city);
     }
 }

@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.data.source;
 
+import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.citylist.parseservice.CityData;
@@ -68,7 +69,7 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void addNewCityToWeatherList(City city) {
-        mLocalDataSource.addNewCityToWeatherList(city);
+    public void addNewCityToChosenCityList(City city) throws SQLiteException {
+        mLocalDataSource.addNewCityToChosenCityList(city);
     }
 }

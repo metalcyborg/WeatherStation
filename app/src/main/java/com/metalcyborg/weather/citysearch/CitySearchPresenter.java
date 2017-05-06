@@ -53,7 +53,7 @@ public class CitySearchPresenter implements CitySearchContract.Presenter {
     @Override
     public void addCityToWeatherList(City city) {
         Log.d(TAG, "addCityToWeatherList: " + city.getName());
-        mRepository.addNewCityToWeatherList(city);
+        mRepository.addNewCityToChosenCityList(city);
         mView.showWeatherList();
     }
 

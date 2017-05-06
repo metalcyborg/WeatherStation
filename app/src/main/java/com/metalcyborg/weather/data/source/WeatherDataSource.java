@@ -49,5 +49,5 @@ public interface WeatherDataSource {
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
-    void addNewCityToWeatherList(City city);
+    void addNewCityToChosenCityList(City city) throws SQLiteException;
 }

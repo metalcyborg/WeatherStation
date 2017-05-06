@@ -92,7 +92,7 @@ public class CitySearchPresenterTest {
     public void clickOnCity_showCityListActivity() {
         City city = new City("0", "City 0", "Country 0", 100, 200);
         mPresenter.addCityToWeatherList(city);
-        verify(mRepository).addNewCityToWeatherList(city);
+        verify(mRepository).addNewCityToChosenCityList(city);
         verify(mView).showWeatherList();
     }
 }
