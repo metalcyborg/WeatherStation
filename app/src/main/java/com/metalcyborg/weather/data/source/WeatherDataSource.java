@@ -4,6 +4,7 @@ import android.database.sqlite.SQLiteException;
 
 import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
+import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface WeatherDataSource {
 
     interface LoadWeatherListCallback {
 
-        void onDataLoaded(List<Weather> weatherData);
+        void onDataLoaded(List<CityWeather> weatherData);
 
         void onError();
     }

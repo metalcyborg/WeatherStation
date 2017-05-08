@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.metalcyborg.weather.BasePresenter;
 import com.metalcyborg.weather.BaseView;
+import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public interface CityListContract {
 
         void setFabVisibility(boolean visibility);
 
-        void showWeatherList(List<Weather> weatherList);
+        void showWeatherList(List<CityWeather> weatherList);
 
         void bindParseService();
 

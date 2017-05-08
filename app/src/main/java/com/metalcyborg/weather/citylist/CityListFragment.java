@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
+import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
@@ -120,7 +121,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
-    public void showWeatherList(List<Weather> weatherList) {
+    public void showWeatherList(List<CityWeather> weatherList) {
 
     }
 

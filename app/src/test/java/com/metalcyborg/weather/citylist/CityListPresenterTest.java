@@ -1,5 +1,7 @@
 package com.metalcyborg.weather.citylist;
 
+import com.metalcyborg.weather.data.City;
+import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 import com.metalcyborg.weather.data.source.WeatherRepository;
@@ -24,9 +26,13 @@ import static org.mockito.Mockito.when;
 
 public class CityListPresenterTest {
 
-    private static final List<Weather> WEATHER_LIST = new ArrayList<>();
+    private static final List<CityWeather> WEATHER_LIST = new ArrayList<>();
+    private static final City CITY_1 = new City("1", "City 1", "Country 1", 10, 20);
+    private static final City CITY_2 = new City("2", "City 2", "Country 2", 10, 20);
     private static final Weather WEATHER_1 = new Weather();
     private static final Weather WEATHER_2 = new Weather();
+    private static final CityWeather CITY_WEATHER_1 = new CityWeather(CITY_1, WEATHER_1);
+    private static final CityWeather CITY_WEATHER_2 = new CityWeather(CITY_2, WEATHER_2);
 
     private CityListContract.Presenter mPresenter;
 
@@ -49,8 +55,8 @@ public class CityListPresenterTest {
     public void setupPresenter() {
         MockitoAnnotations.initMocks(this);
 
-        WEATHER_LIST.add(WEATHER_1);
-        WEATHER_LIST.add(WEATHER_2);
+        WEATHER_LIST.add(CITY_WEATHER_1);
+        WEATHER_LIST.add(CITY_WEATHER_2);
 
         mPresenter = new CityListPresenter(mRepository, mView);
 

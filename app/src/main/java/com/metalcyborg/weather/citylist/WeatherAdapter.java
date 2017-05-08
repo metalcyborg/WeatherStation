@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.CityWeather;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     private RecyclerView mRecyclerView;
     private WeatherClickListener mClickListener;
-    private List<Weather> mItems = new ArrayList<>();
+    private List<CityWeather> mItems = new ArrayList<>();
 
     public interface WeatherClickListener {
-        void onClick(Weather weather);
+        void onClick(CityWeather cityWeather);
     }
 
     public WeatherAdapter(RecyclerView recyclerView) {
@@ -40,10 +40,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        Weather weather = mItems.get(position);
-        holder.mCityName.setText(weather.getCity().getName());
-        holder.mCountryName.setText(weather.getCity().getCountry());
-        holder.mTemperature.setText(String.valueOf(weather.getTemperature()));
+        CityWeather cityWeather = mItems.get(position);
+        holder.mCityName.setText(cityWeather.getCity().getName());
+        holder.mCountryName.setText(cityWeather.getCity().getCountry());
+        holder.mTemperature.setText(String.valueOf(cityWeather.getWeather().getTemperature()));
     }
 
     public void setOnItemClickListener(WeatherClickListener listener) {

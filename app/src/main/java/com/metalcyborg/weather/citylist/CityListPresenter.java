@@ -3,6 +3,7 @@ package com.metalcyborg.weather.citylist;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
@@ -88,7 +89,7 @@ public class CityListPresenter implements CityListContract.Presenter {
     private void loadWeatherData() {
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherListCallback() {
             @Override
-            public void onDataLoaded(List<Weather> weatherData) {
+            public void onDataLoaded(List<CityWeather> weatherData) {
                 mView.showWeatherList(weatherData);
                 mView.setProgressVisibility(false);
             }
