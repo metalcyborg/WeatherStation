@@ -8,6 +8,14 @@ import android.support.annotation.NonNull;
 
 public final class Weather {
 
-    @NonNull
-    private int mCityId;
+    private City mCity;
+    private float mTemperature;
+
+    public City getCity() {
+        return mCity;
+    }
+
+    public float getTemperature() {
+        return mTemperature;
+    }
 }

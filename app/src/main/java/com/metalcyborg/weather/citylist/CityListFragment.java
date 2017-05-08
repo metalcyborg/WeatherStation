@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private static final String CITY_LIST_ZIP_NAME = "cityList";
     private CityListContract.Presenter mPresenter;
     private FloatingActionButton mFab;
+    private RecyclerView mRecyclerView;
     private ServiceConnection mServiceConnection;
     private ParseCitiesService.ParseBinder mServiceBinder;
     private Handler mUiHandler = new Handler();
@@ -57,6 +59,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
                 mPresenter.addNewCity();
             }
         });
+
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
+
 
         return view;
     }
