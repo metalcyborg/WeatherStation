@@ -1,6 +1,6 @@
 package com.metalcyborg.weather.data.source.remote;
 
-import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.Weather;
 
 /**
  * Created by metalcyborg on 03.05.17.
@@ -8,5 +8,12 @@ import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 public interface RemoteDataSource {
 
-    void loadWeatherData(String cityId, WeatherDataSource.GetWeatherCallback callback);
+    interface GetWeatherCallback {
+
+        void onDataLoaded(String cityId, Weather weather);
+
+        void onDataNotAvailable(String cityId);
+    }
+
+    void loadWeatherData(String cityId, GetWeatherCallback callback);
 }

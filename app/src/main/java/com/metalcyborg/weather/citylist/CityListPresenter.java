@@ -101,7 +101,7 @@ public class CityListPresenter implements CityListContract.Presenter {
             }
 
             @Override
-            public void onDataLoaded(String cityId, CityWeather weatherData) {
+            public void onDataLoaded(String cityId, Weather weather) {
 
             }
 

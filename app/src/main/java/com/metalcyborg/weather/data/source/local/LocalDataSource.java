@@ -9,10 +9,6 @@ import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
 
-/**
- * Created by metalcyborg on 09.05.17.
- */
-
 public interface LocalDataSource {
 
     interface LoadCityDataCallback {
@@ -52,4 +48,5 @@ public interface LocalDataSource {
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 
+    void updateWeather(String cityId, Weather weather);
 }

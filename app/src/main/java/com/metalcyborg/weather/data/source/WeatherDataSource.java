@@ -28,16 +28,9 @@ public interface WeatherDataSource {
 
         void onDataListNotAvailable();
 
-        void onDataLoaded(String cityId, CityWeather weatherData);
+        void onDataLoaded(String cityId, Weather weather);
 
         void onDataNotAvailable(String cityId);
-    }
-
-    interface GetWeatherCallback {
-
-        void onDataLoaded(CityWeather weatherData);
-
-        void onDataNotAvailable();
     }
 
     boolean isCitiesDataAdded();

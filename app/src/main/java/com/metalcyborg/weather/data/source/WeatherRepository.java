@@ -12,6 +12,7 @@ import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +67,12 @@ public class WeatherRepository implements WeatherDataSource {
 
     @Override
     public void loadWeatherData(final LoadWeatherCallback callback) {
-        if(mCachedWeather != null) {
+        if (mCachedWeather != null) {
+            List<CityWeather> weatherList = new ArrayList<>(mCachedWeather.values());
             // Load from cache
-            callback.onDataListLoaded(new ArrayList<>(mCachedWeather.values()));
+            callback.onDataListLoaded(weatherList);
             // Check remote source
-//            checkWeatherServer(mCachedWeather);
+            checkWeatherServer(weatherList, callback);
         } else {
             // Load from local DB
             mLocalDataSource.loadWeatherData(new LocalDataSource.LoadWeatherListCallback() {
@@ -78,9 +80,9 @@ public class WeatherRepository implements WeatherDataSource {
                 public void onDataLoaded(List<CityWeather> weatherData) {
                     // Local data found
                     callback.onDataListLoaded(weatherData);
-//                    mCachedWeather = weatherData;
+                    refreshCache(weatherData);
                     // Check remote source
-                    checkWeatherServer(weatherData);
+                    checkWeatherServer(weatherData, callback);
                 }
 
                 @Override
@@ -91,20 +93,31 @@ public class WeatherRepository implements WeatherDataSource {
         }
     }
 
-    private void checkWeatherServer(List<CityWeather> weatherList) {
-        for(final CityWeather weather : weatherList) {
+    private void refreshCache(List<CityWeather> weatherList) {
+        if(mCachedWeather == null) {
+            mCachedWeather = new LinkedHashMap<>();
+        }
+        mCachedWeather.clear();
+        for(CityWeather cityWeather : weatherList) {
+            mCachedWeather.put(cityWeather.getCity().getId(), cityWeather);
+        }
+    }
+
+    private void checkWeatherServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
+        for (final CityWeather weather : weatherList) {
             mRemoteDataSource.loadWeatherData(weather.getCity().getOpenweatherId(),
-                    new GetWeatherCallback() {
-                @Override
-                public void onDataLoaded(CityWeather weatherData) {
-//                    mLocalDataSource.updateWeatherData();
-                }
+                    new RemoteDataSource.GetWeatherCallback() {
+                        @Override
+                        public void onDataLoaded(String cityId, Weather weather) {
+                            mLocalDataSource.updateWeather(cityId, weather);
+                            callback.onDataLoaded(cityId, weather);
+                        }
 
-                @Override
-                public void onDataNotAvailable() {
-
-                }
-            });
+                        @Override
+                        public void onDataNotAvailable(String cityId) {
+                            callback.onDataNotAvailable(cityId);
+                        }
+                    });
         }
     }
 

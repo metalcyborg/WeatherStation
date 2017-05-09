@@ -161,4 +161,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
             }
         }
     }
+
+    @Override
+    public void updateWeather(String cityId, Weather weather) {
+
+    }
 }
