@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
+import com.metalcyborg.weather.data.source.local.LocalDataSource;
 import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.List;
@@ -14,16 +15,16 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class WeatherRepository implements WeatherDataSource {
 
     private static volatile WeatherRepository mInstance;
-    private WeatherDataSource mLocalDataSource;
+    private LocalDataSource mLocalDataSource;
     private RemoteDataSource mRemoteDataSource;
 
-    private WeatherRepository(@NonNull WeatherDataSource localDataSource,
+    private WeatherRepository(@NonNull LocalDataSource localDataSource,
                               @NonNull RemoteDataSource remoteDataSource) {
         mLocalDataSource = checkNotNull(localDataSource);
         mRemoteDataSource = checkNotNull(remoteDataSource);
     }
 
-    public static WeatherRepository getInstance(WeatherDataSource localDataSource,
+    public static WeatherRepository getInstance(LocalDataSource localDataSource,
                                                 RemoteDataSource remoteDataSource) {
         if (mInstance == null) {
             synchronized (WeatherRepository.class) {

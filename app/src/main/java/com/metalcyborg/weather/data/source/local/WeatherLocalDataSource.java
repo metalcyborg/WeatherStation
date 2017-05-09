@@ -18,11 +18,7 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Created by root on 14.04.17.
- */
-
-public class WeatherLocalDataSource implements WeatherDataSource {
+public class WeatherLocalDataSource implements LocalDataSource {
 
     private static final String NAME = "com.metalcyborg.weather.SharedPreferences";
     private static final String KEY_CITIES_DATA_ADDED = "com.metalcyborg.weather.key.CitiesDataAdded";
@@ -98,13 +94,13 @@ public class WeatherLocalDataSource implements WeatherDataSource {
     }
 
     @Override
-    public void loadWeatherData(LoadWeatherListCallback callback) {
+    public void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback) {
 
     }
 
     @Override
     public void findCitiesByPartOfTheName(String partOfTheName, int count,
-                                          FindCityListCallback callback) {
+                                          WeatherDataSource.FindCityListCallback callback) {
         String selection = WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + " MATCH ?";
         String[] selectionArgs = new String[] { partOfTheName + "*" };
         String[] columns = new String[] {

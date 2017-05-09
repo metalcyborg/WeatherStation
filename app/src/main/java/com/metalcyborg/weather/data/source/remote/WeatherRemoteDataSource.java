@@ -1,6 +1,5 @@
 package com.metalcyborg.weather.data.source.remote;
 
-import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 public class WeatherRemoteDataSource implements RemoteDataSource {

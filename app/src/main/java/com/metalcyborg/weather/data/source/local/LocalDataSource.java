@@ -1,4 +1,4 @@
-package com.metalcyborg.weather.data.source;
+package com.metalcyborg.weather.data.source.local;
 
 import android.database.sqlite.SQLiteException;
 
@@ -9,7 +9,11 @@ import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
 
-public interface WeatherDataSource {
+/**
+ * Created by metalcyborg on 09.05.17.
+ */
+
+public interface LocalDataSource {
 
     interface LoadCityDataCallback {
 
@@ -42,9 +46,10 @@ public interface WeatherDataSource {
 
     void addCitiesData(CityData[] data) throws SQLiteException;
 
-    void loadWeatherData(LoadWeatherListCallback callback);
+    void loadWeatherData(com.metalcyborg.weather.data.source.WeatherDataSource.LoadWeatherListCallback callback);
 
-    void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
+    void findCitiesByPartOfTheName(String partOfTheName, int count, com.metalcyborg.weather.data.source.WeatherDataSource.FindCityListCallback callback);
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
+
 }
