@@ -11,6 +11,8 @@ import android.support.annotation.NonNull;
 
 import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
+import com.metalcyborg.weather.data.CityWeather;
+import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import java.util.ArrayList;
@@ -94,16 +96,17 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     @Override
-    public void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback) {
+    public void loadWeatherData(LoadWeatherListCallback callback) {
 
     }
 
     @Override
     public void findCitiesByPartOfTheName(String partOfTheName, int count,
-                                          WeatherDataSource.FindCityListCallback callback) {
+                                          FindCityListCallback callback) {
         String selection = WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + " MATCH ?";
         String[] selectionArgs = new String[] { partOfTheName + "*" };
         String[] columns = new String[] {
+                WeatherPersistenceContract.FtsCityTable._ID,
                 WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID,
                 WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME,
                 WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME,
@@ -120,9 +123,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
         List<City> cityList = new ArrayList<>();
 
         while(cursor.moveToNext()) {
-            City city = new City(
-                    cursor.getString(0), cursor.getString(1), cursor.getString(2),
-                    cursor.getLong(3), cursor.getLong(4)
+            City city = new City(cursor.getString(0),
+                    cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                    cursor.getLong(4), cursor.getLong(5)
             );
             cityList.add(city);
         }
@@ -141,7 +144,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
             ContentValues cv = new ContentValues();
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
-                    city.getId());
+                    city.getOpenweatherId());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
                     city.getName());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,

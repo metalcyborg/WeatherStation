@@ -30,7 +30,7 @@ public interface LocalDataSource {
 
         void onDataLoaded(List<CityWeather> weatherData);
 
-        void onError();
+        void onDataNotAvailable();
     }
 
     interface GetWeatherCallback {
@@ -46,9 +46,9 @@ public interface LocalDataSource {
 
     void addCitiesData(CityData[] data) throws SQLiteException;
 
-    void loadWeatherData(com.metalcyborg.weather.data.source.WeatherDataSource.LoadWeatherListCallback callback);
+    void loadWeatherData(LoadWeatherListCallback callback);
 
-    void findCitiesByPartOfTheName(String partOfTheName, int count, com.metalcyborg.weather.data.source.WeatherDataSource.FindCityListCallback callback);
+    void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 

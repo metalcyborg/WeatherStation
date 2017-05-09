@@ -87,17 +87,27 @@ public class CityListPresenter implements CityListContract.Presenter {
     }
 
     private void loadWeatherData() {
-        mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherListCallback() {
+        mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override
-            public void onDataLoaded(List<CityWeather> weatherData) {
+            public void onDataListLoaded(List<CityWeather> weatherData) {
                 mView.showWeatherList(weatherData);
                 mView.setProgressVisibility(false);
             }
 
             @Override
-            public void onError() {
+            public void onDataListNotAvailable() {
                 mView.setProgressVisibility(false);
                 mView.setWeatherLoadingErrorMessageVisibility(true);
+            }
+
+            @Override
+            public void onDataLoaded(String cityId, CityWeather weatherData) {
+
+            }
+
+            @Override
+            public void onDataNotAvailable(String cityId) {
+
             }
         });
     }

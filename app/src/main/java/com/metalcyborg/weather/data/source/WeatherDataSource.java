@@ -22,18 +22,22 @@ public interface WeatherDataSource {
         void onDataFound(List<City> cityList);
     }
 
-    interface LoadWeatherListCallback {
+    interface LoadWeatherCallback {
 
-        void onDataLoaded(List<CityWeather> weatherData);
+        void onDataListLoaded(List<CityWeather> weatherData);
 
-        void onError();
+        void onDataListNotAvailable();
+
+        void onDataLoaded(String cityId, CityWeather weatherData);
+
+        void onDataNotAvailable(String cityId);
     }
 
     interface GetWeatherCallback {
 
-        void onDataLoaded(Weather weatherData);
+        void onDataLoaded(CityWeather weatherData);
 
-        void onError();
+        void onDataNotAvailable();
     }
 
     boolean isCitiesDataAdded();
@@ -42,7 +46,7 @@ public interface WeatherDataSource {
 
     void addCitiesData(CityData[] data) throws SQLiteException;
 
-    void loadWeatherData(LoadWeatherListCallback callback);
+    void loadWeatherData(LoadWeatherCallback callback);
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 

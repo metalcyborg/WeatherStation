@@ -23,7 +23,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     }
 
     @Override
-    public void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback) {
+    public void loadWeatherData(String cityId, WeatherDataSource.GetWeatherCallback callback) {
 
     }
 }

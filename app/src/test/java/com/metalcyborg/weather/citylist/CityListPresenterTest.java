@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 public class CityListPresenterTest {
 
     private static final List<CityWeather> WEATHER_LIST = new ArrayList<>();
-    private static final City CITY_1 = new City("1", "City 1", "Country 1", 10, 20);
-    private static final City CITY_2 = new City("2", "City 2", "Country 2", 10, 20);
-    private static final Weather WEATHER_1 = new Weather();
-    private static final Weather WEATHER_2 = new Weather();
+    private static final City CITY_1 = new City("0", "1", "City 1", "Country 1", 10, 20);
+    private static final City CITY_2 = new City("1", "2", "City 2", "Country 2", 10, 20);
+    private static final Weather WEATHER_1 = new Weather("0");
+    private static final Weather WEATHER_2 = new Weather("1");
     private static final CityWeather CITY_WEATHER_1 = new CityWeather(CITY_1, WEATHER_1);
     private static final CityWeather CITY_WEATHER_2 = new CityWeather(CITY_2, WEATHER_2);
 
@@ -46,7 +46,7 @@ public class CityListPresenterTest {
     private ArgumentCaptor<WeatherDataSource.LoadCityDataCallback> mLoadCityDataCallbackCaptor;
 
     @Captor
-    private ArgumentCaptor<WeatherDataSource.LoadWeatherListCallback> mLoadWeatherListCallbackCaptor;
+    private ArgumentCaptor<WeatherDataSource.LoadWeatherCallback> mLoadWeatherCallbackCaptor;
 
     @Captor
     private ArgumentCaptor<CityListContract.ParseCompleteListener> mParseCompleteListenerCaptor;
@@ -85,13 +85,13 @@ public class CityListPresenterTest {
     }
 
     private void verifyWeatherDataLoading() {
-        verify(mRepository).loadWeatherData(mLoadWeatherListCallbackCaptor.capture());
-        mLoadWeatherListCallbackCaptor.getValue().onDataLoaded(WEATHER_LIST);
+        verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
+        mLoadWeatherCallbackCaptor.getValue().onDataListLoaded(WEATHER_LIST);
 
         verify(mView).showWeatherList(WEATHER_LIST);
 
         // Data loading error
-        mLoadWeatherListCallbackCaptor.getValue().onError();
+        mLoadWeatherCallbackCaptor.getValue().onDataListNotAvailable();
         verify(mView, times(2)).setProgressVisibility(false);
         verify(mView).setWeatherLoadingErrorMessageVisibility(true);
     }

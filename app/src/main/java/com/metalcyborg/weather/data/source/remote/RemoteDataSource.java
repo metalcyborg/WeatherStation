@@ -8,5 +8,5 @@ import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 public interface RemoteDataSource {
 
-    void loadWeatherData(WeatherDataSource.LoadWeatherListCallback callback);
+    void loadWeatherData(String cityId, WeatherDataSource.GetWeatherCallback callback);
 }
