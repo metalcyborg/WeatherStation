@@ -6,28 +6,22 @@ package com.metalcyborg.weather.data;
 
 public class City {
 
-    private String mId;
-    private String mOpenweatherId;
+    private String mOpenWeatherId;
     private String mName;
     private String mCountry;
     private long mLon;
     private long mLat;
 
-    public City(String id, String openweatherId, String name, String country, long lon, long lat) {
-        mId = id;
-        mOpenweatherId = openweatherId;
+    public City(String openWeatherId, String name, String country, long lon, long lat) {
+        mOpenWeatherId = openWeatherId;
         mName = name;
         mCountry = country;
         mLon = lon;
         mLat = lat;
     }
 
-    public String getId() {
-        return mId;
-    }
-
-    public String getOpenweatherId() {
-        return mOpenweatherId;
+    public String getOpenWeatherId() {
+        return mOpenWeatherId;
     }
 
     public String getName() {

@@ -17,7 +17,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
 
     private WeatherRemoteDataSource() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl("api.openweathermap.org")
+                .baseUrl("http://api.openweathermap.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mCurrentWeatherService = mRetrofit.create(CurrentWeatherService.class);

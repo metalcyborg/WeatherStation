@@ -4,6 +4,8 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.metalcyborg.weather.data.Weather;
+
 /**
  * Created by metalcyborg on 18.04.17.
  */
@@ -33,14 +35,15 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_CHOSEN_CITIES_TABLE = "CREATE TABLE" +
             WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " (" +
             WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
-            WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME + TYPE_TEXT +
+            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME + TYPE_TEXT +
             " )";
 
     private static final String CREATE_WEATHER_TABLE = "CREATE TABLE" +
             WeatherPersistenceContract.WeatherTable.TABLE_NAME + " (" +
             WeatherPersistenceContract.WeatherTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_DATE + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME + TYPE_INTEGER + COMMA +

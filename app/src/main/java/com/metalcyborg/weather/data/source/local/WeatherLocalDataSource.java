@@ -13,7 +13,6 @@ import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
-import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +36,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     public static WeatherLocalDataSource getInstance(Context context) {
-        if(mInstance == null) {
+        if (mInstance == null) {
             synchronized (WeatherLocalDataSource.class) {
-                if(mInstance == null) {
+                if (mInstance == null) {
                     mInstance = new WeatherLocalDataSource(context);
                 }
             }
@@ -88,7 +87,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
             e.printStackTrace();
             throw new SQLiteException("City data insertion error");
         } finally {
-            if(db != null) {
+            if (db != null) {
                 db.endTransaction();
                 db.close();
             }
@@ -97,15 +96,50 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void loadWeatherData(LoadWeatherListCallback callback) {
+        String[] columns = new String[] {
+                "t1." + WeatherPersistenceContract.ChosenCitiesTable._ID,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
+                "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE
+        };
 
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " AS t1" +
+                " LEFT JOIN" + WeatherPersistenceContract.WeatherTable.TABLE_NAME + " AS t2" +
+                " ON" + " (t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + " =" +
+                " t1." + WeatherPersistenceContract.ChosenCitiesTable._ID + ")");
+
+        Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(), columns, null, null,
+                null, null, null);
+
+        List<CityWeather> cityWeatherList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                    0, 0);
+            Weather weather = null;
+            if (!cursor.isNull(4)) {
+                weather = new Weather();
+                weather.setTemperature(cursor.getFloat(4));
+            }
+            CityWeather cityWeather = new CityWeather(city, weather);
+            cityWeatherList.add(cityWeather);
+        }
+
+        if (cityWeatherList.size() == 0) {
+            callback.onDataNotAvailable();
+        } else {
+            callback.onDataLoaded(cityWeatherList);
+        }
     }
 
     @Override
     public void findCitiesByPartOfTheName(String partOfTheName, int count,
                                           FindCityListCallback callback) {
         String selection = WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + " MATCH ?";
-        String[] selectionArgs = new String[] { partOfTheName + "*" };
-        String[] columns = new String[] {
+        String[] selectionArgs = new String[]{partOfTheName + "*"};
+        String[] columns = new String[]{
                 WeatherPersistenceContract.FtsCityTable._ID,
                 WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID,
                 WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME,
@@ -122,9 +156,8 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
         List<City> cityList = new ArrayList<>();
 
-        while(cursor.moveToNext()) {
-            City city = new City(cursor.getString(0),
-                    cursor.getString(1), cursor.getString(2), cursor.getString(3),
+        while (cursor.moveToNext()) {
+            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
                     cursor.getLong(4), cursor.getLong(5)
             );
             cityList.add(city);
@@ -144,7 +177,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
             ContentValues cv = new ContentValues();
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
-                    city.getOpenweatherId());
+                    city.getOpenWeatherId());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
                     city.getName());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
@@ -156,7 +189,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
             e.printStackTrace();
             throw new SQLiteException("Error of insertion to the ChosenCities table");
         } finally {
-            if(db != null) {
+            if (db != null) {
                 db.close();
             }
         }

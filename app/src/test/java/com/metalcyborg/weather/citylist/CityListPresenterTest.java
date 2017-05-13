@@ -27,10 +27,10 @@ import static org.mockito.Mockito.when;
 public class CityListPresenterTest {
 
     private static final List<CityWeather> WEATHER_LIST = new ArrayList<>();
-    private static final City CITY_1 = new City("0", "1", "City 1", "Country 1", 10, 20);
-    private static final City CITY_2 = new City("1", "2", "City 2", "Country 2", 10, 20);
-    private static final Weather WEATHER_1 = new Weather("0");
-    private static final Weather WEATHER_2 = new Weather("1");
+    private static final City CITY_1 = new City("1", "City 1", "Country 1", 10, 20);
+    private static final City CITY_2 = new City("2", "City 2", "Country 2", 10, 20);
+    private static final Weather WEATHER_1 = new Weather();
+    private static final Weather WEATHER_2 = new Weather();
     private static final CityWeather CITY_WEATHER_1 = new CityWeather(CITY_1, WEATHER_1);
     private static final CityWeather CITY_WEATHER_2 = new CityWeather(CITY_2, WEATHER_2);
 
@@ -96,13 +96,13 @@ public class CityListPresenterTest {
         verify(mView).setWeatherLoadingErrorMessageVisibility(true);
 
         // Weather update
-        mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_WEATHER_1.getCity().getId(),
+        mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_WEATHER_1.getCity().getOpenWeatherId(),
                 WEATHER_1);
-        verify(mView).updateItem(CITY_WEATHER_1.getCity().getId(), WEATHER_1);
+        verify(mView).updateItem(CITY_WEATHER_1.getCity().getOpenWeatherId(), WEATHER_1);
 
         // Weather data not available for the concrete city
-        mLoadWeatherCallbackCaptor.getValue().onDataNotAvailable(CITY_1.getId());
-        verify(mView).updateItem(CITY_1.getId(), null);
+        mLoadWeatherCallbackCaptor.getValue().onDataNotAvailable(CITY_1.getOpenWeatherId());
+        verify(mView).updateItem(CITY_1.getOpenWeatherId(), null);
     }
 
     @Test

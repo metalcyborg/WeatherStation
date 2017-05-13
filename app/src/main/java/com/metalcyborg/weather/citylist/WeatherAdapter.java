@@ -66,7 +66,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
         int i = 0;
         while(position == -1 && i < mItems.size()) {
-            if(mItems.get(i).getCity().getId().equals(cityId)) {
+            if(mItems.get(i).getCity().getOpenWeatherId().equals(cityId)) {
                 position = i;
             }
             ++i;

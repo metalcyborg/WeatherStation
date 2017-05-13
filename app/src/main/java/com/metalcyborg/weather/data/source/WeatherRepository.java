@@ -99,13 +99,13 @@ public class WeatherRepository implements WeatherDataSource {
         }
         mCachedWeather.clear();
         for(CityWeather cityWeather : weatherList) {
-            mCachedWeather.put(cityWeather.getCity().getId(), cityWeather);
+            mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(), cityWeather);
         }
     }
 
     private void checkWeatherServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
         for (final CityWeather weather : weatherList) {
-            mRemoteDataSource.loadWeatherData(weather.getCity().getOpenweatherId(),
+            mRemoteDataSource.loadWeatherData(weather.getCity().getOpenWeatherId(),
                     new RemoteDataSource.GetWeatherCallback() {
                         @Override
                         public void onDataLoaded(String cityId, Weather weather) {
