@@ -4,18 +4,17 @@ import android.support.annotation.NonNull;
 
 public final class Weather {
 
-    private String mId;
     private float mTemperature;
 
-    public Weather(String id) {
-        mId = id;
-    }
+    public Weather() {
 
-    public String getId() {
-        return mId;
     }
 
     public float getTemperature() {
         return mTemperature;
+    }
+
+    public void setTemperature(float temperature) {
+        mTemperature = temperature;
     }
 }
