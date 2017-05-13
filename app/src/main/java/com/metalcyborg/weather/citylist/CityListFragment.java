@@ -204,7 +204,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void updateItem(String cityId, Weather weather) {
-
+        mWeatherAdapter.updateItem(cityId, weather);
     }
 
     @Override

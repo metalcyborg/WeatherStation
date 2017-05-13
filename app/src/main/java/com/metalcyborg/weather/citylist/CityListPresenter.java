@@ -102,12 +102,12 @@ public class CityListPresenter implements CityListContract.Presenter {
 
             @Override
             public void onDataLoaded(String cityId, Weather weather) {
-
+                mView.updateItem(cityId, weather);
             }
 
             @Override
             public void onDataNotAvailable(String cityId) {
-
+                mView.updateItem(cityId, null);
             }
         });
     }
