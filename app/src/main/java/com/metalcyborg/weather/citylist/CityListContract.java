@@ -48,6 +48,8 @@ public interface CityListContract {
         void registerParseCompleteListener(ParseCompleteListener listener);
 
         void stopServiceInteractions();
+
+        void updateItem(String cityId, Weather weather);
     }
 
     interface Presenter extends BasePresenter {

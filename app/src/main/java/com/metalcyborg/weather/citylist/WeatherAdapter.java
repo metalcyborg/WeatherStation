@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.CityWeather;
+import com.metalcyborg.weather.data.Weather;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,6 +45,32 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         holder.mCityName.setText(cityWeather.getCity().getName());
         holder.mCountryName.setText(cityWeather.getCity().getCountry());
         holder.mTemperature.setText(String.valueOf(cityWeather.getWeather().getTemperature()));
+    }
+
+    public void setItems(List<CityWeather> items) {
+        mItems = items;
+    }
+
+    public void updateItem(String cityId, Weather weather) {
+        int position = getPosition(cityId);
+        if(position != -1) {
+            mItems.get(position).setWeather(weather);
+            notifyItemChanged(position);
+        }
+    }
+
+    private int getPosition(String cityId) {
+        int position = -1;
+
+        int i = 0;
+        while(position == -1 && i < mItems.size()) {
+            if(mItems.get(i).getCity().getId().equals(cityId)) {
+                position = i;
+            }
+            ++i;
+        }
+
+        return position;
     }
 
     public void setOnItemClickListener(WeatherClickListener listener) {

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +32,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private CityListContract.Presenter mPresenter;
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
+    private WeatherAdapter mWeatherAdapter;
     private ServiceConnection mServiceConnection;
     private ParseCitiesService.ParseBinder mServiceBinder;
     private Handler mUiHandler = new Handler();
@@ -62,7 +64,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         });
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
-
+        mWeatherAdapter = new WeatherAdapter(mRecyclerView);
+        mRecyclerView.setAdapter(mWeatherAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
         return view;
     }
@@ -122,7 +126,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showWeatherList(List<CityWeather> weatherList) {
-
+        mWeatherAdapter.setItems(weatherList);
+        mWeatherAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -195,6 +200,11 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         ParseCitiesService.unbind(getActivity().getApplicationContext(), mServiceConnection);
         mServiceBinder = null;
         mServiceConnection = null;
+    }
+
+    @Override
+    public void updateItem(String cityId, Weather weather) {
+
     }
 
     @Override

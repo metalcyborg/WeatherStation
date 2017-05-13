@@ -94,6 +94,15 @@ public class CityListPresenterTest {
         mLoadWeatherCallbackCaptor.getValue().onDataListNotAvailable();
         verify(mView, times(2)).setProgressVisibility(false);
         verify(mView).setWeatherLoadingErrorMessageVisibility(true);
+
+        // Weather update
+        mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_WEATHER_1.getCity().getId(),
+                WEATHER_1);
+        verify(mView).updateItem(CITY_WEATHER_1.getCity().getId(), WEATHER_1);
+
+        // Weather data not available for the concrete city
+        mLoadWeatherCallbackCaptor.getValue().onDataNotAvailable(CITY_1.getId());
+        verify(mView).updateItem(CITY_1.getId(), null);
     }
 
     @Test

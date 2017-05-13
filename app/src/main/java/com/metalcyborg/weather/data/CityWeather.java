@@ -21,4 +21,8 @@ public class CityWeather {
     public Weather getWeather() {
         return mWeather;
     }
+
+    public void setWeather(Weather weather) {
+        mWeather = weather;
+    }
 }
