@@ -96,7 +96,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void loadWeatherData(LoadWeatherListCallback callback) {
-        String[] columns = new String[] {
+        String[] columns = new String[]{
                 "t1." + WeatherPersistenceContract.ChosenCitiesTable._ID,
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
@@ -197,6 +197,24 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void updateWeather(String cityId, Weather weather) {
+        SQLiteDatabase db = null;
+        try {
+            db = mDatabaseHelper.getWritableDatabase();
 
+            ContentValues cv = new ContentValues();
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE,
+                    weather.getTemperature());
+
+            db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
+                    WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + " = ?",
+                    new String[]{cityId});
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            throw new SQLiteException("Error of updating the Weather table");
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 }
