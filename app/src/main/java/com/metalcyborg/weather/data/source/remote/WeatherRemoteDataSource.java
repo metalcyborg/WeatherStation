@@ -12,6 +12,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
 
     private static volatile WeatherRemoteDataSource mInstance;
     private static final String API_KEY = "1d948a9f3798dae877b6b919f0301bd5";
+    private static final String UNITS = "metric";
     private Retrofit mRetrofit;
     private CurrentWeatherService mCurrentWeatherService;
 
@@ -38,7 +39,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     @Override
     public void loadWeatherData(final String cityId, final GetWeatherCallback callback) {
         Call<CurrentWeatherModel> currentWeatherModelCall = mCurrentWeatherService
-                .currentWeather(cityId, API_KEY);
+                .currentWeather(cityId, API_KEY, UNITS);
         currentWeatherModelCall.enqueue(new Callback<CurrentWeatherModel>() {
             @Override
             public void onResponse(Call<CurrentWeatherModel> call,
