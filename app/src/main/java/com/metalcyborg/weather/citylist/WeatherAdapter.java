@@ -45,7 +45,15 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         holder.mCityName.setText(cityWeather.getCity().getName());
         holder.mCountryName.setText(cityWeather.getCity().getCountry());
         if(cityWeather.getWeather() != null) {
-            holder.mTemperature.setText(String.valueOf(cityWeather.getWeather().getTemperature()));
+            int temp = (int) cityWeather.getWeather().getTemperature();
+            String tempStr = String.valueOf(temp);
+            if(temp > 0) {
+                tempStr = "+" + tempStr;
+            } else
+                if(temp < 0) {
+                    tempStr = "-" + tempStr;
+                }
+            holder.mTemperature.setText(tempStr);
         }
     }
 
