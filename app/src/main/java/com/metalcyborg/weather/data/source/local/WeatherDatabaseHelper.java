@@ -34,8 +34,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_CHOSEN_CITIES_TABLE = "CREATE TABLE" +
             WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " (" +
-            WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
-            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME + TYPE_TEXT +
             " )";
@@ -44,6 +43,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
             WeatherPersistenceContract.WeatherTable.TABLE_NAME + " (" +
             WeatherPersistenceContract.WeatherTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED + TYPE_BOOLEAN + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_DATE + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME + TYPE_INTEGER + COMMA +

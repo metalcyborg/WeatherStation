@@ -19,7 +19,6 @@ public class WeatherPersistenceContract {
 
     public static class ChosenCitiesTable implements BaseColumns {
         public static final String TABLE_NAME = " ChosenCities";
-        public static final String COLUMN_OPEN_WEATHER_ID = " OpenWeatherId";
         public static final String COLUMN_CITY_NAME = " CityName";
         public static final String COLUMN_COUNTRY_NAME = " CountryName";
     }
@@ -27,6 +26,7 @@ public class WeatherPersistenceContract {
     public static class WeatherTable implements BaseColumns {
         public static final String TABLE_NAME = " Weather";
         public static final String COLUMN_CHOSEN_CITY_ID = " ChosenCityId";
+        public static final String COLUMN_DATA_RECEIVED = " DataReceived";
         public static final String COLUMN_DATE = " Date";
         public static final String COLUMN_SUNRISE_TIME = " SunriseTime";
         public static final String COLUMN_SUNSET_TIME = " SunsetTime";
