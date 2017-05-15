@@ -24,7 +24,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_FTS_CITY_TABLE = "CREATE VIRTUAL TABLE" +
             WeatherPersistenceContract.FtsCityTable.TABLE_NAME + " USING fts3 (" +
-            WeatherPersistenceContract.FtsCityTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
+            WeatherPersistenceContract.FtsCityTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME + TYPE_TEXT + COMMA +
@@ -34,7 +34,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_CHOSEN_CITIES_TABLE = "CREATE TABLE" +
             WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " (" +
-            WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
+            WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME + TYPE_TEXT +
@@ -42,7 +42,7 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_WEATHER_TABLE = "CREATE TABLE" +
             WeatherPersistenceContract.WeatherTable.TABLE_NAME + " (" +
-            WeatherPersistenceContract.WeatherTable._ID + TYPE_TEXT + " PRIMARY KEY" + COMMA +
+            WeatherPersistenceContract.WeatherTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_DATE + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME + TYPE_INTEGER + COMMA +
