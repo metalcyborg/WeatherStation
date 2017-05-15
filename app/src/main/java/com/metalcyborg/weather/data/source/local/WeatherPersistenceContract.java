@@ -19,6 +19,7 @@ public class WeatherPersistenceContract {
 
     public static class ChosenCitiesTable implements BaseColumns {
         public static final String TABLE_NAME = " ChosenCities";
+        public static final String COLUMN_OPEN_WEATHER_ID = " OpenWeatherId";
         public static final String COLUMN_CITY_NAME = " CityName";
         public static final String COLUMN_COUNTRY_NAME = " CountryName";
     }

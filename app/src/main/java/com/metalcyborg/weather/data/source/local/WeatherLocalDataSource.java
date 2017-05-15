@@ -100,31 +100,32 @@ public class WeatherLocalDataSource implements LocalDataSource {
     public void loadWeatherData(LoadWeatherListCallback callback) {
         String[] columns = new String[]{
                 "t1." + WeatherPersistenceContract.ChosenCitiesTable._ID, // 0
-                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME, // 1
-                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME, // 2
-                "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID, // 3
-                WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, // 4
-                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE // 5
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID, // 1
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME, // 2
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME, // 3
+                "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID, // 4
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, // 5
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE // 6
         };
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " AS t1" +
                 " LEFT JOIN" + WeatherPersistenceContract.WeatherTable.TABLE_NAME + " AS t2" +
                 " ON" + " (t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + " =" +
-                " t1." + WeatherPersistenceContract.ChosenCitiesTable._ID + ")");
+                " t1." + WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + ")");
 
         Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(), columns, null, null,
                 null, null, null);
 
         List<CityWeather> cityWeatherList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            City city = new City(cursor.getString(0), cursor.getString(1), cursor.getString(2),
+            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
                     0, 0);
             Weather weather = null;
-            if (cursor.getInt(4) == 1) {
+            if (cursor.getInt(5) == 1) {
                 // Data was received
                 weather = new Weather();
-                weather.setTemperature(cursor.getFloat(5));
+                weather.setTemperature(cursor.getFloat(6));
             }
             CityWeather cityWeather = new CityWeather(city, weather);
             cityWeatherList.add(cityWeather);
@@ -179,8 +180,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
         try {
             chosenCityCursor = db.query(
                     WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME,
-                    new String[]{WeatherPersistenceContract.ChosenCitiesTable._ID},
-                    WeatherPersistenceContract.ChosenCitiesTable._ID + "=?",
+                    new String[]{WeatherPersistenceContract.ChosenCitiesTable._ID,
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID},
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + "=?",
                     new String[]{city.getOpenWeatherId()}, null, null, null);
             if (chosenCityCursor.getCount() > 0) {
                 Log.d(TAG, "City " + city.getName() + " is already added");
@@ -191,20 +193,20 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
             // Add data to the ChosenCityTable
             ContentValues cv = new ContentValues();
-            cv.put(WeatherPersistenceContract.ChosenCitiesTable._ID,
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
                     city.getOpenWeatherId());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
                     city.getName());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
                     city.getCountry());
-            db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
+            long id = db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
 
             // Add default data to the Weather table
             cv.clear();
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
                     city.getOpenWeatherId());
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 0);// False value
-            db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
+            long weatherId = db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
 
             db.setTransactionSuccessful();
         } catch (SQLiteException e) {

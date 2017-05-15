@@ -103,6 +103,14 @@ public class WeatherRepository implements WeatherDataSource {
         }
     }
 
+    private void addToCache(CityWeather cityWeather) {
+        if(mCachedWeather == null) {
+            mCachedWeather = new LinkedHashMap<>();
+        }
+
+        mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(), cityWeather);
+    }
+
     private void checkWeatherServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
         for (final CityWeather weather : weatherList) {
             mRemoteDataSource.loadWeatherData(weather.getCity().getOpenWeatherId(),
@@ -136,5 +144,7 @@ public class WeatherRepository implements WeatherDataSource {
     @Override
     public void addNewCityToChosenCityList(City city) throws SQLiteException {
         mLocalDataSource.addNewCityToChosenCityList(city);
+        CityWeather cityWeather = new CityWeather(city, null);
+        addToCache(cityWeather);
     }
 }

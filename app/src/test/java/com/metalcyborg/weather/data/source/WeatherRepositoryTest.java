@@ -110,6 +110,8 @@ public class WeatherRepositoryTest {
         mWeatherRepository.addNewCityToChosenCityList(city);
 
         verify(mLocalDataSource).addNewCityToChosenCityList(city);
+        // Add to cache
+        assertThat(mWeatherRepository.mCachedWeather.size(), is(1));
     }
 
     private void checkRemoteDataSource(String cityId,
