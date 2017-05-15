@@ -40,7 +40,7 @@ public class WeatherRepositoryTest {
 
     private static final String CITY_ID = "1";
     private static final City CITY = new City(CITY_ID, "City 1", "Country 1", 10, 20);
-    private static final Weather WEATHER = new Weather();
+    private static final Weather WEATHER = new Weather(100);
     private static final CityWeather CITY_WEATHER = new CityWeather(CITY, WEATHER);
     private static final List<CityWeather> WEATHER_LIST = Lists.newArrayList(CITY_WEATHER);
 

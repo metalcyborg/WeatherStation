@@ -38,21 +38,19 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
 
     @Override
     public void loadWeatherData(final String cityId, final GetWeatherCallback callback) {
-        Call<CurrentWeatherModel> currentWeatherModelCall = mCurrentWeatherService
+        Call<Weather> currentWeatherModelCall = mCurrentWeatherService
                 .currentWeather(cityId, API_KEY, UNITS);
-        currentWeatherModelCall.enqueue(new Callback<CurrentWeatherModel>() {
+        currentWeatherModelCall.enqueue(new Callback<Weather>() {
             @Override
-            public void onResponse(Call<CurrentWeatherModel> call,
-                                   Response<CurrentWeatherModel> response) {
-                CurrentWeatherModel currentWeatherModel = response.body();
-                Weather weather = new Weather();
-                weather.setTemperature(currentWeatherModel.getMain().getTemp());
+            public void onResponse(Call<Weather> call,
+                                   Response<Weather> response) {
+                Weather currentWeather = response.body();
 
-                callback.onDataLoaded(cityId, weather);
+                callback.onDataLoaded(cityId, currentWeather);
             }
 
             @Override
-            public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
+            public void onFailure(Call<Weather> call, Throwable t) {
                 callback.onDataNotAvailable(cityId);
             }
         });

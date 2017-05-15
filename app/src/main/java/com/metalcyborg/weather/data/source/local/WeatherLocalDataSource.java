@@ -10,6 +10,7 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.common.collect.Lists;
 import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
@@ -105,7 +106,21 @@ public class WeatherLocalDataSource implements LocalDataSource {
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME, // 3
                 "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID, // 4
                 WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, // 5
-                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE // 6
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATE, // 6
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME, // 7
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME, // 8
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE, // 9
+                WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE, // 10
+                WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY, // 11
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED, // 12
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION, // 13
+                WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS, // 14
+                WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID, // 15
+                WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP, // 16
+                WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION, // 17
+                WeatherPersistenceContract.WeatherTable.COLUMN_ICON, // 18
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H, // 19
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H // 20
         };
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -124,8 +139,33 @@ public class WeatherLocalDataSource implements LocalDataSource {
             Weather weather = null;
             if (cursor.getInt(5) == 1) {
                 // Data was received
-                weather = new Weather();
-                weather.setTemperature(cursor.getFloat(6));
+                weather = new Weather(cursor.getLong(6));
+
+                Weather.WeatherDescription description = new Weather.WeatherDescription(
+                        cursor.getInt(15), cursor.getString(16), cursor.getString(17),
+                        cursor.getString(18)
+                );
+                Weather.Main main = new Weather.Main(cursor.getFloat(9), cursor.getFloat(10),
+                        cursor.getFloat(11));
+                Weather.Wind wind = new Weather.Wind(cursor.getFloat(12), cursor.getFloat(13));
+                Weather.Clouds clouds = new Weather.Clouds(cursor.getInt(14));
+                Weather.Sys sys = new Weather.Sys(cursor.getLong(7), cursor.getLong(8));
+                if(!cursor.isNull(19)) {
+                    Weather.Rain rain = new Weather.Rain(cursor.getFloat(19));
+                    weather.setRain(rain);
+                }
+
+                if(!cursor.isNull(20)) {
+                    Weather.Snow snow = new Weather.Snow(cursor.getFloat(20));
+                    weather.setSnow(snow);
+                }
+
+                weather.setWeatherDescription(Lists.newArrayList(description));
+                weather.setMain(main);
+                weather.setWind(wind);
+                weather.setClouds(clouds);
+                weather.setSys(sys);
+
             }
             CityWeather cityWeather = new CityWeather(city, weather);
             cityWeatherList.add(cityWeather);
@@ -199,14 +239,14 @@ public class WeatherLocalDataSource implements LocalDataSource {
                     city.getName());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
                     city.getCountry());
-            long id = db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
+            db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
 
             // Add default data to the Weather table
             cv.clear();
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
                     city.getOpenWeatherId());
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 0);// False value
-            long weatherId = db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
+            db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
 
             db.setTransactionSuccessful();
         } catch (SQLiteException e) {
@@ -223,16 +263,55 @@ public class WeatherLocalDataSource implements LocalDataSource {
         }
     }
 
+    private ContentValues generateContentValues(Weather weather) {
+        ContentValues cv = new ContentValues();
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATE,
+                weather.getDateTime());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME,
+                weather.getSys().getSunrise());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME,
+                weather.getSys().getSunset());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE,
+                weather.getMain().getTemp());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE,
+                weather.getMain().getPressure());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY,
+                weather.getMain().getHumidity());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED,
+                weather.getWind().getSpeed());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION,
+                weather.getWind().getDeg());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
+                weather.getClouds().getCloudiness());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
+                weather.getWeatherDescription().get(0).getId());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
+                weather.getWeatherDescription().get(0).getMain());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
+                weather.getWeatherDescription().get(0).getDetail());
+        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
+                weather.getWeatherDescription().get(0).getIcon());
+        if(weather.getRain() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H,
+                    weather.getRain().getVolume3H());
+        }
+
+        if(weather.getSnow() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H,
+                    weather.getSnow().getVolume3H());
+        }
+
+        return cv;
+    }
+
     @Override
     public void updateWeather(String cityId, Weather weather) {
         SQLiteDatabase db = null;
         try {
             db = mDatabaseHelper.getWritableDatabase();
 
-            ContentValues cv = new ContentValues();
+            ContentValues cv = generateContentValues(weather);
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 1); // True value
-            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE,
-                    weather.getTemperature());
 
             db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
                     WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + " = ?",
