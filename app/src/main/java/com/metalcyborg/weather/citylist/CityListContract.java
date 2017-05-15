@@ -55,8 +55,6 @@ public interface CityListContract {
     interface Presenter extends BasePresenter {
         void addNewCity();
 
-        void result(int requestCode, int resultCode, Bundle extras);
-
         void onParseServiceBound();
     }
 }

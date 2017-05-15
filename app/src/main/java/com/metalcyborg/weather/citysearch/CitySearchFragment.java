@@ -61,7 +61,6 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
             @Override
             public void onClick(City city) {
                 mPresenter.addCityToWeatherList(city);
-                getActivity().finish();
             }
         });
 
@@ -135,6 +134,6 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
 
     @Override
     public void showWeatherList() {
-
+        getActivity().finish();
     }
 }

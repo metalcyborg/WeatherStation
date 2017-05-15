@@ -50,11 +50,6 @@ public class CityListPresenter implements CityListContract.Presenter {
     }
 
     @Override
-    public void result(int requestCode, int resultCode, Bundle extras) {
-
-    }
-
-    @Override
     public void onParseServiceBound() {
         mView.setProgressVisibility(true);
 

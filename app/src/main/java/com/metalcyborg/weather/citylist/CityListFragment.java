@@ -91,7 +91,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public void showCitySearch() {
         Intent intent = new Intent(getActivity(), CitySearchActivity.class);
-        startActivityForResult(intent, CityListActivity.REQUEST_CITY_SEARCH);
+        startActivity(intent);
     }
 
     @Override
@@ -205,10 +205,5 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public void updateItem(String cityId, Weather weather) {
         mWeatherAdapter.updateItem(cityId, weather);
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        mPresenter.result(requestCode, resultCode, data == null ? null : data.getExtras());
     }
 }
