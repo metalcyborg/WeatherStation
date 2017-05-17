@@ -98,7 +98,12 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void loadForecastData(LoadForecastCallback callback) {
+    public void load3HForecastData(LoadForecastCallback callback) {
+
+    }
+
+    @Override
+    public void load13DForecastData(LoadForecastCallback callback) {
 
     }
 
@@ -121,8 +126,8 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     private void checkWeatherServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
-        for (final CityWeather weather : weatherList) {
-            mRemoteDataSource.loadWeatherData(weather.getCity().getOpenWeatherId(),
+        for (final CityWeather cityWeather : weatherList) {
+            mRemoteDataSource.loadWeatherData(cityWeather.getCity().getOpenWeatherId(),
                     new RemoteDataSource.GetWeatherCallback() {
                         @Override
                         public void onDataLoaded(String cityId, Weather weather) {
@@ -132,7 +137,9 @@ public class WeatherRepository implements WeatherDataSource {
 
                         @Override
                         public void onDataNotAvailable(String cityId) {
-                            callback.onDataNotAvailable(cityId);
+                            if(cityWeather.getWeather() == null) {
+                                callback.onDataNotAvailable(cityId);
+                            }
                         }
                     });
         }

@@ -35,13 +35,9 @@ public interface WeatherDataSource {
 
     interface LoadForecastCallback {
 
-        void on3HForecastLoaded(List<Weather> forecast);
+        void onDataLoaded(List<Weather> forecast);
 
-        void on3HForecastNotAvailable();
-
-        void on13DaysForecastLoaded(List<Weather> forecast);
-
-        void on13DaysForecastNotAvailable();
+        void onDataNotAvailable();
     }
 
     boolean isCitiesDataAdded();
@@ -52,7 +48,9 @@ public interface WeatherDataSource {
 
     void loadWeatherData(LoadWeatherCallback callback);
 
-    void loadForecastData(LoadForecastCallback callback);
+    void load3HForecastData(LoadForecastCallback callback);
+
+    void load13DForecastData(LoadForecastCallback callback);
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
