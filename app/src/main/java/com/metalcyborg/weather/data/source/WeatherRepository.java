@@ -26,6 +26,10 @@ public class WeatherRepository implements WeatherDataSource {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     Map<String, CityWeather> mCachedWeather;
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    Map<String, List<Weather>> mCached3hForecast;
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    Map<String, List<Weather>> mCached13DaysForecast;
 
     private WeatherRepository(@NonNull LocalDataSource localDataSource,
                               @NonNull RemoteDataSource remoteDataSource) {
@@ -91,6 +95,11 @@ public class WeatherRepository implements WeatherDataSource {
                 }
             });
         }
+    }
+
+    @Override
+    public void loadForecastData(LoadForecastCallback callback) {
+
     }
 
     private void refreshCache(List<CityWeather> weatherList) {

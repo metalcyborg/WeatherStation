@@ -40,4 +40,9 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     public void setPresenter(DetailContract.Presenter presenter) {
         mPresenter = presenter;
     }
+
+    @Override
+    public boolean isActive() {
+        return isAdded();
+    }
 }

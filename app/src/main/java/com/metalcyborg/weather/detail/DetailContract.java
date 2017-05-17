@@ -11,6 +11,7 @@ public interface DetailContract {
 
     interface View extends BaseView<Presenter> {
 
+        boolean isActive();
     }
 
     interface Presenter extends BasePresenter {

@@ -1,33 +1,14 @@
 package com.metalcyborg.weather.data;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
-
 public class Weather {
 
-    @SerializedName("dt")
     private long mDateTime;
-
-    @SerializedName("weather")
-    private List<WeatherDescription> mWeatherDescription;
-
-    @SerializedName("main")
+    private WeatherDescription mWeatherDescription;
     private Main mMain;
-
-    @SerializedName("wind")
     private Wind mWind;
-
-    @SerializedName("clouds")
     private Clouds mClouds;
-
-    @SerializedName("sys")
     private Sys mSys;
-
-    @SerializedName("rain")
     private Rain mRain;
-
-    @SerializedName("snow")
     private Snow mSnow;
 
     public Weather(long dateTime) {
@@ -42,7 +23,7 @@ public class Weather {
         return mMain;
     }
 
-    public List<WeatherDescription> getWeatherDescription() {
+    public WeatherDescription getWeatherDescription() {
         return mWeatherDescription;
     }
 
@@ -70,7 +51,7 @@ public class Weather {
         mDateTime = dateTime;
     }
 
-    public void setWeatherDescription(List<WeatherDescription> weatherDescription) {
+    public void setWeatherDescription(WeatherDescription weatherDescription) {
         mWeatherDescription = weatherDescription;
     }
 
@@ -100,13 +81,8 @@ public class Weather {
 
     public static class Main {
 
-        @SerializedName("temp")
         private float mTemp;
-
-        @SerializedName("pressure")
         private float mPressure;
-
-        @SerializedName("humidity")
         private float mHumidity;
 
         public Main(float temp, float pressure, float humidity) {
@@ -141,16 +117,10 @@ public class Weather {
     }
 
     public static class WeatherDescription {
-        @SerializedName("id")
+
         private int mId;
-
-        @SerializedName("main")
         private String mMain;
-
-        @SerializedName("description")
         private String mDetail;
-
-        @SerializedName("icon")
         private String mIcon;
 
         public WeatherDescription(int id, String main, String detail, String icon) {
@@ -195,10 +165,7 @@ public class Weather {
 
     public static class Wind {
 
-        @SerializedName("speed")
         private float mSpeed;
-
-        @SerializedName("deg")
         private float mDeg;
 
         public Wind(float speed, float deg) {
@@ -225,7 +192,6 @@ public class Weather {
 
     public static class Clouds {
 
-        @SerializedName("all")
         private int mCloudiness;
 
         public Clouds(int cloudiness) {
@@ -243,10 +209,7 @@ public class Weather {
 
     public static class Sys {
 
-        @SerializedName("sunrise")
         private long mSunrise;
-
-        @SerializedName("sunset")
         private long mSunset;
 
         public Sys(long sunrise, long sunset) {
@@ -273,7 +236,6 @@ public class Weather {
 
     public static class Rain {
 
-        @SerializedName("3h")
         private float mVolume3H;
 
         public Rain(float volume3H) {
@@ -291,7 +253,6 @@ public class Weather {
 
     public static class Snow {
 
-        @SerializedName("3h")
         private float mVolume3H;
 
         public Snow(float volume3H) {

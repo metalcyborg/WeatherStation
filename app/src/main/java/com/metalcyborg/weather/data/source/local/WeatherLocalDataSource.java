@@ -160,7 +160,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
                     weather.setSnow(snow);
                 }
 
-                weather.setWeatherDescription(Lists.newArrayList(description));
+                weather.setWeatherDescription(description);
                 weather.setMain(main);
                 weather.setWind(wind);
                 weather.setClouds(clouds);
@@ -284,13 +284,13 @@ public class WeatherLocalDataSource implements LocalDataSource {
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
                 weather.getClouds().getCloudiness());
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
-                weather.getWeatherDescription().get(0).getId());
+                weather.getWeatherDescription().getId());
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
-                weather.getWeatherDescription().get(0).getMain());
+                weather.getWeatherDescription().getMain());
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
-                weather.getWeatherDescription().get(0).getDetail());
+                weather.getWeatherDescription().getDetail());
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
-                weather.getWeatherDescription().get(0).getIcon());
+                weather.getWeatherDescription().getIcon());
         if(weather.getRain() != null) {
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H,
                     weather.getRain().getVolume3H());

@@ -31,4 +31,8 @@ public class DetailPresenter implements DetailContract.Presenter {
     public void stop() {
 
     }
+
+    private void loadForecastData() {
+
+    }
 }

@@ -33,6 +33,17 @@ public interface WeatherDataSource {
         void onDataNotAvailable(String cityId);
     }
 
+    interface LoadForecastCallback {
+
+        void on3HForecastLoaded(List<Weather> forecast);
+
+        void on3HForecastNotAvailable();
+
+        void on13DaysForecastLoaded(List<Weather> forecast);
+
+        void on13DaysForecastNotAvailable();
+    }
+
     boolean isCitiesDataAdded();
 
     void setCitiesDataAdded();
@@ -40,6 +51,8 @@ public interface WeatherDataSource {
     void addCitiesData(CityData[] data) throws SQLiteException;
 
     void loadWeatherData(LoadWeatherCallback callback);
+
+    void loadForecastData(LoadForecastCallback callback);
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
