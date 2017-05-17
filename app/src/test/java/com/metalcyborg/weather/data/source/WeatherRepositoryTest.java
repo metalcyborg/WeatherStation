@@ -22,6 +22,7 @@ import java.util.List;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.junit.Assert.assertThat;
 
@@ -38,11 +39,15 @@ public class WeatherRepositoryTest {
     private static final CityData[] CITY_DATA = new CityData[]{CITY_DATA_0, CITY_DATA_1};
 
 
-    private static final String CITY_ID = "1";
-    private static final City CITY = new City(CITY_ID, "City 1", "Country 1", 10, 20);
-    private static final Weather WEATHER = new Weather(100);
-    private static final CityWeather CITY_WEATHER = new CityWeather(CITY, WEATHER);
-    private static final List<CityWeather> WEATHER_LIST = Lists.newArrayList(CITY_WEATHER);
+    private static final String CITY_ID_1 = "1";
+    private static final String CITY_ID_2 = "2";
+    private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1", 10, 20);
+    private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2", 20, 40);
+    private static final Weather WEATHER_1 = new Weather(100);
+    private static final CityWeather CITY_WEATHER_1 = new CityWeather(CITY_1, WEATHER_1);
+    private static final CityWeather CITY_WEATHER_2 = new CityWeather(CITY_2, null); // Empty weather data
+    private static final List<CityWeather> WEATHER_LIST =
+            Lists.newArrayList(CITY_WEATHER_1, CITY_WEATHER_2);
 
     private WeatherRepository mWeatherRepository;
 
@@ -114,29 +119,46 @@ public class WeatherRepositoryTest {
         assertThat(mWeatherRepository.mCachedWeather.size(), is(1));
     }
 
-    private void checkRemoteDataSource(String cityId,
+    private void checkRemoteDataSource(List<CityWeather> weatherList,
                                        WeatherDataSource.LoadWeatherCallback callback) {
-        // Data loaded
-        verify(mRemoteDataSource).loadWeatherData(eq(cityId), mGetWeatherCallbackCaptor.capture());
-        mGetWeatherCallbackCaptor.getValue().onDataLoaded(cityId, WEATHER);
-        verify(mLocalDataSource).updateWeather(cityId, WEATHER);
-        verify(callback).onDataLoaded(cityId, WEATHER);
+        for(CityWeather cityWeather : weatherList) {
 
-        // Data not available
-        mGetWeatherCallbackCaptor.getValue().onDataNotAvailable(cityId);
-        verify((callback)).onDataNotAvailable(cityId);
+            verify(mRemoteDataSource).loadWeatherData(eq(cityWeather.getCity().getOpenWeatherId()),
+                    mGetWeatherCallbackCaptor.capture());
+
+            // Data not available
+            mGetWeatherCallbackCaptor.getValue()
+                    .onDataNotAvailable(cityWeather.getCity().getOpenWeatherId());
+            if(cityWeather.getWeather() == null) {
+                // Show error if local data not available
+                verify(callback).onDataNotAvailable(cityWeather.getCity().getOpenWeatherId());
+            } else {
+                // Show nothing if local data available
+                verify(callback, never()).onDataNotAvailable(cityWeather.getCity().getOpenWeatherId());
+            }
+
+            // New data received
+            mGetWeatherCallbackCaptor.getValue()
+                    .onDataLoaded(cityWeather.getCity().getOpenWeatherId(),
+                            WEATHER_1);
+            verify(mLocalDataSource).updateWeather(cityWeather.getCity().getOpenWeatherId(),
+                    WEATHER_1);
+            verify(callback).onDataLoaded(cityWeather.getCity().getOpenWeatherId(),
+                    WEATHER_1);
+        }
     }
 
     @Test
     public void getWeatherList_loadFromCache() {
         mWeatherRepository.mCachedWeather = new LinkedHashMap<>();
-        mWeatherRepository.mCachedWeather.put(CITY_ID, CITY_WEATHER);
+        mWeatherRepository.mCachedWeather.put(CITY_ID_1, CITY_WEATHER_1);
+        mWeatherRepository.mCachedWeather.put(CITY_ID_2, CITY_WEATHER_2);
 
         mWeatherRepository.loadWeatherData(mLoadWeatherCallback);
         assertThat(mWeatherRepository.mCachedWeather.size(), is(WEATHER_LIST.size()));
         verify(mLoadWeatherCallback).onDataListLoaded(WEATHER_LIST);
 
-        checkRemoteDataSource(CITY_ID, mLoadWeatherCallback);
+        checkRemoteDataSource(WEATHER_LIST, mLoadWeatherCallback);
     }
 
     @Test
@@ -148,6 +170,6 @@ public class WeatherRepositoryTest {
         verify(mLoadWeatherCallback).onDataListLoaded(WEATHER_LIST);
         assertThat(mWeatherRepository.mCachedWeather.size(), is(WEATHER_LIST.size()));
 
-        checkRemoteDataSource(CITY_ID, mLoadWeatherCallback);
+        checkRemoteDataSource(WEATHER_LIST, mLoadWeatherCallback);
     }
 }
