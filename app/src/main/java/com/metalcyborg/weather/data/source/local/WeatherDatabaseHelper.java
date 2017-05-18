@@ -45,10 +45,13 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
             WeatherPersistenceContract.WeatherTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED + TYPE_BOOLEAN + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST + TYPE_BOOLEAN + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H + TYPE_BOOLEAN + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_DATE + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME + TYPE_INTEGER + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME + TYPE_INTEGER + COMMA +
-            WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE + TYPE_FLOAT + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY + TYPE_FLOAT + COMMA +
+            WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT + TYPE_FLOAT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY + TYPE_FLOAT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE + TYPE_FLOAT + COMMA +
             WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED + TYPE_FLOAT + COMMA +

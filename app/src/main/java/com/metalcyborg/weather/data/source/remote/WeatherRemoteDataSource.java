@@ -54,7 +54,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
         if (currentWeather.getMain() != null) {
             Weather.Main main = new Weather.Main(
                     currentWeather.getMain().getTemp(),
-                    0, 0, 0,
+                    0,
                     currentWeather.getMain().getPressure(),
                     currentWeather.getMain().getHumidity()
             );
@@ -115,7 +115,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             if (forecastWeather.getMain() != null) {
                 Weather.Main main = new Weather.Main(
                         forecastWeather.getMain().getTemp(),
-                        0, 0, 0,
+                        0,
                         forecastWeather.getMain().getPressure(),
                         forecastWeather.getMain().getHumidity()
                 );
@@ -171,8 +171,6 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             if (forecastWeather.getTemp() != null) {
                 Weather.Main main = new Weather.Main(
                         forecastWeather.getTemp().getDay(),
-                        forecastWeather.getTemp().getMorning(),
-                        forecastWeather.getTemp().getEvening(),
                         forecastWeather.getTemp().getNight(),
                         forecastWeather.getPressure(),
                         forecastWeather.getHumidity()

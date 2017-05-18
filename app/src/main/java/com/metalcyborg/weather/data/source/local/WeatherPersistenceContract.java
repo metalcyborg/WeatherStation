@@ -28,10 +28,13 @@ public class WeatherPersistenceContract {
         public static final String TABLE_NAME = " Weather";
         public static final String COLUMN_CHOSEN_CITY_ID = " ChosenCityId";
         public static final String COLUMN_DATA_RECEIVED = " DataReceived";
+        public static final String COLUMN_FORECAST = " Forecast";
+        public static final String COLUMN_FORECAST_3H = " Forecast3H";
         public static final String COLUMN_DATE = " Date";
         public static final String COLUMN_SUNRISE_TIME = " SunriseTime";
         public static final String COLUMN_SUNSET_TIME = " SunsetTime";
-        public static final String COLUMN_TEMPERATURE = " Temperature";
+        public static final String COLUMN_TEMPERATURE_DAY = " Temperature";
+        public static final String COLUMN_TEMPERATURE_NIGHT = " TemperatureNight";
         public static final String COLUMN_HUMIDITY = " Humidity";
         public static final String COLUMN_PRESSURE = " Pressure";
         public static final String COLUMN_WIND_SPEED = " WindSpeed";
