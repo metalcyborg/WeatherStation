@@ -14,6 +14,7 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.verify;
@@ -54,14 +55,14 @@ public class DetailPresenterTest {
         mPresenter.start();
         InOrder inOrder = inOrder(mView);
 
-        verify(mRepository).load3HForecastData(eq(CITY_ID),mLoad3HForecastCallbackCaptor.capture());
+        verify(mRepository).load3HForecastData(anyString(),mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
         mLoad3HForecastCallbackCaptor.getValue().onDataLoaded(FORECAST_LIST);
 
         inOrder.verify(mView).setLoadingIndicator(false);
         verify(mView).show3HForecast(FORECAST_LIST);
 
-        verify(mRepository).load13DForecastData(eq(CITY_ID), mLoad13DForecastCallbackCaptor.capture());
+        verify(mRepository).load13DForecastData(anyString(), mLoad13DForecastCallbackCaptor.capture());
         mLoad13DForecastCallbackCaptor.getValue().onDataLoaded(FORECAST_LIST);
 
         verify(mView).show13DForecast(FORECAST_LIST);
@@ -72,14 +73,14 @@ public class DetailPresenterTest {
         mPresenter.start();
         InOrder inOrder = inOrder(mView);
 
-        verify(mRepository).load3HForecastData(eq(CITY_ID), mLoad3HForecastCallbackCaptor.capture());
+        verify(mRepository).load3HForecastData(anyString(), mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
         mLoad3HForecastCallbackCaptor.getValue().onDataNotAvailable();
 
         inOrder.verify(mView).setLoadingIndicator(false);
         verify(mView).show3hForecastError();
 
-        verify(mRepository).load13DForecastData(eq(CITY_ID), mLoad13DForecastCallbackCaptor.capture());
+        verify(mRepository).load13DForecastData(anyString(), mLoad13DForecastCallbackCaptor.capture());
         mLoad13DForecastCallbackCaptor.getValue().onDataNotAvailable();
 
         verify(mView).show13DForecastError();

@@ -2,7 +2,10 @@ package com.metalcyborg.weather.detail;
 
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -14,6 +17,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     private WeatherDataSource mRepository;
     private DetailContract.View mView;
+    private String mCityId;
 
     public DetailPresenter(@NonNull WeatherDataSource repository,
                            @NonNull DetailContract.View view) {
@@ -24,7 +28,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     @Override
     public void start() {
-
+        loadForecastData();
     }
 
     @Override
@@ -33,11 +37,36 @@ public class DetailPresenter implements DetailContract.Presenter {
     }
 
     private void loadForecastData() {
+        mView.setLoadingIndicator(true);
+        mRepository.load3HForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
+            @Override
+            public void onDataLoaded(List<Weather> forecast) {
+                mView.setLoadingIndicator(false);
+                mView.show3HForecast(forecast);
+            }
 
+            @Override
+            public void onDataNotAvailable() {
+                mView.setLoadingIndicator(false);
+                mView.show3hForecastError();
+            }
+        });
+
+        mRepository.load13DForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
+            @Override
+            public void onDataLoaded(List<Weather> forecast) {
+                mView.show13DForecast(forecast);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                mView.show13DForecastError();
+            }
+        });
     }
 
     @Override
     public void setParameters(String cityId) {
-
+        mCityId = cityId;
     }
 }
