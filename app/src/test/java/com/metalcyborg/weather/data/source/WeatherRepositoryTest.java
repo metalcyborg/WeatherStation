@@ -158,7 +158,7 @@ public class WeatherRepositoryTest {
             mGetWeatherCallbackCaptor.getValue()
                     .onDataLoaded(cityWeather.getCity().getOpenWeatherId(),
                             WEATHER_1);
-            verify(mLocalDataSource).updateWeather(cityWeather.getCity().getOpenWeatherId(),
+            verify(mLocalDataSource).updateCurrentWeather(cityWeather.getCity().getOpenWeatherId(),
                     WEATHER_1);
             verify(callback).onDataLoaded(cityWeather.getCity().getOpenWeatherId(),
                     WEATHER_1);
@@ -224,7 +224,7 @@ public class WeatherRepositoryTest {
         // 13d forecast
         mWeatherRepository.load13DForecastData(CITY_ID_1, mLoad13DForecastCallback);
 
-        verify(mLocalDataSource).load13DForecastData(CITY_ID_1, mLoad13DForecastCallbackCaptor.capture());
+        verify(mLocalDataSource).load13DForecastData(eq(CITY_ID_1), mLoad13DForecastCallbackCaptor.capture());
         mLoad13DForecastCallbackCaptor.getValue().onDataLoaded(FORECAST);
         verify(mLoad13DForecastCallback).onDataLoaded(FORECAST);
         assertThat(mWeatherRepository.mCached13DForecast.get(CITY_ID_1).size(), is(FORECAST.size()));
@@ -246,7 +246,7 @@ public class WeatherRepositoryTest {
         // Local data was already loaded
         mWeatherRepository.load13DForecastData(CITY_ID_1, mLoad13DForecastCallback);
 
-        verify(mRemoteDataSource).load13DForecastData(CITY_ID_1, mGet13DForecastCallbackCaptor.capture());
+        verify(mRemoteDataSource).load13DForecastData(eq(CITY_ID_1), mGet13DForecastCallbackCaptor.capture());
         mGet13DForecastCallbackCaptor.getValue().onDataLoaded(FORECAST);
         verify(mLocalDataSource).update13DForecast(CITY_ID_1, FORECAST);
         assertThat(mWeatherRepository.mCached13DForecast.get(CITY_ID_1).size(), is(FORECAST.size()));
@@ -254,7 +254,7 @@ public class WeatherRepositoryTest {
     }
 
     @Test
-    public void get3HForecast_dataNotAvailable() {
+    public void getForecast_dataNotAvailable() {
         // 3h forecast
         // Forecast cache is empty
         mWeatherRepository.load3HForecastData(CITY_ID_1, mLoad3HForecastCallback);
@@ -267,7 +267,7 @@ public class WeatherRepositoryTest {
         // Forecast cache is empty
         mWeatherRepository.load13DForecastData(CITY_ID_1, mLoad13DForecastCallback);
 
-        verify(mRemoteDataSource).load13DForecastData(CITY_ID_1, mGet13DForecastCallbackCaptor.capture());
+        verify(mRemoteDataSource).load13DForecastData(eq(CITY_ID_1), mGet13DForecastCallbackCaptor.capture());
         mGet13DForecastCallbackCaptor.getValue().onDataNotAvailable();
         verify(mLoad13DForecastCallback).onDataNotAvailable();
     }
@@ -288,7 +288,7 @@ public class WeatherRepositoryTest {
         // 13d forecast
         mWeatherRepository.load13DForecastData(CITY_ID_1, mLoad13DForecastCallback);
 
-        verify(mRemoteDataSource).load13DForecastData(CITY_ID_1, mGet13DForecastCallbackCaptor.capture());
+        verify(mRemoteDataSource).load13DForecastData(eq(CITY_ID_1), mGet13DForecastCallbackCaptor.capture());
         mGet13DForecastCallbackCaptor.getValue().onDataNotAvailable();
         // Do nothing
         verify(mLoad13DForecastCallback, never()).onDataNotAvailable();

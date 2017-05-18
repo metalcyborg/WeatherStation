@@ -60,7 +60,7 @@ public interface LocalDataSource {
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 
-    void updateWeather(String cityId, Weather weather);
+    void updateCurrentWeather(String cityId, Weather weather);
 
     void update3HForecast(String cityId, List<Weather> forecast);
 

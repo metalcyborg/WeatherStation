@@ -82,17 +82,36 @@ public class Weather {
     public static class Main {
 
         private float mTemp;
+        private float mMorningTemp;
+        private float mEveningTemp;
+        private float mNightTemp;
         private float mPressure;
         private float mHumidity;
 
-        public Main(float temp, float pressure, float humidity) {
-            mTemp = temp;
+        public Main(float temp, float morningTemp, float eveningTemp, float nightTemp,
+                    float pressure, float humidity) {
+            mTemp = temp; // Average temp or day temp
+            mMorningTemp = morningTemp; // optional, 0 by default
+            mEveningTemp = eveningTemp; // optional, 0 by default
+            mNightTemp = nightTemp; // optional, 0 by default
             mPressure = pressure;
             mHumidity = humidity;
         }
 
         public float getTemp() {
             return mTemp;
+        }
+
+        public float getMorningTemp() {
+            return mMorningTemp;
+        }
+
+        public float getEveningTemp() {
+            return mEveningTemp;
+        }
+
+        public float getNightTemp() {
+            return mNightTemp;
         }
 
         public float getPressure() {
@@ -105,6 +124,18 @@ public class Weather {
 
         public void setTemp(float temp) {
             mTemp = temp;
+        }
+
+        public void setMorningTemp(float morningTemp) {
+            mMorningTemp = morningTemp;
+        }
+
+        public void setEveningTemp(float eveningTemp) {
+            mEveningTemp = eveningTemp;
+        }
+
+        public void setNightTemp(float nightTemp) {
+            mNightTemp = nightTemp;
         }
 
         public void setPressure(float pressure) {

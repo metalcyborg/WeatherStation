@@ -145,7 +145,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
                         cursor.getInt(15), cursor.getString(16), cursor.getString(17),
                         cursor.getString(18)
                 );
-                Weather.Main main = new Weather.Main(cursor.getFloat(9), cursor.getFloat(10),
+                Weather.Main main = new Weather.Main(cursor.getFloat(9), 0, 0, 0, cursor.getFloat(10),
                         cursor.getFloat(11));
                 Weather.Wind wind = new Weather.Wind(cursor.getFloat(12), cursor.getFloat(13));
                 Weather.Clouds clouds = new Weather.Clouds(cursor.getInt(14));
@@ -315,7 +315,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     @Override
-    public void updateWeather(String cityId, Weather weather) {
+    public void updateCurrentWeather(String cityId, Weather weather) {
         SQLiteDatabase db = null;
         try {
             db = mDatabaseHelper.getWritableDatabase();

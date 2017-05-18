@@ -76,7 +76,7 @@ public class WeatherRepository implements WeatherDataSource {
             // Load from cache
             callback.onDataListLoaded(weatherList);
             // Check remote source
-            checkWeatherServer(weatherList, callback);
+            checkCurrentWeatherOnServer(weatherList, callback);
         } else {
             // Load from local DB
             mLocalDataSource.loadWeatherData(new LocalDataSource.LoadWeatherListCallback() {
@@ -84,9 +84,9 @@ public class WeatherRepository implements WeatherDataSource {
                 public void onDataLoaded(List<CityWeather> weatherData) {
                     // Local data found
                     callback.onDataListLoaded(weatherData);
-                    refreshCache(weatherData);
+                    refreshCurrentWeatherCache(weatherData);
                     // Check remote source
-                    checkWeatherServer(weatherData, callback);
+                    checkCurrentWeatherOnServer(weatherData, callback);
                 }
 
                 @Override
@@ -98,16 +98,60 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void load3HForecastData(String cityId, LoadForecastCallback callback) {
+    public void load3HForecastData(final String cityId, final LoadForecastCallback callback) {
+        if(mCached3hForecast != null && mCached3hForecast.get(cityId) != null) {
+            List<Weather> forecast = mCached3hForecast.get(cityId);
+            // Load from cache
+            callback.onDataLoaded(forecast);
+        } else {
+            // Load from local db
+            mLocalDataSource.load3HForecastData(cityId, new LocalDataSource.LoadForecastCallback() {
+                @Override
+                public void onDataLoaded(List<Weather> forecast) {
+                    // Local data found
+                    callback.onDataLoaded(forecast);
+                    addTo3HForecastHash(cityId, forecast);
+                }
 
+                @Override
+                public void onDataNotAvailable() {
+
+                }
+            });
+        }
+
+        // Check remote source
+        check3HForecastOnServer(cityId, callback);
     }
 
     @Override
-    public void load13DForecastData(String cityId, LoadForecastCallback callback) {
+    public void load13DForecastData(final String cityId, final LoadForecastCallback callback) {
+        if(mCached13DForecast != null && mCached13DForecast.get(cityId) != null) {
+            List<Weather> forecast = mCached13DForecast.get(cityId);
+            // Load from cache
+            callback.onDataLoaded(forecast);
+        } else {
+            // Load from local db
+            mLocalDataSource.load13DForecastData(cityId, new LocalDataSource.LoadForecastCallback() {
+                @Override
+                public void onDataLoaded(List<Weather> forecast) {
+                    // Local data found
+                    callback.onDataLoaded(forecast);
+                    addTo13DForecastHash(cityId, forecast);
+                }
 
+                @Override
+                public void onDataNotAvailable() {
+
+                }
+            });
+        }
+
+        // Check remote source
+        check13DForecastOnServer(cityId, callback);
     }
 
-    private void refreshCache(List<CityWeather> weatherList) {
+    private void refreshCurrentWeatherCache(List<CityWeather> weatherList) {
         if(mCachedWeather == null) {
             mCachedWeather = new LinkedHashMap<>();
         }
@@ -117,7 +161,7 @@ public class WeatherRepository implements WeatherDataSource {
         }
     }
 
-    private void addToCache(CityWeather cityWeather) {
+    private void addToCurrentWeatherCache(CityWeather cityWeather) {
         if(mCachedWeather == null) {
             mCachedWeather = new LinkedHashMap<>();
         }
@@ -125,13 +169,36 @@ public class WeatherRepository implements WeatherDataSource {
         mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(), cityWeather);
     }
 
-    private void checkWeatherServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
+    private void updateCachedCurentWeather(String cityId, Weather weather) {
+        if(mCachedWeather != null && mCachedWeather.get(cityId) != null) {
+            mCachedWeather.get(cityId).setWeather(weather);
+        }
+    }
+
+    private void addTo3HForecastHash(String cityId, List<Weather> forecast) {
+        if(mCached3hForecast == null) {
+            mCached3hForecast = new LinkedHashMap<>();
+        }
+
+        mCached3hForecast.put(cityId, forecast);
+    }
+
+    private void addTo13DForecastHash(String cityId, List<Weather> forecast) {
+        if(mCached13DForecast == null) {
+            mCached13DForecast = new LinkedHashMap<>();
+        }
+
+        mCached13DForecast.put(cityId, forecast);
+    }
+
+    private void checkCurrentWeatherOnServer(List<CityWeather> weatherList, final LoadWeatherCallback callback) {
         for (final CityWeather cityWeather : weatherList) {
             mRemoteDataSource.loadWeatherData(cityWeather.getCity().getOpenWeatherId(),
                     new RemoteDataSource.GetWeatherCallback() {
                         @Override
                         public void onDataLoaded(String cityId, Weather weather) {
-                            mLocalDataSource.updateWeather(cityId, weather);
+                            mLocalDataSource.updateCurrentWeather(cityId, weather);
+                            updateCachedCurentWeather(cityId, weather);
                             callback.onDataLoaded(cityId, weather);
                         }
 
@@ -143,6 +210,44 @@ public class WeatherRepository implements WeatherDataSource {
                         }
                     });
         }
+    }
+
+    private void check3HForecastOnServer(final String cityId, final LoadForecastCallback callback) {
+        mRemoteDataSource.load3HForecastData(cityId, new RemoteDataSource.GetForecastCallback() {
+            @Override
+            public void onDataLoaded(List<Weather> forecast) {
+                mLocalDataSource.update3HForecast(cityId, forecast);
+                addTo3HForecastHash(cityId, forecast);
+                callback.onDataLoaded(forecast);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                if(mCached3hForecast == null ||
+                        mCached3hForecast.get(cityId) == null) {
+                    callback.onDataNotAvailable();
+                }
+            }
+        });
+    }
+
+    private void check13DForecastOnServer(final String cityId, final LoadForecastCallback callback) {
+        mRemoteDataSource.load13DForecastData(cityId, new RemoteDataSource.GetForecastCallback() {
+            @Override
+            public void onDataLoaded(List<Weather> forecast) {
+                mLocalDataSource.update13DForecast(cityId, forecast);
+                addTo13DForecastHash(cityId, forecast);
+                callback.onDataLoaded(forecast);
+            }
+
+            @Override
+            public void onDataNotAvailable() {
+                if(mCached13DForecast == null ||
+                        mCached13DForecast.get(cityId) == null) {
+                    callback.onDataNotAvailable();
+                }
+            }
+        });
     }
 
     @Override
@@ -161,6 +266,6 @@ public class WeatherRepository implements WeatherDataSource {
     public void addNewCityToChosenCityList(City city) throws SQLiteException {
         mLocalDataSource.addNewCityToChosenCityList(city);
         CityWeather cityWeather = new CityWeather(city, null);
-        addToCache(cityWeather);
+        addToCurrentWeatherCache(cityWeather);
     }
 }

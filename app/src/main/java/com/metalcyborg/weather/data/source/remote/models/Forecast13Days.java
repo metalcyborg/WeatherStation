@@ -13,6 +13,10 @@ public class Forecast13Days {
     @SerializedName("list")
     private List<Weather> mWeatherList;
 
+    public List<Weather> getWeatherList() {
+        return mWeatherList;
+    }
+
     public static class Weather {
 
         @SerializedName("dt")
