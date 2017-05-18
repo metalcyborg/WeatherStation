@@ -35,4 +35,9 @@ public class DetailPresenter implements DetailContract.Presenter {
     private void loadForecastData() {
 
     }
+
+    @Override
+    public void setParameters(String cityId) {
+
+    }
 }

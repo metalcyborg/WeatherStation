@@ -112,4 +112,14 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             }
         });
     }
+
+    @Override
+    public void load3HForecastData(String cityId, GetForecastCallback callback) {
+
+    }
+
+    @Override
+    public void load13DForecastData(String cityId, GetForecastCallback callback) {
+
+    }
 }

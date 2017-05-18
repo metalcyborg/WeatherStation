@@ -179,6 +179,16 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     @Override
+    public void load3HForecastData(String cityId, LoadForecastCallback callback) {
+
+    }
+
+    @Override
+    public void load13DForecastData(String cityId, LoadForecastCallback callback) {
+
+    }
+
+    @Override
     public void findCitiesByPartOfTheName(String partOfTheName, int count,
                                           FindCityListCallback callback) {
         String selection = WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME + " MATCH ?";
@@ -324,5 +334,15 @@ public class WeatherLocalDataSource implements LocalDataSource {
                 db.close();
             }
         }
+    }
+
+    @Override
+    public void update3HForecast(String cityId, List<Weather> forecast) {
+
+    }
+
+    @Override
+    public void update13DForecast(String cityId, List<Weather> forecast) {
+
     }
 }

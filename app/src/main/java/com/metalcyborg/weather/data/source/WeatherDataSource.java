@@ -48,9 +48,9 @@ public interface WeatherDataSource {
 
     void loadWeatherData(LoadWeatherCallback callback);
 
-    void load3HForecastData(LoadForecastCallback callback);
+    void load3HForecastData(String cityId, LoadForecastCallback callback);
 
-    void load13DForecastData(LoadForecastCallback callback);
+    void load13DForecastData(String cityId, LoadForecastCallback callback);
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 

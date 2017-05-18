@@ -29,7 +29,7 @@ public class WeatherRepository implements WeatherDataSource {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     Map<String, List<Weather>> mCached3hForecast;
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
-    Map<String, List<Weather>> mCached13DaysForecast;
+    Map<String, List<Weather>> mCached13DForecast;
 
     private WeatherRepository(@NonNull LocalDataSource localDataSource,
                               @NonNull RemoteDataSource remoteDataSource) {
@@ -98,12 +98,12 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void load3HForecastData(LoadForecastCallback callback) {
+    public void load3HForecastData(String cityId, LoadForecastCallback callback) {
 
     }
 
     @Override
-    public void load13DForecastData(LoadForecastCallback callback) {
+    public void load13DForecastData(String cityId, LoadForecastCallback callback) {
 
     }
 

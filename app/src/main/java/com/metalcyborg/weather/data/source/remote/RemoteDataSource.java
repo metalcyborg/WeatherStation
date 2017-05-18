@@ -2,9 +2,7 @@ package com.metalcyborg.weather.data.source.remote;
 
 import com.metalcyborg.weather.data.Weather;
 
-/**
- * Created by metalcyborg on 03.05.17.
- */
+import java.util.List;
 
 public interface RemoteDataSource {
 
@@ -15,5 +13,15 @@ public interface RemoteDataSource {
         void onDataNotAvailable(String cityId);
     }
 
+    interface GetForecastCallback {
+        void onDataLoaded(List<Weather> forecast);
+
+        void onDataNotAvailable();
+    }
+
     void loadWeatherData(String cityId, GetWeatherCallback callback);
+
+    void load3HForecastData(String cityId, GetForecastCallback callback);
+
+    void load13DForecastData(String cityId, GetForecastCallback callback);
 }
