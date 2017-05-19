@@ -20,6 +20,7 @@ import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.detail.DetailActivity;
 
 import java.util.List;
 
@@ -48,7 +49,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         return fragment;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,6 +67,13 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         mWeatherAdapter = new WeatherAdapter(mRecyclerView);
         mRecyclerView.setAdapter(mWeatherAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        mWeatherAdapter.setOnItemClickListener(new WeatherAdapter.WeatherClickListener() {
+            @Override
+            public void onClick(CityWeather cityWeather) {
+                mPresenter.onWeatherItemClicked(cityWeather);
+            }
+        });
 
         return view;
     }
@@ -205,5 +212,12 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public void updateItem(String cityId, Weather weather) {
         mWeatherAdapter.updateItem(cityId, weather);
+    }
+
+    @Override
+    public void showForecast(CityWeather cityWeather) {
+        Intent intent = new Intent(getActivity(), DetailActivity.class);
+        intent.putExtra(DetailActivity.EXTRAS_CITY_ID, cityWeather.getCity().getOpenWeatherId());
+        startActivity(intent);
     }
 }

@@ -279,32 +279,43 @@ public class WeatherLocalDataSource implements LocalDataSource {
         ContentValues cv = new ContentValues();
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATE,
                 weather.getDateTime());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME,
-                weather.getSys().getSunrise());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME,
-                weather.getSys().getSunset());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY,
-                weather.getMain().getDayTemp());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT,
-                weather.getMain().getNightTemp());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE,
-                weather.getMain().getPressure());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY,
-                weather.getMain().getHumidity());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED,
-                weather.getWind().getSpeed());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION,
-                weather.getWind().getDeg());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
-                weather.getClouds().getCloudiness());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
-                weather.getWeatherDescription().getId());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
-                weather.getWeatherDescription().getMain());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
-                weather.getWeatherDescription().getDetail());
-        cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
-                weather.getWeatherDescription().getIcon());
+        // Sys
+        if(weather.getSys() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME,
+                    weather.getSys().getSunrise());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME,
+                    weather.getSys().getSunset());
+        }
+        if(weather.getMain() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY,
+                    weather.getMain().getDayTemp());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT,
+                    weather.getMain().getNightTemp());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE,
+                    weather.getMain().getPressure());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY,
+                    weather.getMain().getHumidity());
+        }
+        if(weather.getWind() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED,
+                    weather.getWind().getSpeed());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION,
+                    weather.getWind().getDeg());
+        }
+        if(weather.getClouds() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
+                    weather.getClouds().getCloudiness());
+        }
+        if(weather.getWeatherDescription() != null) {
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
+                    weather.getWeatherDescription().getId());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
+                    weather.getWeatherDescription().getMain());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
+                    weather.getWeatherDescription().getDetail());
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
+                    weather.getWeatherDescription().getIcon());
+        }
         if(weather.getRain() != null) {
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H,
                     weather.getRain().getVolume3H());

@@ -3,6 +3,8 @@ package com.metalcyborg.weather.detail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ import java.util.List;
 public class DetailFragment extends Fragment implements DetailContract.View {
 
     private DetailContract.Presenter mPresenter;
+    private RecyclerView mForecast13DRecycler;
+    private DayForecastAdapter mDayForecastAdapter;
+
 
     public DetailFragment() {
         // Required empty public constructor
@@ -34,9 +39,25 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        TextView textView = new TextView(getActivity());
-        textView.setText(R.string.hello_blank_fragment);
-        return textView;
+        View view = inflater.inflate(R.layout.fragment_detail, container, false);
+        mForecast13DRecycler = (RecyclerView) view.findViewById(R.id.forecast13DRecycler);
+        mForecast13DRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mDayForecastAdapter = new DayForecastAdapter();
+        mForecast13DRecycler.setAdapter(mDayForecastAdapter);
+
+        return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mPresenter.start();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mPresenter.stop();
     }
 
     @Override
@@ -56,7 +77,8 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void show13DForecast(List<Weather> forecast) {
-
+        mDayForecastAdapter.setItems(forecast);
+        mDayForecastAdapter.notifyDataSetChanged();
     }
 
     @Override

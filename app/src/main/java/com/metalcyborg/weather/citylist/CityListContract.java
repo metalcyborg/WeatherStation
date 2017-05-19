@@ -50,11 +50,15 @@ public interface CityListContract {
         void stopServiceInteractions();
 
         void updateItem(String cityId, Weather weather);
+
+        void showForecast(CityWeather cityWeather);
     }
 
     interface Presenter extends BasePresenter {
         void addNewCity();
 
         void onParseServiceBound();
+
+        void onWeatherItemClicked(CityWeather cityWeather);
     }
 }

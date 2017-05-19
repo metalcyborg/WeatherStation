@@ -81,6 +81,13 @@ public class CityListPresenter implements CityListContract.Presenter {
         }
     }
 
+    @Override
+    public void onWeatherItemClicked(CityWeather cityWeather) {
+        if(cityWeather.getWeather() != null) {
+            mView.showForecast(cityWeather);
+        }
+    }
+
     private void loadWeatherData() {
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override

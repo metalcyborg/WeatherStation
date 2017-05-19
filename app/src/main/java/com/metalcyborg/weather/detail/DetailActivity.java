@@ -10,6 +10,7 @@ import com.metalcyborg.weather.R;
 
 public class DetailActivity extends AppCompatActivity {
 
+    public static final String EXTRAS_CITY_ID = "cityId";
     private DetailContract.Presenter mPresenter;
 
     @Override
@@ -36,5 +37,13 @@ public class DetailActivity extends AppCompatActivity {
                 Injection.provideWeatherRepository(getApplicationContext()),
                 fragment
         );
+
+        // Extras
+        Bundle extras = getIntent().getExtras();
+        if(extras != null) {
+            String cityId = extras.getString(EXTRAS_CITY_ID, "");
+
+            mPresenter.setParameters(cityId);
+        }
     }
 }
