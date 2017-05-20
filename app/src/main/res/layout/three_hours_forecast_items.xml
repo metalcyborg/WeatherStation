@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:stretchColumns="*">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/time1"
+            android:text="13:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/time2"
+            android:text="16:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/time3"
+            android:text="19:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/time4"
+            android:text="22:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/time5"
+            android:text="01:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/time6"
+            android:text="04:00"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
+        <ImageView
+            android:id="@+id/image1"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/image2"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/image3"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/image4"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/image5"
+            android:src="@mipmap/ic_launcher"/>
+
+        <ImageView
+            android:id="@+id/image6"
+            android:src="@mipmap/ic_launcher"/>
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/temp1"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/temp2"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/temp3"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/temp4"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/temp5"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/temp6"
+            android:text="+10"
+            android:textAlignment="center"
+            android:textSize="14sp"/>
+
+    </TableRow>
+
+</TableLayout>

@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.Weather;
@@ -21,8 +20,8 @@ import java.util.List;
 public class DetailFragment extends Fragment implements DetailContract.View {
 
     private DetailContract.Presenter mPresenter;
-    private RecyclerView mForecast13DRecycler;
-    private DayForecastAdapter mDayForecastAdapter;
+    private RecyclerView mForecastRecycler;
+    private ForecastAdapter mForecastAdapter;
 
 
     public DetailFragment() {
@@ -40,10 +39,10 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        mForecast13DRecycler = (RecyclerView) view.findViewById(R.id.forecast13DRecycler);
-        mForecast13DRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mDayForecastAdapter = new DayForecastAdapter();
-        mForecast13DRecycler.setAdapter(mDayForecastAdapter);
+        mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
+        mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mForecastAdapter = new ForecastAdapter();
+        mForecastRecycler.setAdapter(mForecastAdapter);
 
         return view;
     }
@@ -72,13 +71,14 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void show3HForecast(List<Weather> forecast) {
-
+        mForecastAdapter.set3HForecast(forecast);
+        mForecastAdapter.notifyItemChanged(0);
     }
 
     @Override
     public void show13DForecast(List<Weather> forecast) {
-        mDayForecastAdapter.setItems(forecast);
-        mDayForecastAdapter.notifyDataSetChanged();
+        mForecastAdapter.setDayForecast(forecast);
+        mForecastAdapter.notifyDataSetChanged();
     }
 
     @Override

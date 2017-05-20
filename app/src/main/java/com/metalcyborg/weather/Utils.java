@@ -11,6 +11,10 @@ import java.util.Locale;
 public class Utils {
 
     public static String convertLongToDateString(long milliseconds) {
+        if(milliseconds < 0) {
+            return "";
+        }
+
         return new SimpleDateFormat("EEE, MMM d", new Locale("en")).format(new Date(milliseconds));
     }
 
@@ -23,5 +27,13 @@ public class Utils {
         }
 
         return tempStr;
+    }
+
+    public static String convertLongToTimeString(long milliseconds) {
+        if(milliseconds < 0) {
+            return "";
+        }
+
+        return new SimpleDateFormat("h a", new Locale("en")).format(new Date(milliseconds));
     }
 }
