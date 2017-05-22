@@ -257,7 +257,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
             cv.clear();
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
                     city.getOpenWeatherId());
-            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 0);// False value
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 0); // False value
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST, 0); // False value
+            cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H, 0); // False value
             db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
 
             db.setTransactionSuccessful();
@@ -340,9 +342,12 @@ public class WeatherLocalDataSource implements LocalDataSource {
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST, 0); // False value
             cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H, 0); // False value
 
-            db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
-                    WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + " = ?",
-                    new String[]{cityId});
+            String whereClause = WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST + "=? AND" +
+                    WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?";
+
+            int update = db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
+                    whereClause, new String[]{"0", cityId});
+            Log.d(TAG, "updateCurrentWeather: update" + update);
         } catch (SQLiteException e) {
             e.printStackTrace();
             throw new SQLiteException("Error of updating the Weather table");
@@ -383,7 +388,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
                 cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID, cityId);
                 cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, 1); // True value
                 cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST, 1); // True value
-                cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H, 1); // True value
+                cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H, forecast3H ? 1 : 0);
 
                 db.insertOrThrow(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, cv);
             }
