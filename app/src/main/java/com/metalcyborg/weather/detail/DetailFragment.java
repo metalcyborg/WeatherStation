@@ -3,8 +3,11 @@ package com.metalcyborg.weather.detail;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +41,18 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
+
+        // Set up the toolbar with the up button
+        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if(ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setHomeButtonEnabled(true);
+        }
+
         mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
         mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         mForecastAdapter = new ForecastAdapter();

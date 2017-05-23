@@ -15,7 +15,15 @@ public class Utils {
             return "";
         }
 
-        return new SimpleDateFormat("EEE, MMM d", new Locale("en")).format(new Date(milliseconds));
+        return new SimpleDateFormat("MMM d", new Locale("en")).format(new Date(milliseconds));
+    }
+
+    public static String convertLongToDayString(long milliseconds) {
+        if(milliseconds < 0) {
+            return "";
+        }
+
+        return new SimpleDateFormat("EEE", new Locale("en")).format(new Date(milliseconds));
     }
 
     public static String getTemperatureString(float temp) {

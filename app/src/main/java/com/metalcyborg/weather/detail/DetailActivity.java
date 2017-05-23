@@ -18,13 +18,6 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        // Set up the toolbar with the up button
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
-        ab.setHomeButtonEnabled(true);
-
         // Add a fragment to the Activity
         DetailFragment fragment = (DetailFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.content);

@@ -18,19 +18,27 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private static final int TYPE_3_HOURS_FORECAST = 0;
     private static final int TYPE_DAY_FORECAST = 1;
+    private static final int TYPE_HEADER = 2;
     private List<Weather> m3HForecast = new ArrayList<>();
     private List<Weather> mDayForecast = new ArrayList<>();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        if(viewType == TYPE_3_HOURS_FORECAST) {
-            View view = inflater.inflate(R.layout.three_hours_forecast_items, parent, false);
-            return new ThreeHoursForecastViewHolder(view);
-        } else {
-            View view = inflater.inflate(R.layout.day_forecast_item, parent, false);
-            return new DayForecastViewHolder(view);
+        View view;
+        switch (viewType) {
+            case TYPE_3_HOURS_FORECAST:
+                view = inflater.inflate(R.layout.three_hours_forecast_items, parent, false);
+                return new ThreeHoursForecastViewHolder(view);
+            case TYPE_DAY_FORECAST:
+                view = inflater.inflate(R.layout.day_forecast_item, parent, false);
+                return new DayForecastViewHolder(view);
+            case TYPE_HEADER:
+                view = inflater.inflate(R.layout.forecast_header, parent, false);
+                return new HeaderViewHolder(view);
         }
+
+        return null;
     }
 
     @Override
@@ -40,26 +48,27 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        if(getItemViewType(position) == TYPE_3_HOURS_FORECAST) {
-            bind3HoursForecast((ThreeHoursForecastViewHolder) holder);
-        } else {
-            DayForecastViewHolder viewHolder = (DayForecastViewHolder) holder;
-            Weather weather = mDayForecast.get(position);
-            String date = Utils.convertLongToDateString(weather.getDateTime() * 1000);
-            viewHolder.mDateTextView.setText(date);
-            if (weather.getMain() != null) {
-                String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp());
-                viewHolder.mDayTemperatureTextView.setText(dayTemp);
-            }
+        switch (getItemViewType(position)) {
+            case TYPE_3_HOURS_FORECAST:
+                bind3HoursForecast((ThreeHoursForecastViewHolder) holder);
+                break;
+            case TYPE_DAY_FORECAST:
+                bindDayForecast((DayForecastViewHolder) holder, position);
+                break;
+            case TYPE_HEADER:
+                bindHeaderForecast((HeaderViewHolder) holder, position);
+                break;
         }
     }
 
     @Override
     public int getItemViewType(int position) {
-        if(position == 0) {
+        if(position == 1) {
             return TYPE_3_HOURS_FORECAST;
-        } else {
+        } else if(position > 2){
             return TYPE_DAY_FORECAST;
+        } else {
+            return TYPE_HEADER;
         }
     }
 
@@ -71,6 +80,27 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         m3HForecast = forecast;
     }
 
+    private void bindDayForecast(DayForecastViewHolder holder, int position) {
+        Weather weather = mDayForecast.get(position);
+        String date = Utils.convertLongToDateString(weather.getDateTime() * 1000);
+        String day = Utils.convertLongToDayString(weather.getDateTime() * 1000);
+        holder.mDateTextView.setText(date);
+        holder.mDayTextView.setText(day);
+        if (weather.getMain() != null) {
+            String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp());
+            holder.mDayTemperatureTextView.setText(dayTemp);
+        }
+
+        if(weather.getWeatherDescription() != null) {
+            if(weather.getWeatherDescription().getIcon() != null) {
+                int iconId = getIconId(weather.getWeatherDescription().getIcon());
+                if(iconId != -1) {
+                    holder.mIconImageView.setImageResource(iconId);
+                }
+            }
+        }
+    }
+
     private void bind3HoursForecast(ThreeHoursForecastViewHolder holder) {
         if(m3HForecast == null || m3HForecast.size() < ThreeHoursForecastViewHolder.FORECAST_COUNT)
             return;
@@ -80,6 +110,67 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             holder.mTimeArray[i].setText(time);
             String temp = Utils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp());
             holder.mTempArray[i].setText(temp);
+
+            Weather.WeatherDescription description = m3HForecast.get(i).getWeatherDescription();
+            if(description != null) {
+                if(description.getIcon() != null) {
+                    int iconId = getIconId(description.getIcon());
+                    holder.mImageArray[i].setImageResource(iconId);
+                }
+            }
+        }
+    }
+
+    private void bindHeaderForecast(HeaderViewHolder holder, int position) {
+        if(position == 0) {
+            holder.mHeaderTextView.setText(R.string.header_3h_forecast);
+        } else {
+            holder.mHeaderTextView.setText(R.string.header_daily_forecast);
+        }
+    }
+
+    private int getIconId(String icon) {
+        switch (icon) {
+            case "01d":
+                return R.drawable.ic_weather_sunny;
+            case "01n":
+                return R.drawable.ic_weather_night;
+            case "02d":
+            case "02n":
+                return R.drawable.ic_weather_partlycloudy;
+            case "03d":
+            case "03n":
+                return R.drawable.ic_weather_cloudy;
+            case "04d":
+            case "04n":
+                return R.drawable.ic_weather_cloudy;
+            case "09d":
+            case "09n":
+                return R.drawable.ic_weather_pouring;
+            case "10d":
+            case "10n":
+                return R.drawable.ic_weather_rainy;
+            case "11d":
+            case "11n":
+                return R.drawable.ic_weather_lightning;
+            case "13d":
+            case "13n":
+                return R.drawable.ic_weather_hail;
+            case "50d":
+            case "50n":
+                return R.drawable.ic_weather_fog;
+        }
+
+        return -1;
+    }
+
+    public class HeaderViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mHeaderTextView;
+
+        public HeaderViewHolder(View itemView) {
+            super(itemView);
+            mHeaderTextView = (TextView) itemView.findViewById(R.id.header);
         }
     }
 
@@ -87,6 +178,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         private TextView mDateTextView;
         private TextView mDayTextView;
+        private ImageView mIconImageView;
         private TextView mDayTemperatureTextView;
 
         public DayForecastViewHolder(View itemView) {
@@ -94,6 +186,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
             mDateTextView = (TextView) itemView.findViewById(R.id.date);
             mDayTextView = (TextView) itemView.findViewById(R.id.day);
+            mIconImageView = (ImageView) itemView.findViewById(R.id.icon);
             mDayTemperatureTextView = (TextView) itemView.findViewById(R.id.dayTemperature);
         }
     }
