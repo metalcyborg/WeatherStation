@@ -23,6 +23,9 @@ import static org.mockito.Mockito.when;
 public class DetailPresenterTest {
 
     private static final String CITY_ID = "city_id";
+    private static final String CITY_NAME = "city_name";
+    private static final int TEMPERATURE = 10;
+    private static final String ICON = "icon";
     private static final Weather WEATHER_1 = new Weather(10);
     private static final Weather WEATHER_2 = new Weather(100);
     private static final List<Weather> FORECAST_LIST = Lists.newArrayList(WEATHER_1, WEATHER_2);
@@ -46,14 +49,20 @@ public class DetailPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         mPresenter = new DetailPresenter(mRepository, mView);
-        mPresenter.setParameters(CITY_ID);
+        mPresenter.setParameters(CITY_ID, CITY_NAME, TEMPERATURE, ICON);
         when(mView.isActive()).thenReturn(true);
+    }
+
+    private void verifyHeaderLoading() {
+        verify(mView).displayHeader(CITY_NAME, TEMPERATURE, ICON);
     }
 
     @Test
     public void loadForecastData_forecastDataLoaded() {
         mPresenter.start();
         InOrder inOrder = inOrder(mView);
+
+        verifyHeaderLoading();
 
         verify(mRepository).load3HForecastData(anyString(),mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
@@ -72,6 +81,8 @@ public class DetailPresenterTest {
     public void loadForecastData_forecastDataNotAvailable() {
         mPresenter.start();
         InOrder inOrder = inOrder(mView);
+
+        verifyHeaderLoading();
 
         verify(mRepository).load3HForecastData(anyString(), mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
