@@ -28,7 +28,7 @@ public class CitySearchActivity extends AppCompatActivity {
         CitySearchFragment fragment = (CitySearchFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.content);
         if(fragment == null) {
-            fragment = new CitySearchFragment();
+            fragment = CitySearchFragment.newInstance();
             getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
         }
 
@@ -36,5 +36,10 @@ public class CitySearchActivity extends AppCompatActivity {
                 Injection.provideWeatherRepository(getApplicationContext()),
                 fragment
         );
+    }
+
+    @Override
+    public void onBackPressed() {
+        finish();
     }
 }

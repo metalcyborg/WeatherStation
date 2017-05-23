@@ -4,12 +4,14 @@ package com.metalcyborg.weather.citysearch;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
@@ -83,8 +85,12 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.city_search, menu);
 
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-        menu.findItem(R.id.search).expandActionView();
+        MenuItem searchItem = menu.findItem(R.id.search);
+
+        SearchView searchView = (SearchView) searchItem.getActionView();
+        searchView.setIconifiedByDefault(false);
+        searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.requestFocus();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -97,6 +103,20 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
                 mPresenter.findCitiesByPartOfTheName(newText);
                 Log.d(TAG, "onQueryTextChange: " + newText);
                 return true;
+            }
+        });
+
+        MenuItemCompat.expandActionView(searchItem);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getActivity().finish();
+                return false;
             }
         });
     }
@@ -136,4 +156,6 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
     public void showWeatherList() {
         getActivity().finish();
     }
+
+
 }
