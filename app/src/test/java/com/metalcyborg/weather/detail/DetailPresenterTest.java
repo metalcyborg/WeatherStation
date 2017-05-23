@@ -24,7 +24,7 @@ public class DetailPresenterTest {
 
     private static final String CITY_ID = "city_id";
     private static final String CITY_NAME = "city_name";
-    private static final int TEMPERATURE = 10;
+    private static final float TEMPERATURE = 10f;
     private static final String ICON = "icon";
     private static final Weather WEATHER_1 = new Weather(10);
     private static final Weather WEATHER_2 = new Weather(100);

@@ -6,10 +6,6 @@ import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
 
-/**
- * Created by root on 13.04.17.
- */
-
 public interface DetailContract {
 
     interface View extends BaseView<Presenter> {
@@ -25,10 +21,12 @@ public interface DetailContract {
         void show13DForecastError();
 
         void setLoadingIndicator(boolean indicator);
+
+        void displayHeader(String cityName, float temperature, String icon);
     }
 
     interface Presenter extends BasePresenter {
 
-        void setParameters(String cityId);
+        void setParameters(String cityId, String cityName, float temperature, String icon);
     }
 }

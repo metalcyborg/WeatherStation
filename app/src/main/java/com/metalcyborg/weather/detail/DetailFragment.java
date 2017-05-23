@@ -11,8 +11,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.Weather;
 
 import java.util.List;
@@ -25,7 +28,9 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     private DetailContract.Presenter mPresenter;
     private RecyclerView mForecastRecycler;
     private ForecastAdapter mForecastAdapter;
-
+    private ActionBar mActionBar;
+    private TextView mHeaderTemp;
+    private ImageView mHeaderImage;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -47,11 +52,15 @@ public class DetailFragment extends Fragment implements DetailContract.View {
         // Set up the toolbar with the up button
         Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-        ActionBar ab = ((AppCompatActivity)getActivity()).getSupportActionBar();
-        if(ab != null) {
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setHomeButtonEnabled(true);
+        mActionBar = ((AppCompatActivity)getActivity()).getSupportActionBar();
+        if(mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setHomeButtonEnabled(true);
+            mActionBar.setTitle("");
         }
+
+        mHeaderTemp = (TextView) view.findViewById(R.id.header_temp);
+        mHeaderImage = (ImageView) view.findViewById(R.id.header_image);
 
         mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
         mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -108,5 +117,22 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     @Override
     public void setLoadingIndicator(boolean indicator) {
 
+    }
+
+    @Override
+    public void displayHeader(String cityName, float temperature, String icon) {
+        if(mActionBar != null) {
+            mActionBar.setTitle(cityName);
+            if(temperature != DetailActivity.WRONG_TEMP_VALUE) {
+                mHeaderTemp.setText(Utils.getTemperatureString(temperature));
+            }
+
+            if(icon != null) {
+                int imageId = Utils.getWeatherImageId(icon);
+                if(imageId != -1) {
+                    mHeaderImage.setImageResource(imageId);
+                }
+            }
+        }
     }
 }

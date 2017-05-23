@@ -18,6 +18,9 @@ public class DetailPresenter implements DetailContract.Presenter {
     private WeatherDataSource mRepository;
     private DetailContract.View mView;
     private String mCityId;
+    private String mCityName;
+    private float mTemperature;
+    private String mIcon;
 
     public DetailPresenter(@NonNull WeatherDataSource repository,
                            @NonNull DetailContract.View view) {
@@ -28,6 +31,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     @Override
     public void start() {
+        mView.displayHeader(mCityName, mTemperature, mIcon);
         loadForecastData();
     }
 
@@ -66,7 +70,10 @@ public class DetailPresenter implements DetailContract.Presenter {
     }
 
     @Override
-    public void setParameters(String cityId) {
+    public void setParameters(String cityId, String cityName, float temperature, String icon) {
         mCityId = cityId;
+        mCityName = cityName;
+        mTemperature = temperature;
+        mIcon = icon;
     }
 }

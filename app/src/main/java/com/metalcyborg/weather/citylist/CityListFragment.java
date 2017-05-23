@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.detail.DetailActivity;
@@ -217,7 +218,22 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public void showForecast(CityWeather cityWeather) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
-        intent.putExtra(DetailActivity.EXTRAS_CITY_ID, cityWeather.getCity().getOpenWeatherId());
+        City city = cityWeather.getCity();
+        if(city != null) {
+            intent.putExtra(DetailActivity.EXTRAS_CITY_ID, cityWeather.getCity().getOpenWeatherId());
+            intent.putExtra(DetailActivity.EXTRAS_CITY_NAME, cityWeather.getCity().getName());
+        }
+        Weather weather = cityWeather.getWeather();
+        if(weather != null) {
+            if(weather.getMain() != null) {
+                intent.putExtra(DetailActivity.EXTRAS_TEMPERATURE_FLOAT,
+                        weather.getMain().getDayTemp());
+            }
+            if(weather.getWeatherDescription() != null) {
+                intent.putExtra(DetailActivity.EXTRAS_ICON,
+                        weather.getWeatherDescription().getIcon());
+            }
+        }
         startActivity(intent);
     }
 }
