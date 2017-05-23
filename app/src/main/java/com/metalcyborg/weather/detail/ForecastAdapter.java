@@ -93,7 +93,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if(weather.getWeatherDescription() != null) {
             if(weather.getWeatherDescription().getIcon() != null) {
-                int iconId = getIconId(weather.getWeatherDescription().getIcon());
+                int iconId = Utils.getIconId(weather.getWeatherDescription().getIcon());
                 if(iconId != -1) {
                     holder.mIconImageView.setImageResource(iconId);
                 }
@@ -114,7 +114,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             Weather.WeatherDescription description = m3HForecast.get(i).getWeatherDescription();
             if(description != null) {
                 if(description.getIcon() != null) {
-                    int iconId = getIconId(description.getIcon());
+                    int iconId = Utils.getIconId(description.getIcon());
                     holder.mImageArray[i].setImageResource(iconId);
                 }
             }
@@ -127,41 +127,6 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         } else {
             holder.mHeaderTextView.setText(R.string.header_daily_forecast);
         }
-    }
-
-    private int getIconId(String icon) {
-        switch (icon) {
-            case "01d":
-                return R.drawable.ic_weather_sunny;
-            case "01n":
-                return R.drawable.ic_weather_night;
-            case "02d":
-            case "02n":
-                return R.drawable.ic_weather_partlycloudy;
-            case "03d":
-            case "03n":
-                return R.drawable.ic_weather_cloudy;
-            case "04d":
-            case "04n":
-                return R.drawable.ic_weather_cloudy;
-            case "09d":
-            case "09n":
-                return R.drawable.ic_weather_pouring;
-            case "10d":
-            case "10n":
-                return R.drawable.ic_weather_rainy;
-            case "11d":
-            case "11n":
-                return R.drawable.ic_weather_lightning;
-            case "13d":
-            case "13n":
-                return R.drawable.ic_weather_hail;
-            case "50d":
-            case "50n":
-                return R.drawable.ic_weather_fog;
-        }
-
-        return -1;
     }
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {

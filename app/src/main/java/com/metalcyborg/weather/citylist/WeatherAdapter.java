@@ -4,9 +4,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
@@ -54,7 +56,18 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
                     tempStr = "-" + tempStr;
                 }
             holder.mTemperature.setText(tempStr);
+
+            Weather.WeatherDescription description = cityWeather.getWeather().getWeatherDescription();
+            if(description != null) {
+                if(description.getIcon() != null) {
+                    int iconId = Utils.getIconId(description.getIcon());
+                    if(iconId != -1) {
+                        holder.mIcon.setImageResource(iconId);
+                    }
+                }
+            }
         }
+
     }
 
     public void setItems(List<CityWeather> items) {
@@ -91,6 +104,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
         private TextView mCityName;
         private TextView mCountryName;
+        private ImageView mIcon;
         private TextView mTemperature;
 
         public WeatherViewHolder(View itemView) {
@@ -98,6 +112,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             itemView.setOnClickListener(this);
             mCityName = (TextView) itemView.findViewById(R.id.cityName);
             mCountryName = (TextView) itemView.findViewById(R.id.countryName);
+            mIcon = (ImageView) itemView.findViewById(R.id.icon);
             mTemperature = (TextView) itemView.findViewById(R.id.temperature);
         }
 
