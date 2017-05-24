@@ -4,9 +4,11 @@ package com.metalcyborg.weather.citylist;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -20,12 +22,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.detail.DetailActivity;
+import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.List;
 
@@ -116,7 +120,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == R.id.settings) {
             // Open settings
-
+            mPresenter.onSettingsMenuItemClick();
         }
 
         return true;
@@ -160,7 +164,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showWeatherList(List<CityWeather> weatherList) {
-        mWeatherAdapter.setItems(weatherList);
+        mWeatherAdapter.setItems(weatherList, Utils.getCurrentTempUnits(getActivity()));
         mWeatherAdapter.notifyDataSetChanged();
     }
 
@@ -265,6 +269,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showSettings() {
-
+        Intent intent = new Intent(getActivity(), SettingsActivity.class);
+        startActivity(intent);
     }
 }

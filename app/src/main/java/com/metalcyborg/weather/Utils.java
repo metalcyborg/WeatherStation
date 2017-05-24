@@ -1,5 +1,11 @@
 package com.metalcyborg.weather;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.metalcyborg.weather.settings.SettingsActivity;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -9,6 +15,12 @@ import java.util.Locale;
  */
 
 public class Utils {
+
+    public enum TemperatureUnits {
+        KELVIN,
+        FAHRENHEIT,
+        CELSIUS
+    }
 
     public static String convertLongToDateString(long milliseconds) {
         if(milliseconds < 0) {
@@ -26,12 +38,30 @@ public class Utils {
         return new SimpleDateFormat("EEE", new Locale("en")).format(new Date(milliseconds));
     }
 
-    public static String getTemperatureString(float temp) {
-        String tempStr = String.valueOf(Math.round(temp));
-        if (temp < 0) {
-            tempStr = "-" + tempStr;
-        } else if (temp > 0) {
-            tempStr = "+" + tempStr;
+    public static String getTemperatureString(float temp, TemperatureUnits units) {
+        String tempStr;
+
+        switch (units) {
+
+            case KELVIN:
+                tempStr = String.valueOf(Math.round(temp)) + "K";
+                break;
+            case FAHRENHEIT:
+                tempStr = String.valueOf(Math.round(convertKelvinToFahrenheit(temp))) + " F";
+                break;
+            case CELSIUS:
+                tempStr = String.valueOf(Math.round(convertKelvinToCelsius(temp))) + " C";
+                break;
+            default:
+                tempStr = String.valueOf(Math.round(temp));
+        }
+
+        if(units != TemperatureUnits.KELVIN) {
+            if (temp < 0) {
+                tempStr = "-" + tempStr;
+            } else if (temp > 0) {
+                tempStr = "+" + tempStr;
+            }
         }
 
         return tempStr;
@@ -113,5 +143,29 @@ public class Utils {
         }
 
         return -1;
+    }
+
+    public static float convertKelvinToFahrenheit(float kelvin) {
+        return kelvin * 9 / 5 - 459.67f;
+    }
+
+    public static float convertKelvinToCelsius(float kelvin) {
+        return kelvin - 273.15f;
+    }
+
+    public static TemperatureUnits getCurrentTempUnits(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String tempUnitsStr = sharedPreferences
+                .getString(SettingsActivity.PREF_KEY_TEMP_UNITS, "");
+        Utils.TemperatureUnits tempUnits;
+        try {
+            tempUnits = Utils.TemperatureUnits.valueOf(tempUnitsStr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            tempUnits = Utils.TemperatureUnits.CELSIUS;
+        }
+
+        return tempUnits;
     }
 }

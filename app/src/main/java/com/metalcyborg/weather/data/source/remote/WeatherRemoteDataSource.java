@@ -18,21 +18,19 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
 
     private static volatile WeatherRemoteDataSource mInstance;
     private static final String API_KEY = "1d948a9f3798dae877b6b919f0301bd5";
-    private static final String UNITS = "metric";
     private static final int FORECAST_3_H_COUNT = 10;
-    private Retrofit mRetrofit;
     private CurrentWeatherService mCurrentWeatherService;
     private Forecast3HService mForecast3HoursService;
     private Forecast13DService mForecast13DService;
 
     private WeatherRemoteDataSource() {
-        mRetrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.openweathermap.org")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        mCurrentWeatherService = mRetrofit.create(CurrentWeatherService.class);
-        mForecast3HoursService = mRetrofit.create(Forecast3HService.class);
-        mForecast13DService = mRetrofit.create(Forecast13DService.class);
+        mCurrentWeatherService = retrofit.create(CurrentWeatherService.class);
+        mForecast3HoursService = retrofit.create(Forecast3HService.class);
+        mForecast13DService = retrofit.create(Forecast13DService.class);
     }
 
     public static WeatherRemoteDataSource getInstance() {
@@ -214,7 +212,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     @Override
     public void loadWeatherData(final String cityId, final GetWeatherCallback callback) {
         Call<CurrentWeather> currentWeatherModelCall = mCurrentWeatherService
-                .currentWeather(cityId, API_KEY, UNITS);
+                .currentWeather(cityId, API_KEY);
         currentWeatherModelCall.enqueue(new Callback<CurrentWeather>() {
             @Override
             public void onResponse(Call<CurrentWeather> call,
@@ -233,7 +231,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     @Override
     public void load3HForecastData(String cityId, final GetForecastCallback callback) {
         Call<Forecast3Hours> forecastCall = mForecast3HoursService
-                .forecast3H(cityId, API_KEY, UNITS, FORECAST_3_H_COUNT);
+                .forecast3H(cityId, API_KEY, FORECAST_3_H_COUNT);
         forecastCall.enqueue(new Callback<Forecast3Hours>() {
             @Override
             public void onResponse(Call<Forecast3Hours> call, Response<Forecast3Hours> response) {
@@ -252,7 +250,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     @Override
     public void load13DForecastData(String cityId, final GetForecastCallback callback) {
         Call<Forecast13Days> forecastCall = mForecast13DService
-                .forecast13D(cityId, API_KEY, UNITS, 14);
+                .forecast13D(cityId, API_KEY, 14);
         forecastCall.enqueue(new Callback<Forecast13Days>() {
             @Override
             public void onResponse(Call<Forecast13Days> call, Response<Forecast13Days> response) {

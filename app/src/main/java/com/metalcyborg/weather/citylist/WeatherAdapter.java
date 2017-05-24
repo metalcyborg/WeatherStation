@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.citylist;
 
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
     private RecyclerView mRecyclerView;
     private WeatherClickListener mClickListener;
     private List<CityWeather> mItems = new ArrayList<>();
+    private Utils.TemperatureUnits mTempUnits = Utils.TemperatureUnits.CELSIUS;
 
     public interface WeatherClickListener {
         void onClick(CityWeather cityWeather);
@@ -47,15 +50,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         holder.mCityName.setText(cityWeather.getCity().getName());
         holder.mCountryName.setText(cityWeather.getCity().getCountry());
         if(cityWeather.getWeather() != null) {
-            int temp = (int) cityWeather.getWeather().getMain().getDayTemp();
-            String tempStr = String.valueOf(temp);
-            if(temp > 0) {
-                tempStr = "+" + tempStr;
-            } else
-                if(temp < 0) {
-                    tempStr = "-" + tempStr;
-                }
-            holder.mTemperature.setText(tempStr);
+            String temp = Utils.getTemperatureString(
+                    cityWeather.getWeather().getMain().getDayTemp(),
+                    mTempUnits);
+            holder.mTemperature.setText(temp);
 
             Weather.WeatherDescription description = cityWeather.getWeather().getWeatherDescription();
             if(description != null) {
@@ -70,7 +68,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     }
 
-    public void setItems(List<CityWeather> items) {
+    public void setItems(List<CityWeather> items, Utils.TemperatureUnits temperatureUnits) {
+        mTempUnits = temperatureUnits;
         mItems = items;
     }
 

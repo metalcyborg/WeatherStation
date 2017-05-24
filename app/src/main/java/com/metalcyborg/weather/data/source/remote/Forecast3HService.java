@@ -15,6 +15,5 @@ public interface Forecast3HService {
     @GET("data/2.5/forecast")
     Call<Forecast3Hours> forecast3H(@Query("id") String cityId,
                                         @Query("appid") String apiKey,
-                                        @Query("units") String units,
                                         @Query("cnt") int count);
 }

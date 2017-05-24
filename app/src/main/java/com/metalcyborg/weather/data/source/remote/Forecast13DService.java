@@ -15,6 +15,5 @@ public interface Forecast13DService {
     @GET("data/2.5/forecast/daily")
     Call<Forecast13Days> forecast13D(@Query("id") String cityId,
                                      @Query("appid") String apiKey,
-                                     @Query("units") String units,
                                      @Query("cnt") int count);
 }

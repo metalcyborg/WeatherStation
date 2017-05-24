@@ -7,4 +7,11 @@
     <string name="search_hint">Search city</string>
     <string name="header_3h_forecast">3 hour forecast</string>
     <string name="header_daily_forecast">Daily forecast</string>
+
+    <string name="pref_temperature_fahrenheit">FAHRENHEIT</string>
+    <string name="pref_temperature_celsius">Celsius</string>
+    <string name="pref_temperature_kelvin">Kelvin</string>
+    <string name="pref_title_units">Units</string>
+    <string name="pref_title_temperature">Temperature</string>
+    <string name="activity_settings_label">Settings</string>
 </resources>

@@ -1,7 +1,9 @@
 package com.metalcyborg.weather.detail;
 
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +19,7 @@ import android.widget.TextView;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.List;
 
@@ -94,13 +97,13 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void show3HForecast(List<Weather> forecast) {
-        mForecastAdapter.set3HForecast(forecast);
+        mForecastAdapter.set3HForecast(forecast, Utils.getCurrentTempUnits(getActivity()));
         mForecastAdapter.notifyItemChanged(0);
     }
 
     @Override
     public void show13DForecast(List<Weather> forecast) {
-        mForecastAdapter.setDayForecast(forecast);
+        mForecastAdapter.setDayForecast(forecast, Utils.getCurrentTempUnits(getActivity()));
         mForecastAdapter.notifyDataSetChanged();
     }
 
@@ -124,7 +127,8 @@ public class DetailFragment extends Fragment implements DetailContract.View {
         if(mActionBar != null) {
             mActionBar.setTitle(cityName);
             if(temperature != DetailActivity.WRONG_TEMP_VALUE) {
-                mHeaderTemp.setText(Utils.getTemperatureString(temperature));
+                mHeaderTemp.setText(Utils.getTemperatureString(temperature,
+                        Utils.getCurrentTempUnits(getActivity())));
             }
 
             if(icon != null) {

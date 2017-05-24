@@ -21,6 +21,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private static final int TYPE_HEADER = 2;
     private List<Weather> m3HForecast = new ArrayList<>();
     private List<Weather> mDayForecast = new ArrayList<>();
+    private Utils.TemperatureUnits mTemperatureUnits = Utils.TemperatureUnits.CELSIUS;
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -72,11 +73,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void setDayForecast(List<Weather> dayForecast) {
+    public void setDayForecast(List<Weather> dayForecast, Utils.TemperatureUnits tempUnits) {
+        mTemperatureUnits = tempUnits;
         mDayForecast = dayForecast;
     }
 
-    public void set3HForecast(List<Weather> forecast) {
+    public void set3HForecast(List<Weather> forecast, Utils.TemperatureUnits tempUnits) {
+        mTemperatureUnits = tempUnits;
         m3HForecast = forecast;
     }
 
@@ -87,7 +90,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.mDateTextView.setText(date);
         holder.mDayTextView.setText(day);
         if (weather.getMain() != null) {
-            String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp());
+            String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp(),
+                    mTemperatureUnits);
             holder.mDayTemperatureTextView.setText(dayTemp);
         }
 
@@ -108,7 +112,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         for(int i = 0; i < ThreeHoursForecastViewHolder.FORECAST_COUNT; ++i) {
             String time = Utils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000);
             holder.mTimeArray[i].setText(time);
-            String temp = Utils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp());
+            String temp = Utils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp(),
+                    mTemperatureUnits);
             holder.mTempArray[i].setText(temp);
 
             Weather.WeatherDescription description = m3HForecast.get(i).getWeatherDescription();
