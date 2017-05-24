@@ -173,4 +173,10 @@ public class CityListPresenterTest {
         mPresenter.stop();
         verify(mView).stopServiceInteractions();
     }
+
+    @Test
+    public void clickSettingsMenuItem() {
+        mPresenter.onSettingsMenuItemClick();
+        verify(mView).showSettings();
+    }
 }

@@ -52,6 +52,8 @@ public interface CityListContract {
         void updateItem(String cityId, Weather weather);
 
         void showForecast(CityWeather cityWeather);
+
+        void showSettings();
     }
 
     interface Presenter extends BasePresenter {
@@ -60,5 +62,7 @@ public interface CityListContract {
         void onParseServiceBound();
 
         void onWeatherItemClicked(CityWeather cityWeather);
+
+        void onSettingsMenuItemClick();
     }
 }

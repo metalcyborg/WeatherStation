@@ -88,6 +88,11 @@ public class CityListPresenter implements CityListContract.Presenter {
         }
     }
 
+    @Override
+    public void onSettingsMenuItemClick() {
+
+    }
+
     private void loadWeatherData() {
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override
