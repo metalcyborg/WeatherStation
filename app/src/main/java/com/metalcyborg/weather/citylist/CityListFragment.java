@@ -262,4 +262,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         }
         startActivity(intent);
     }
+
+    @Override
+    public void showSettings() {
+
+    }
 }

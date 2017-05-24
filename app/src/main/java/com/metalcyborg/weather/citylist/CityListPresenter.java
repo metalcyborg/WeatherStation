@@ -90,7 +90,7 @@ public class CityListPresenter implements CityListContract.Presenter {
 
     @Override
     public void onSettingsMenuItemClick() {
-
+        mView.showSettings();
     }
 
     private void loadWeatherData() {
