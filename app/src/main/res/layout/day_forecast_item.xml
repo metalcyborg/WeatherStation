@@ -12,7 +12,6 @@
         android:id="@+id/date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textColor="#ff000000"
         android:textSize="20sp"
         android:layout_marginTop="8dp"
         android:layout_marginStart="16dp"

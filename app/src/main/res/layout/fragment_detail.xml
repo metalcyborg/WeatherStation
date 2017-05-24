@@ -23,7 +23,7 @@
                 android:id="@+id/header_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
+                android:background="?attr/colorPrimary"
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="parallax"/>
 
@@ -31,19 +31,18 @@
                 android:id="@+id/header_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+10"
                 android:textSize="24sp"
                 android:textColor="#ffffffff"
                 android:fitsSystemWindows="true"
                 android:layout_gravity="end|bottom"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="24dp"/>
+                android:layout_marginBottom="24dp"
+                app:layout_collapseMode="parallax"/>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
                 app:layout_collapseMode="pin"
                 app:popupTheme="@style/AppTheme.PopupOverlay"/>
 
