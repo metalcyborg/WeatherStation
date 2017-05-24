@@ -19,6 +19,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".detail.DetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".citylist.CityListActivity" />
         </activity>
         <activity android:name=".citysearch.CitySearchActivity">
         </activity>
