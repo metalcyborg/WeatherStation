@@ -122,6 +122,17 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         return items;
     }
 
+    public SparseBooleanArray getSelectedPositions() {
+        return mSelectedPositions;
+    }
+
+    public void deleteSelectedItems() {
+        for(int i = 0; i < mSelectedPositions.size(); ++i) {
+            int position = mSelectedPositions.keyAt(i);
+            mItems.remove(position);
+        }
+    }
+
     public void setOnItemClickListener(WeatherClickListener listener) {
         mClickListener = listener;
     }

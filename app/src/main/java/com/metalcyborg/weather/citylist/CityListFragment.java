@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -333,6 +334,19 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void deleteSelectedItems() {
+        SparseBooleanArray selectedItems = mWeatherAdapter.getSelectedPositions();
+        mWeatherAdapter.deleteSelectedItems();
 
+        for(int i = 0; i < selectedItems.size(); ++i) {
+            // FIXME: animation not running
+            int position = selectedItems.keyAt(i);
+            mWeatherAdapter.notifyItemRemoved(position);
+        }
+
+        mWeatherAdapter.clearItemSelection();
+
+        if(mActionMode != null) {
+            mActionMode.finish();
+        }
     }
 }

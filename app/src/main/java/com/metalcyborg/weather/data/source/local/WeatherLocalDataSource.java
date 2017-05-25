@@ -182,12 +182,12 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void load3HForecastData(String cityId, LoadForecastCallback callback) {
-
+        // TODO: load from db
     }
 
     @Override
     public void load13DForecastData(String cityId, LoadForecastCallback callback) {
-
+        // TODO: load from db
     }
 
     @Override
@@ -278,8 +278,31 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     @Override
-    public void deleteCityFromChosenCityList(City city) {
+    public void deleteCitiesFromChosenCityList(List<CityWeather> items) {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
+        try {
+            db.beginTransaction();
+
+            for(CityWeather cityWeather : items) {
+                // Delete from chosen city table
+                db.delete(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME,
+                        WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + "=?",
+                        new String[]{cityWeather.getCity().getOpenWeatherId()});
+
+                // Delete from weather table
+                db.delete(WeatherPersistenceContract.WeatherTable.TABLE_NAME,
+                        WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?",
+                        new String[]{cityWeather.getCity().getOpenWeatherId()});
+            }
+
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+
+        } finally {
+            db.endTransaction();
+        }
     }
 
     private ContentValues generateContentValues(Weather weather) {

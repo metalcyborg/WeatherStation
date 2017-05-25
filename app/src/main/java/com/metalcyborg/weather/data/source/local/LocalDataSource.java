@@ -60,7 +60,7 @@ public interface LocalDataSource {
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 
-    void deleteCityFromChosenCityList(City city);
+    void deleteCitiesFromChosenCityList(List<CityWeather> items);
 
     void updateCurrentWeather(String cityId, Weather weather);
 

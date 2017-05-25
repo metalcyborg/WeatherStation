@@ -312,9 +312,7 @@ public class WeatherRepositoryTest {
 
         mWeatherRepository.deleteCitiesFromChosenCityList(deletedCityList);
         // Delete from local db
-        for(CityWeather cityWeather : deletedCityList) {
-            verify(mLocalDataSource).deleteCityFromChosenCityList(cityWeather.getCity());
-        }
+        verify(mLocalDataSource).deleteCitiesFromChosenCityList(deletedCityList);
 
         // Delete from cache
         assertThat(mWeatherRepository.mCachedWeather.size(),
