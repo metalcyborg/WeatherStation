@@ -112,6 +112,16 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         return position;
     }
 
+    public List<CityWeather> getSelectedItems() {
+        List<CityWeather> items = new ArrayList<>();
+        for(int i = 0; i < mSelectedPositions.size(); ++i) {
+            int position = mSelectedPositions.keyAt(i);
+            items.add(mItems.get(position));
+        }
+
+        return items;
+    }
+
     public void setOnItemClickListener(WeatherClickListener listener) {
         mClickListener = listener;
     }

@@ -66,5 +66,7 @@ public interface CityListContract {
         void onWeatherItemLongClicked(CityWeather cityWeather);
 
         void onSettingsMenuItemClick();
+
+        void deleteItems(List<CityWeather> items);
     }
 }

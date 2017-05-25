@@ -94,6 +94,11 @@ public class CityListPresenter implements CityListContract.Presenter {
         mView.showSettings();
     }
 
+    @Override
+    public void deleteItems(List<CityWeather> items) {
+
+    }
+
     private void loadWeatherData() {
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override

@@ -90,6 +90,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
             @Override
             public boolean onCreateActionMode(ActionMode mode, Menu menu) {
                 mActionMode = mode;
+                MenuInflater menuInflater = mode.getMenuInflater();
+                menuInflater.inflate(R.menu.city_list_action_mode, menu);
                 return true;
             }
 
@@ -100,7 +102,10 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
             @Override
             public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
+                if(item.getItemId() == R.id.delete) {
+                    mPresenter.deleteItems(mWeatherAdapter.getSelectedItems());
+                }
+                return true;
             }
 
             @Override
