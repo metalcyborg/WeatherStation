@@ -44,7 +44,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        return mDayForecast.size();
+        if(mDayForecast.size() == 0) {
+            return 0;
+        } else {
+            return mDayForecast.size() + 2;
+        }
     }
 
     @Override
@@ -84,7 +88,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindDayForecast(DayForecastViewHolder holder, int position) {
-        Weather weather = mDayForecast.get(position);
+        Weather weather = mDayForecast.get(position - 2);
         String date = Utils.convertLongToDateString(weather.getDateTime() * 1000);
         String day = Utils.convertLongToDayString(weather.getDateTime() * 1000);
         holder.mDateTextView.setText(date);
