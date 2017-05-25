@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
     <color name="drawer_header_color">#ffaaaaaa</color>
     <color name="transparent">#00ffffff</color>
+    <color name="selected_item">#bdbdbd</color>
 </resources>

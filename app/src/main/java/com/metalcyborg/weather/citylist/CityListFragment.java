@@ -12,6 +12,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -46,6 +48,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private ServiceConnection mServiceConnection;
     private ParseCitiesService.ParseBinder mServiceBinder;
     private Handler mUiHandler = new Handler();
+    private ActionMode mActionMode = null;
+    private ActionMode.Callback mActionModeCallback = null;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -83,15 +87,49 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         mRecyclerView.setAdapter(mWeatherAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        mWeatherAdapter.setOnItemClickListener(new WeatherAdapter.WeatherClickListener() {
+        mActionModeCallback = new ActionMode.Callback() {
             @Override
-            public void onClick(CityWeather cityWeather) {
-                mPresenter.onWeatherItemClicked(cityWeather);
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                mActionMode = mode;
+                return true;
             }
 
             @Override
-            public void onLongClick(CityWeather cityWeather) {
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            @Override
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
+            }
+
+            @Override
+            public void onDestroyActionMode(ActionMode mode) {
+                mActionMode = null;
+            }
+        };
+
+        mWeatherAdapter.setOnItemClickListener(new WeatherAdapter.WeatherClickListener() {
+            @Override
+            public void onClick(CityWeather cityWeather, int position) {
+                if(mActionMode != null) {
+                    // Select item
+                    mWeatherAdapter.changeItemSelection(position);
+                    mWeatherAdapter.notifyItemChanged(position);
+                } else {
+                    mPresenter.onWeatherItemClicked(cityWeather);
+                }
+            }
+
+            @Override
+            public void onLongClick(CityWeather cityWeather,int position) {
+                if(mActionMode != null) {
+                    return;
+                }
+
                 mPresenter.onWeatherItemLongClicked(cityWeather);
+                ((AppCompatActivity)getActivity()).startSupportActionMode(mActionModeCallback);
             }
         });
 

@@ -21,11 +21,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
     private WeatherClickListener mClickListener;
     private List<CityWeather> mItems = new ArrayList<>();
     private Utils.TemperatureUnits mTempUnits = Utils.TemperatureUnits.CELSIUS;
+    private List<Integer> mSelectedPositions = new ArrayList<>();
 
     public interface WeatherClickListener {
-        void onClick(CityWeather cityWeather);
+        void onClick(CityWeather cityWeather, int position);
 
-        void onLongClick(CityWeather cityWeather);
+        void onLongClick(CityWeather cityWeather, int position);
     }
 
     public WeatherAdapter(RecyclerView recyclerView) {
@@ -66,6 +67,12 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             }
         }
 
+        if(mSelectedPositions.contains(position)) {
+            holder.mContainer.setSelected(true);
+        } else {
+            holder.mContainer.setSelected(false);
+        }
+
     }
 
     public void setItems(List<CityWeather> items, Utils.TemperatureUnits temperatureUnits) {
@@ -78,6 +85,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         if(position != -1) {
             mItems.get(position).setWeather(weather);
             notifyItemChanged(position);
+        }
+    }
+
+    public void changeItemSelection(int position) {
+        if(mSelectedPositions.contains(position)) {
+            mSelectedPositions.remove((Integer) position);
+        } else {
+            mSelectedPositions.add(position);
         }
     }
 
@@ -106,10 +121,13 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         private TextView mCountryName;
         private ImageView mIcon;
         private TextView mTemperature;
+        private View mContainer;
 
         public WeatherViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
+            mContainer = itemView;
             mCityName = (TextView) itemView.findViewById(R.id.cityName);
             mCountryName = (TextView) itemView.findViewById(R.id.countryName);
             mIcon = (ImageView) itemView.findViewById(R.id.icon);
@@ -120,7 +138,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         public void onClick(View v) {
             if (mClickListener != null) {
                 int position = mRecyclerView.getLayoutManager().getPosition(v);
-                mClickListener.onClick(mItems.get(position));
+                mClickListener.onClick(mItems.get(position), position);
             }
         }
 
@@ -128,7 +146,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         public boolean onLongClick(View v) {
             if(mClickListener != null) {
                 int position = mRecyclerView.getLayoutManager().getPosition(v);
-                mClickListener.onLongClick(mItems.get(position));
+                mClickListener.onLongClick(mItems.get(position), position);
             }
             return true;
         }

@@ -85,6 +85,11 @@ public class CityListPresenter implements CityListContract.Presenter {
     }
 
     @Override
+    public void onWeatherItemLongClicked(CityWeather cityWeather) {
+
+    }
+
+    @Override
     public void onSettingsMenuItemClick() {
         mView.showSettings();
     }
