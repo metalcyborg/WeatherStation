@@ -179,4 +179,14 @@ public class CityListPresenterTest {
         mPresenter.onSettingsMenuItemClick();
         verify(mView).showSettings();
     }
+
+    @Test
+    public void deleteSelectedItems() {
+        mPresenter.deleteItems(WEATHER_LIST);
+
+        // Delete from list
+        verify(mView).deleteSelectedItems();
+        // Delete form local db
+        verify(mRepository).deleteCitiesFromChosenCityList(WEATHER_LIST);
+    }
 }

@@ -268,4 +268,9 @@ public class WeatherRepository implements WeatherDataSource {
         CityWeather cityWeather = new CityWeather(city, null);
         addToCurrentWeatherCache(cityWeather);
     }
+
+    @Override
+    public void deleteCitiesFromChosenCityList(List<CityWeather> cityWeatherList) {
+
+    }
 }

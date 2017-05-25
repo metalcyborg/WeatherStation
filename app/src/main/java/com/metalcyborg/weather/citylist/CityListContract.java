@@ -54,6 +54,8 @@ public interface CityListContract {
         void showForecast(CityWeather cityWeather);
 
         void showSettings();
+
+        void deleteSelectedItems();
     }
 
     interface Presenter extends BasePresenter {

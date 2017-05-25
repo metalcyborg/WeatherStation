@@ -330,4 +330,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         Intent intent = new Intent(getActivity(), SettingsActivity.class);
         startActivity(intent);
     }
+
+    @Override
+    public void deleteSelectedItems() {
+
+    }
 }

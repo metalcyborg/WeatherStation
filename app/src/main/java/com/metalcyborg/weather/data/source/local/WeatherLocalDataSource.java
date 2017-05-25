@@ -277,6 +277,11 @@ public class WeatherLocalDataSource implements LocalDataSource {
         }
     }
 
+    @Override
+    public void deleteCityFromChosenCityList(City city) {
+
+    }
+
     private ContentValues generateContentValues(Weather weather) {
         ContentValues cv = new ContentValues();
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATE,

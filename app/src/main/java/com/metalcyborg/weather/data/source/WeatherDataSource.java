@@ -55,4 +55,6 @@ public interface WeatherDataSource {
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
+
+    void deleteCitiesFromChosenCityList(List<CityWeather> cityWeatherList);
 }

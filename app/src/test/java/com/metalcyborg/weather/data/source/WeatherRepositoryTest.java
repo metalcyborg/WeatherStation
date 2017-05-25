@@ -41,14 +41,18 @@ public class WeatherRepositoryTest {
 
     private static final String CITY_ID_1 = "1";
     private static final String CITY_ID_2 = "2";
+    private static final String CITY_ID_3 = "3";
     private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1", 10, 20);
     private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2", 20, 40);
+    private static final City CITY_3 = new City(CITY_ID_3, "City 3", "Country 3", 30, 60);
     private static final Weather WEATHER_1 = new Weather(100);
     private static final Weather WEATHER_2 = new Weather(200);
+    private static final Weather WEATHER_3 = new Weather(300);
     private static final CityWeather CITY_WEATHER_1 = new CityWeather(CITY_1, WEATHER_1);
     private static final CityWeather CITY_WEATHER_2 = new CityWeather(CITY_2, null); // Empty weather data
+    private static final CityWeather CITY_WEATHER_3 = new CityWeather(CITY_3, WEATHER_3);
     private static final List<CityWeather> CITY_WEATHER_LIST =
-            Lists.newArrayList(CITY_WEATHER_1, CITY_WEATHER_2);
+            Lists.newArrayList(CITY_WEATHER_1, CITY_WEATHER_2, CITY_WEATHER_3);
     private static final List<Weather> FORECAST = Lists.newArrayList(WEATHER_1, WEATHER_2);
 
     private WeatherRepository mWeatherRepository;
@@ -165,11 +169,17 @@ public class WeatherRepositoryTest {
         }
     }
 
+    private void fillCurrentWeatherCache() {
+        mWeatherRepository.mCachedWeather = new LinkedHashMap<>();
+        for(CityWeather cityWeather : CITY_WEATHER_LIST) {
+            mWeatherRepository.mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(),
+                    cityWeather);
+        }
+    }
+
     @Test
     public void getWeatherList_loadFromCache() {
-        mWeatherRepository.mCachedWeather = new LinkedHashMap<>();
-        mWeatherRepository.mCachedWeather.put(CITY_ID_1, CITY_WEATHER_1);
-        mWeatherRepository.mCachedWeather.put(CITY_ID_2, CITY_WEATHER_2);
+        fillCurrentWeatherCache();
 
         mWeatherRepository.loadWeatherData(mLoadWeatherCallback);
         assertThat(mWeatherRepository.mCachedWeather.size(), is(CITY_WEATHER_LIST.size()));
@@ -292,5 +302,22 @@ public class WeatherRepositoryTest {
         mGet13DForecastCallbackCaptor.getValue().onDataNotAvailable();
         // Do nothing
         verify(mLoad13DForecastCallback, never()).onDataNotAvailable();
+    }
+
+    @Test
+    public void deleteCitiesFromChosenCityList() {
+        List<CityWeather> deletedCityList = Lists.newArrayList(CITY_WEATHER_1, CITY_WEATHER_2);
+        fillCurrentWeatherCache();
+        assertThat(mWeatherRepository.mCachedWeather.size(), is(CITY_WEATHER_LIST.size()));
+
+        mWeatherRepository.deleteCitiesFromChosenCityList(deletedCityList);
+        // Delete from local db
+        for(CityWeather cityWeather : deletedCityList) {
+            verify(mLocalDataSource).deleteCityFromChosenCityList(cityWeather.getCity());
+        }
+
+        // Delete from cache
+        assertThat(mWeatherRepository.mCachedWeather.size(),
+                is(CITY_WEATHER_LIST.size() - deletedCityList.size()));
     }
 }
