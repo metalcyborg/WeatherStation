@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.citylist;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
     private WeatherClickListener mClickListener;
     private List<CityWeather> mItems = new ArrayList<>();
     private Utils.TemperatureUnits mTempUnits = Utils.TemperatureUnits.CELSIUS;
-    private List<Integer> mSelectedPositions = new ArrayList<>();
+    private SparseBooleanArray mSelectedPositions = new SparseBooleanArray();
 
     public interface WeatherClickListener {
         void onClick(CityWeather cityWeather, int position);
@@ -67,12 +68,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             }
         }
 
-        if(mSelectedPositions.contains(position)) {
-            holder.mContainer.setSelected(true);
-        } else {
-            holder.mContainer.setSelected(false);
-        }
-
+        holder.mContainer.setSelected(mSelectedPositions.get(position));
     }
 
     public void setItems(List<CityWeather> items, Utils.TemperatureUnits temperatureUnits) {
@@ -88,12 +84,18 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         }
     }
 
-    public void changeItemSelection(int position) {
-        if(mSelectedPositions.contains(position)) {
-            mSelectedPositions.remove((Integer) position);
+    public int changeItemSelection(int position) {
+        if(mSelectedPositions.get(position)) {
+            mSelectedPositions.delete(position);
         } else {
-            mSelectedPositions.add(position);
+            mSelectedPositions.put(position, true);
         }
+
+        return mSelectedPositions.size();
+    }
+
+    public void clearItemSelection() {
+        mSelectedPositions.clear();
     }
 
     private int getPosition(String cityId) {

@@ -4,11 +4,9 @@ package com.metalcyborg.weather.citylist;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -50,6 +48,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private Handler mUiHandler = new Handler();
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
+    private int mNumOfSelectedItems = 0;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -107,6 +106,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
             @Override
             public void onDestroyActionMode(ActionMode mode) {
                 mActionMode = null;
+                mWeatherAdapter.clearItemSelection();
+                mWeatherAdapter.notifyDataSetChanged();
             }
         };
 
@@ -115,8 +116,13 @@ public class CityListFragment extends Fragment implements CityListContract.View 
             public void onClick(CityWeather cityWeather, int position) {
                 if(mActionMode != null) {
                     // Select item
-                    mWeatherAdapter.changeItemSelection(position);
+                    int count = mWeatherAdapter.changeItemSelection(position);
                     mWeatherAdapter.notifyItemChanged(position);
+                    if(count == 0) {
+                        mActionMode.finish();
+                    } else {
+                        mActionMode.setTitle(String.valueOf(count));
+                    }
                 } else {
                     mPresenter.onWeatherItemClicked(cityWeather);
                 }
@@ -130,6 +136,10 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
                 mPresenter.onWeatherItemLongClicked(cityWeather);
                 ((AppCompatActivity)getActivity()).startSupportActionMode(mActionModeCallback);
+
+                int count = mWeatherAdapter.changeItemSelection(position);
+                mWeatherAdapter.notifyItemChanged(position);
+                mActionMode.setTitle(String.valueOf(count));
             }
         });
 
