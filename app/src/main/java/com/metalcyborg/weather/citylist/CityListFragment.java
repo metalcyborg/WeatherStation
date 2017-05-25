@@ -49,7 +49,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private Handler mUiHandler = new Handler();
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
-    private int mNumOfSelectedItems = 0;
 
     public CityListFragment() {
         // Required empty public constructor

@@ -127,9 +127,9 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
     }
 
     public void deleteSelectedItems() {
-        for(int i = 0; i < mSelectedPositions.size(); ++i) {
-            int position = mSelectedPositions.keyAt(i);
-            mItems.remove(position);
+        List<CityWeather> selectedItems = getSelectedItems();
+        for(CityWeather cityWeather : selectedItems) {
+            mItems.remove(cityWeather);
         }
     }
 

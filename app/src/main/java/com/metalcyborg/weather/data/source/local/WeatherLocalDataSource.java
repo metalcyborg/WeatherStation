@@ -302,6 +302,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
         } finally {
             db.endTransaction();
+            db.close();
         }
     }
 
@@ -373,9 +374,8 @@ public class WeatherLocalDataSource implements LocalDataSource {
             String whereClause = WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST + "=? AND" +
                     WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?";
 
-            int update = db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
+            db.update(WeatherPersistenceContract.WeatherTable.TABLE_NAME, cv,
                     whereClause, new String[]{"0", cityId});
-            Log.d(TAG, "updateCurrentWeather: update" + update);
         } catch (SQLiteException e) {
             e.printStackTrace();
             throw new SQLiteException("Error of updating the Weather table");
