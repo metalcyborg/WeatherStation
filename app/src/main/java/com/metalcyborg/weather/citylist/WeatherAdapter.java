@@ -1,6 +1,5 @@
 package com.metalcyborg.weather.citylist;
 
-import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
-import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +24,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     public interface WeatherClickListener {
         void onClick(CityWeather cityWeather);
+
+        void onLongClick(CityWeather cityWeather);
     }
 
     public WeatherAdapter(RecyclerView recyclerView) {
@@ -99,7 +99,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         mClickListener = listener;
     }
 
-    class WeatherViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class WeatherViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
+            View.OnLongClickListener {
 
         private TextView mCityName;
         private TextView mCountryName;
@@ -121,6 +122,15 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
                 int position = mRecyclerView.getLayoutManager().getPosition(v);
                 mClickListener.onClick(mItems.get(position));
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if(mClickListener != null) {
+                int position = mRecyclerView.getLayoutManager().getPosition(v);
+                mClickListener.onLongClick(mItems.get(position));
+            }
+            return true;
         }
     }
 }

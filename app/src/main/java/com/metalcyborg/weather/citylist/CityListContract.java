@@ -63,6 +63,8 @@ public interface CityListContract {
 
         void onWeatherItemClicked(CityWeather cityWeather);
 
+        void onWeatherItemLongClicked(CityWeather cityWeather);
+
         void onSettingsMenuItemClick();
     }
 }

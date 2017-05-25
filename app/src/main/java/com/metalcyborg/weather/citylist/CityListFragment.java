@@ -88,6 +88,11 @@ public class CityListFragment extends Fragment implements CityListContract.View 
             public void onClick(CityWeather cityWeather) {
                 mPresenter.onWeatherItemClicked(cityWeather);
             }
+
+            @Override
+            public void onLongClick(CityWeather cityWeather) {
+                mPresenter.onWeatherItemLongClicked(cityWeather);
+            }
         });
 
         return view;
