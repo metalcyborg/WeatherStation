@@ -10,10 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-/**
- * Created by metalcyborg on 19.05.17.
- */
-
 public class Utils {
 
     public enum TemperatureUnits {
@@ -47,13 +43,13 @@ public class Utils {
                 tempStr = String.valueOf(Math.round(temp)) + "K";
                 break;
             case FAHRENHEIT:
-                tempStr = String.valueOf(Math.round(convertKelvinToFahrenheit(temp))) + " F";
+                tempStr = String.valueOf(Math.round(convertKelvinToFahrenheit(temp))) + (char)0x00B0;
                 break;
             case CELSIUS:
-                tempStr = String.valueOf(Math.round(convertKelvinToCelsius(temp))) + " C";
+                tempStr = String.valueOf(Math.round(convertKelvinToCelsius(temp))) + (char)0x00B0;
                 break;
             default:
-                tempStr = String.valueOf(Math.round(temp));
+                tempStr = String.valueOf(Math.round(temp)) + "K";
         }
 
         if(units != TemperatureUnits.KELVIN) {

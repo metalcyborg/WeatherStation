@@ -14,6 +14,8 @@ import com.metalcyborg.weather.data.Weather;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.internal.Util;
+
 public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_3_HOURS_FORECAST = 0;
@@ -96,7 +98,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if (weather.getMain() != null) {
             String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp(),
                     mTemperatureUnits);
+            String nightTemp = Utils.getTemperatureString(weather.getMain().getNightTemp(),
+                    mTemperatureUnits);
             holder.mDayTemperatureTextView.setText(dayTemp);
+            holder.mNightTemperature.setText(nightTemp);
         }
 
         if(weather.getWeatherDescription() != null) {
@@ -154,6 +159,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         private TextView mDayTextView;
         private ImageView mIconImageView;
         private TextView mDayTemperatureTextView;
+        private TextView mNightTemperature;
 
         public DayForecastViewHolder(View itemView) {
             super(itemView);
@@ -162,6 +168,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mDayTextView = (TextView) itemView.findViewById(R.id.day);
             mIconImageView = (ImageView) itemView.findViewById(R.id.icon);
             mDayTemperatureTextView = (TextView) itemView.findViewById(R.id.dayTemperature);
+            mNightTemperature = (TextView) itemView.findViewById(R.id.nightTemperature);
         }
     }
 

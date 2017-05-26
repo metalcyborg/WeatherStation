@@ -35,7 +35,7 @@
                 android:textColor="#ffffffff"
                 android:fitsSystemWindows="true"
                 android:layout_gravity="end|bottom"
-                android:layout_marginEnd="16dp"
+                android:layout_marginEnd="24dp"
                 android:layout_marginBottom="24dp"
                 app:layout_collapseMode="parallax"/>
 
