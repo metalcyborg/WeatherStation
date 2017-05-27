@@ -16,4 +16,5 @@
     <string name="activity_settings_label">Settings</string>
     <string name="delete">menu_item_delete</string>
     <string name="weather_icon_description">Weather icon</string>
+    <string name="details_header">Current weather details</string>
 </resources>
