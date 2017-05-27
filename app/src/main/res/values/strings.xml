@@ -8,11 +8,19 @@
     <string name="header_3h_forecast">3 hour forecast</string>
     <string name="header_daily_forecast">Daily forecast</string>
 
+    <string name="key_pref_temperature">pref_temperature</string>
+    <string name="key_pref_pressure">pref_pressure</string>
+    <string name="key_pref_speed">pref_speed</string>
+    <string name="key_pref_time">pref_time</string>
     <string name="pref_temperature_fahrenheit">FAHRENHEIT</string>
-    <string name="pref_temperature_celsius">Celsius</string>
-    <string name="pref_temperature_kelvin">Kelvin</string>
+    <string name="pref_pressure_hpa">H_PA</string>
+    <string name="pref_speed_m_sec">M_SEC</string>
+    <string name="pref_time_12_h">CLOCK_12_H</string>
     <string name="pref_title_units">Units</string>
     <string name="pref_title_temperature">Temperature</string>
+    <string name="pref_title_pressure">Pressure</string>
+    <string name="pref_title_speed">Speed</string>
+    <string name="pref_title_time">Time</string>
     <string name="activity_settings_label">Settings</string>
     <string name="delete">menu_item_delete</string>
     <string name="weather_icon_description">Weather icon</string>

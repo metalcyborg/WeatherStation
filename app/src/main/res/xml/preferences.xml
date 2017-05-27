@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:key="pref_temperature"
+        android:key="@string/key_pref_temperature"
         android:title="@string/pref_title_temperature"
         android:defaultValue="@string/pref_temperature_fahrenheit"
         android:entries="@array/pref_temperature_units"
         android:entryValues="@array/pref_temperature_units_values"
+        android:summary="%s"/>
+    <ListPreference
+        android:key="@string/key_pref_pressure"
+        android:title="@string/pref_title_pressure"
+        android:defaultValue="@string/pref_pressure_hpa"
+        android:entries="@array/pref_pressure_units"
+        android:entryValues="@array/pref_pressure_units_values"
+        android:summary="%s"/>
+    <ListPreference
+        android:key="@string/key_pref_speed"
+        android:title="@string/pref_title_speed"
+        android:defaultValue="@string/pref_speed_m_sec"
+        android:entries="@array/pref_speed_units"
+        android:entryValues="@array/pref_speed_units_values"
+        android:summary="%s"/>
+    <ListPreference
+        android:key="@string/key_pref_time"
+        android:title="@string/pref_title_time"
+        android:defaultValue="@string/pref_time_12_h"
+        android:entries="@array/pref_time_units"
+        android:entryValues="@array/pref_time_units_values"
         android:summary="%s"/>
 </PreferenceScreen>

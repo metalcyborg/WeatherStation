@@ -5,9 +5,42 @@
         <item>Celsius</item>
         <item>Kelvin</item>
     </array>
+
     <array name="pref_temperature_units_values">
         <item>FAHRENHEIT</item>
         <item>CELSIUS</item>
         <item>KELVIN</item>
+    </array>
+
+    <array name="pref_pressure_units">
+        <item>hPa</item>
+        <item>mmHg</item>
+    </array>
+
+    <array name="pref_pressure_units_values">
+        <item>H_PA</item>
+        <item>MM_HG</item>
+    </array>
+
+    <array name="pref_speed_units">
+        <item>m/sec</item>
+        <item>km/h</item>
+        <item>mi/h</item>
+    </array>
+
+    <array name="pref_speed_units_values">
+        <item>M_SEC</item>
+        <item>KM_H</item>
+        <item>MI_H</item>
+    </array>
+
+    <array name="pref_time_units">
+        <item>12 h</item>
+        <item>24 h</item>
+    </array>
+
+    <array name="pref_time_units_values">
+        <item>CLOCK_12_H</item>
+        <item>CLOCK_24_H</item>
     </array>
 </resources>
