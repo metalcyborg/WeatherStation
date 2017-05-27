@@ -19,6 +19,7 @@ import android.widget.TextView;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.List;
@@ -67,7 +68,10 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
         mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
         mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mForecastAdapter = new ForecastAdapter();
+        mForecastAdapter = new ForecastAdapter(Utils.getCurrentTempUnits(getActivity()),
+                Utils.getCurrentPressureUnits(getActivity()),
+                Utils.getCurrentSpeedUnits(getActivity()),
+                Utils.getCurrentTimeUnits(getActivity()));
         mForecastRecycler.setAdapter(mForecastAdapter);
 
         return view;
@@ -97,13 +101,13 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void show3HForecast(List<Weather> forecast) {
-        mForecastAdapter.set3HForecast(forecast, Utils.getCurrentTempUnits(getActivity()));
+        mForecastAdapter.set3HForecast(forecast);
         mForecastAdapter.notifyItemChanged(0);
     }
 
     @Override
     public void show13DForecast(List<Weather> forecast) {
-        mForecastAdapter.setDayForecast(forecast, Utils.getCurrentTempUnits(getActivity()));
+        mForecastAdapter.setDayForecast(forecast);
         mForecastAdapter.notifyDataSetChanged();
     }
 
@@ -123,20 +127,22 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     }
 
     @Override
-    public void displayHeader(String cityName, float temperature, String icon) {
+    public void displayCurrentWeatherDetails(String cityName, WeatherDetails details) {
         if(mActionBar != null) {
             mActionBar.setTitle(cityName);
-            if(temperature != DetailActivity.WRONG_TEMP_VALUE) {
-                mHeaderTemp.setText(Utils.getTemperatureString(temperature,
+            if(details.getTemperature() != DetailActivity.WRONG_TEMP_VALUE) {
+                mHeaderTemp.setText(Utils.getTemperatureString(details.getTemperature(),
                         Utils.getCurrentTempUnits(getActivity())));
             }
 
-            if(icon != null) {
-                int imageId = Utils.getWeatherImageId(icon);
+            if(details.getIcon() != null) {
+                int imageId = Utils.getWeatherImageId(details.getIcon());
                 if(imageId != -1) {
                     mHeaderImage.setImageResource(imageId);
                 }
             }
+
+            mForecastAdapter.setWeatherDetails(details);
         }
     }
 }

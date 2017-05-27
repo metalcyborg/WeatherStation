@@ -12,10 +12,44 @@ import java.util.Locale;
 
 public class Utils {
 
+    private static final String UNITS_H_PA = "hPa";
+    private static final String UNITS_MM_HG = "mmHg";
+    private static final String UNITS_M_SEC = "m/sec";
+    private static final String UNITS_KM_H = "km/h";
+    private static final String UNITS_MI_H = "mi/h";
+    private static final String UNITS_HUMIDITY = "%";
+
     public enum TemperatureUnits {
         KELVIN,
         FAHRENHEIT,
         CELSIUS
+    }
+
+    public enum PressureUnits {
+        H_PA,
+        MM_HG
+    }
+
+    public enum SpeedUnits {
+        M_SEC,
+        KM_H,
+        MI_H
+    }
+
+    public enum TimeUnits {
+        CLOCK_12_H,
+        CLOCK_24_H
+    }
+
+    public enum Wind {
+        N,
+        S,
+        W,
+        E,
+        NW,
+        NE,
+        SW,
+        SE
     }
 
     public static String convertLongToDateString(long milliseconds) {
@@ -32,6 +66,49 @@ public class Utils {
         }
 
         return new SimpleDateFormat("EEE", new Locale("en")).format(new Date(milliseconds));
+    }
+
+    public static String convertLongToTimeString(long milliseconds, TimeUnits units) {
+        if(milliseconds < 0) {
+            return "";
+        }
+
+        if(units == TimeUnits.CLOCK_12_H) {
+            return new SimpleDateFormat("h:mm a", new Locale("en")).format(new Date(milliseconds));
+        } else {
+            // 24 h
+            return new SimpleDateFormat("H:mm", new Locale("en")).format(new Date(milliseconds));
+        }
+
+    }
+
+    public static String convertLongToDurationString(long milliseconds) {
+        // Without seconds
+        if(milliseconds < 0)
+            return "";
+
+        long seconds = milliseconds / 1000;
+        long minutes = seconds / 60;
+        seconds %= 60;
+        long hours = minutes / 60;
+        minutes %= 60;
+
+        String timeStr = "" + hours + ":";
+
+        if(minutes < 10) {
+            timeStr += "0";
+        }
+
+        timeStr += minutes;
+//        timeStr += minutes + ":";
+//
+//        if(seconds < 10) {
+//            timeStr += "0";
+//        }
+//
+//        timeStr += seconds;
+
+        return timeStr;
     }
 
     public static String getTemperatureString(float temp, TemperatureUnits units) {
@@ -61,14 +138,6 @@ public class Utils {
         }
 
         return tempStr;
-    }
-
-    public static String convertLongToTimeString(long milliseconds) {
-        if(milliseconds < 0) {
-            return "";
-        }
-
-        return new SimpleDateFormat("h a", new Locale("en")).format(new Date(milliseconds));
     }
 
     public static int getIconId(String icon) {
@@ -153,7 +222,7 @@ public class Utils {
         SharedPreferences sharedPreferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         String tempUnitsStr = sharedPreferences
-                .getString(SettingsActivity.PREF_KEY_TEMP_UNITS, "");
+                .getString(context.getString(R.string.key_pref_temperature), "");
         Utils.TemperatureUnits tempUnits;
         try {
             tempUnits = Utils.TemperatureUnits.valueOf(tempUnitsStr);
@@ -163,5 +232,125 @@ public class Utils {
         }
 
         return tempUnits;
+    }
+
+    public static PressureUnits getCurrentPressureUnits(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String pressureUnitsStr = sharedPreferences
+                .getString(context.getString(R.string.key_pref_pressure), "");
+        Utils.PressureUnits pressureUnits;
+        try {
+            pressureUnits = Utils.PressureUnits.valueOf(pressureUnitsStr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            pressureUnits = PressureUnits.H_PA;
+        }
+
+        return pressureUnits;
+    }
+
+    public static SpeedUnits getCurrentSpeedUnits(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String speedUnitsStr = sharedPreferences
+                .getString(context.getString(R.string.key_pref_speed), "");
+        Utils.SpeedUnits speedUnits;
+        try {
+            speedUnits = Utils.SpeedUnits.valueOf(speedUnitsStr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            speedUnits = SpeedUnits.M_SEC;
+        }
+
+        return speedUnits;
+    }
+
+    public static TimeUnits getCurrentTimeUnits(Context context) {
+        SharedPreferences sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        String timeUnitsStr = sharedPreferences
+                .getString(context.getString(R.string.key_pref_time), "");
+        Utils.TimeUnits timeUnits;
+        try {
+            timeUnits = Utils.TimeUnits.valueOf(timeUnitsStr);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            timeUnits = TimeUnits.CLOCK_12_H;
+        }
+
+        return timeUnits;
+    }
+
+    private static float convertHPaToMmHg(float pressureHPa) {
+        return pressureHPa * 0.75006375541921f;
+    }
+
+    private static float convertMetersSecToKilometersHour(float speedMetersSec) {
+        return speedMetersSec * 3.6f;
+    }
+
+    private static float convertMetersSecToMilesHour(float speedMetersSec) {
+        return speedMetersSec * 2.236936f;
+    }
+
+    public static String getPressureString(float pressure, PressureUnits units) {
+        String pressureStr = "";
+        if(units == PressureUnits.MM_HG) {
+            pressureStr += Math.round(convertHPaToMmHg(pressure)) + " " + UNITS_MM_HG;
+        } else {
+            pressureStr += Math.round(pressure) + " " + UNITS_H_PA;
+        }
+
+        return pressureStr;
+    }
+
+    public static String getSpeedString(float speed, SpeedUnits units) {
+        String speedStr = "";
+
+        switch (units) {
+
+            case M_SEC:
+                speedStr += Math.round(speed) + " " + UNITS_M_SEC;
+                break;
+            case KM_H:
+                speedStr += Math.round(convertMetersSecToKilometersHour(speed)) + " " + UNITS_KM_H;
+                break;
+            case MI_H:
+                speedStr += Math.round(convertMetersSecToMilesHour(speed)) + " " + UNITS_MI_H;
+                break;
+            default:
+                speedStr += Math.round(speed) + " " + UNITS_M_SEC;
+        }
+
+        return speedStr;
+    }
+
+    public static String getHumidityString(float humidity) {
+        return "" + Math.round(humidity) + " " + UNITS_HUMIDITY;
+    }
+
+    public static Wind getWindDirectionByAngle(float angle) {
+        if((angle >= 337.5 && angle < 360) || (angle >=0 && angle < 22.5)) {
+            return Wind.N;
+        } else if(angle >= 22.5 && angle < (45 + 22.5)) {
+            return Wind.NE;
+        } else if(angle >= (45 + 22.5) && angle < (90 + 22.5)) {
+            return Wind.E;
+        } else if(angle >= (90 + 22.5) && angle < (135 + 22.5)) {
+            return Wind.SE;
+        } else if(angle >= (135 + 22.5) && angle < (180 + 22.5)) {
+            return Wind.S;
+        } else if(angle >= (180 + 22.5) && angle < (225 + 22.5)) {
+            return Wind.SW;
+        } else if(angle >= (225 + 22.5) && angle < (270 + 22.5)) {
+            return Wind.W;
+        } else if(angle >= (270 + 22.5) && angle < (315 + 22.5)) {
+            return Wind.NW;
+        } else if(angle >= (315 + 22.5) && angle < 360) {
+            return Wind.N;
+        }
+
+        return null;
     }
 }

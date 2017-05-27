@@ -5,13 +5,13 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.data.WeatherDetails;
 
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRAS_CITY_ID = "cityId";
     public static final String EXTRAS_CITY_NAME = "cityName";
-    public static final String EXTRAS_TEMPERATURE_FLOAT = "temp";
-    public static final String EXTRAS_ICON = "icon";
+    public static final String EXTRAS_WEATHER_DETAILS = "weatherDetails";
     public static final float WRONG_TEMP_VALUE = -1000f;
     private DetailContract.Presenter mPresenter;
 
@@ -38,10 +38,9 @@ public class DetailActivity extends AppCompatActivity {
         if(extras != null) {
             String cityId = extras.getString(EXTRAS_CITY_ID, "");
             String cityName = extras.getString(EXTRAS_CITY_NAME, "");
-            float temp = extras.getFloat(EXTRAS_TEMPERATURE_FLOAT, WRONG_TEMP_VALUE);
-            String icon = extras.getString(EXTRAS_ICON, null);
+            WeatherDetails details = extras.getParcelable(EXTRAS_WEATHER_DETAILS);
 
-            mPresenter.setParameters(cityId, cityName, temp, icon);
+            mPresenter.setParameters(cityId, cityName, details);
         }
     }
 }

@@ -10,20 +10,33 @@ import android.widget.TextView;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.Utils;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.WeatherDetails;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import okhttp3.internal.Util;
 
 public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_3_HOURS_FORECAST = 0;
     private static final int TYPE_DAY_FORECAST = 1;
-    private static final int TYPE_HEADER = 2;
+    private static final int TYPE_DETAILS = 2;
+    private static final int TYPE_HEADER = 3;
     private List<Weather> m3HForecast = new ArrayList<>();
     private List<Weather> mDayForecast = new ArrayList<>();
+    private WeatherDetails mCurrentWeatherDetails;
     private Utils.TemperatureUnits mTemperatureUnits = Utils.TemperatureUnits.CELSIUS;
+    private Utils.PressureUnits mPressureUnits;
+    private Utils.SpeedUnits mSpeedUnits;
+    private Utils.TimeUnits mTimeUnits;
+
+    public ForecastAdapter(Utils.TemperatureUnits temperatureUnits,
+                           Utils.PressureUnits pressureUnits, Utils.SpeedUnits speedUnits,
+                           Utils.TimeUnits timeUnits) {
+        mTemperatureUnits = temperatureUnits;
+        mPressureUnits = pressureUnits;
+        mSpeedUnits = speedUnits;
+        mTimeUnits = timeUnits;
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,6 +49,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_DAY_FORECAST:
                 view = inflater.inflate(R.layout.day_forecast_item, parent, false);
                 return new DayForecastViewHolder(view);
+            case TYPE_DETAILS:
+                view = inflater.inflate(R.layout.weather_details_item, parent, false);
+                return new WeatherDetailsViewHolder(view);
             case TYPE_HEADER:
                 view = inflater.inflate(R.layout.forecast_header, parent, false);
                 return new HeaderViewHolder(view);
@@ -49,7 +65,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(mDayForecast.size() == 0) {
             return 0;
         } else {
-            return mDayForecast.size() + 2;
+            return mDayForecast.size() + 4;
         }
     }
 
@@ -62,6 +78,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             case TYPE_DAY_FORECAST:
                 bindDayForecast((DayForecastViewHolder) holder, position);
                 break;
+            case TYPE_DETAILS:
+                bindDetails((WeatherDetailsViewHolder) holder);
+                break;
             case TYPE_HEADER:
                 bindHeaderForecast((HeaderViewHolder) holder, position);
                 break;
@@ -71,26 +90,30 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     @Override
     public int getItemViewType(int position) {
         if(position == 1) {
+            return TYPE_DETAILS;
+        } else if(position == 3){
             return TYPE_3_HOURS_FORECAST;
-        } else if(position > 2){
+        } else if(position > 4){
             return TYPE_DAY_FORECAST;
         } else {
             return TYPE_HEADER;
         }
     }
 
-    public void setDayForecast(List<Weather> dayForecast, Utils.TemperatureUnits tempUnits) {
-        mTemperatureUnits = tempUnits;
+    public void setDayForecast(List<Weather> dayForecast) {
         mDayForecast = dayForecast;
     }
 
-    public void set3HForecast(List<Weather> forecast, Utils.TemperatureUnits tempUnits) {
-        mTemperatureUnits = tempUnits;
+    public void set3HForecast(List<Weather> forecast) {
         m3HForecast = forecast;
     }
 
+    public void setWeatherDetails(WeatherDetails details) {
+        mCurrentWeatherDetails = details;
+    }
+
     private void bindDayForecast(DayForecastViewHolder holder, int position) {
-        Weather weather = mDayForecast.get(position - 2);
+        Weather weather = mDayForecast.get(position - 4);
         String date = Utils.convertLongToDateString(weather.getDateTime() * 1000);
         String day = Utils.convertLongToDayString(weather.getDateTime() * 1000);
         holder.mDateTextView.setText(date);
@@ -119,7 +142,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return;
 
         for(int i = 0; i < ThreeHoursForecastViewHolder.FORECAST_COUNT; ++i) {
-            String time = Utils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000);
+            String time = Utils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000,
+                    mTimeUnits);
             holder.mTimeArray[i].setText(time);
             String temp = Utils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp(),
                     mTemperatureUnits);
@@ -135,8 +159,42 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
+    private void bindDetails(WeatherDetailsViewHolder holder) {
+        if(mCurrentWeatherDetails == null)
+            return;
+
+        String pressureString = Utils.getPressureString(mCurrentWeatherDetails.getPressure(),
+                mPressureUnits);
+        holder.mPressureTextView.setText(pressureString);
+
+        holder.mHumidityTextView.setText(Utils.getHumidityString(
+                mCurrentWeatherDetails.getHumidity()));
+
+        String windSpeedStr = Utils.getSpeedString(mCurrentWeatherDetails.getWindSpeed(),
+                mSpeedUnits);
+        holder.mWindSpeedTextView.setText(windSpeedStr);
+
+        String sunriseTimeStr = Utils.convertLongToTimeString(mCurrentWeatherDetails.getSunrise() * 1000,
+                mTimeUnits);
+        holder.mSunriseTextView.setText(sunriseTimeStr);
+
+        String sunsetTimeStr = Utils.convertLongToTimeString(mCurrentWeatherDetails.getSunset() * 1000,
+                mTimeUnits);
+        holder.mSunsetTextView.setText(sunsetTimeStr);
+
+        String dayLightStr = Utils.convertLongToDurationString(
+                (mCurrentWeatherDetails.getSunset() - mCurrentWeatherDetails.getSunrise()) * 1000
+        );
+        holder.mDayLightTime.setText(dayLightStr);
+
+        Utils.Wind wind = Utils.getWindDirectionByAngle(mCurrentWeatherDetails.getWindDeg());
+        holder.mWindDegImageView.setImageResource(getWindDegIcon(wind));
+    }
+
     private void bindHeaderForecast(HeaderViewHolder holder, int position) {
         if(position == 0) {
+            holder.mHeaderTextView.setText(R.string.details_header);
+        } else if(position == 2) {
             holder.mHeaderTextView.setText(R.string.header_3h_forecast);
         } else {
             holder.mHeaderTextView.setText(R.string.header_daily_forecast);
@@ -150,6 +208,30 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public HeaderViewHolder(View itemView) {
             super(itemView);
             mHeaderTextView = (TextView) itemView.findViewById(R.id.header);
+        }
+    }
+
+    private int getWindDegIcon(Utils.Wind wind) {
+        switch (wind) {
+
+            case N:
+                return R.drawable.ic_arrow_up_grey600_24dp;
+            case S:
+                return R.drawable.ic_arrow_down_grey600_24dp;
+            case W:
+                return R.drawable.ic_arrow_left_grey600_24dp;
+            case E:
+                return R.drawable.ic_arrow_right_grey600_24dp;
+            case NW:
+                return R.drawable.ic_arrow_top_left_grey600_24dp;
+            case NE:
+                return R.drawable.ic_arrow_top_right_grey600_24dp;
+            case SW:
+                return R.drawable.ic_arrow_bottom_left_grey600_24dp;
+            case SE:
+                return R.drawable.ic_arrow_bottom_right_grey600_24dp;
+            default:
+                return R.drawable.ic_arrow_up_grey600_24dp;
         }
     }
 
@@ -202,6 +284,28 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             mTempArray[3] = (TextView) itemView.findViewById(R.id.temp4);
             mTempArray[4] = (TextView) itemView.findViewById(R.id.temp5);
             mTempArray[5] = (TextView) itemView.findViewById(R.id.temp6);
+        }
+    }
+
+    private class WeatherDetailsViewHolder extends RecyclerView.ViewHolder {
+
+        private TextView mPressureTextView;
+        private TextView mHumidityTextView;
+        private TextView mWindSpeedTextView;
+        private TextView mSunriseTextView;
+        private TextView mSunsetTextView;
+        private TextView mDayLightTime;
+        private ImageView mWindDegImageView;
+
+        public WeatherDetailsViewHolder(View itemView) {
+            super(itemView);
+            mPressureTextView = (TextView) itemView.findViewById(R.id.pressure);
+            mHumidityTextView = (TextView) itemView.findViewById(R.id.humidity);
+            mWindSpeedTextView = (TextView) itemView.findViewById(R.id.windSpeed);
+            mSunriseTextView = (TextView) itemView.findViewById(R.id.sunrise);
+            mSunsetTextView = (TextView) itemView.findViewById(R.id.sunset);
+            mDayLightTime = (TextView) itemView.findViewById(R.id.dayLightTime);
+            mWindDegImageView = (ImageView) itemView.findViewById(R.id.windDeg);
         }
     }
 }

@@ -29,6 +29,7 @@ import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.detail.DetailActivity;
 import com.metalcyborg.weather.settings.SettingsActivity;
 
@@ -307,22 +308,36 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     public void showForecast(CityWeather cityWeather) {
         Intent intent = new Intent(getActivity(), DetailActivity.class);
         City city = cityWeather.getCity();
+        Weather weather = cityWeather.getWeather();
+        WeatherDetails details = new WeatherDetails();
+        if(weather != null) {
+            if(weather.getMain() != null ) {
+                details.setTemperature(weather.getMain().getDayTemp());
+                details.setPressure(weather.getMain().getPressure());
+                details.setHumidity(weather.getMain().getHumidity());
+            }
+            if(weather.getWeatherDescription() != null) {
+                details.setIcon(weather.getWeatherDescription().getIcon());
+            }
+
+            if(weather.getSys() != null) {
+                details.setSunrise(weather.getSys().getSunrise());
+                details.setSunset(weather.getSys().getSunset());
+            }
+
+            if(weather.getWind() != null) {
+                details.setWindSpeed(weather.getWind().getSpeed());
+                details.setWindDeg(weather.getWind().getDeg());
+            }
+        }
+
+        intent.putExtra(DetailActivity.EXTRAS_WEATHER_DETAILS, details);
+
         if(city != null) {
             intent.putExtra(DetailActivity.EXTRAS_CITY_ID, cityWeather.getCity().getOpenWeatherId());
             intent.putExtra(DetailActivity.EXTRAS_CITY_NAME, cityWeather.getCity().getName());
+            startActivity(intent);
         }
-        Weather weather = cityWeather.getWeather();
-        if(weather != null) {
-            if(weather.getMain() != null) {
-                intent.putExtra(DetailActivity.EXTRAS_TEMPERATURE_FLOAT,
-                        weather.getMain().getDayTemp());
-            }
-            if(weather.getWeatherDescription() != null) {
-                intent.putExtra(DetailActivity.EXTRAS_ICON,
-                        weather.getWeatherDescription().getIcon());
-            }
-        }
-        startActivity(intent);
     }
 
     @Override

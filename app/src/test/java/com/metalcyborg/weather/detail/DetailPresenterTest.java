@@ -2,6 +2,7 @@ package com.metalcyborg.weather.detail;
 
 import com.google.common.collect.Lists;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 import org.junit.Before;
@@ -24,8 +25,10 @@ public class DetailPresenterTest {
 
     private static final String CITY_ID = "city_id";
     private static final String CITY_NAME = "city_name";
-    private static final float TEMPERATURE = 10f;
     private static final String ICON = "icon";
+
+    private static final WeatherDetails WEATHER_DETAILS = new WeatherDetails(100, 100, 100,
+            10, 180, 1234, 4321, "icon");
     private static final Weather WEATHER_1 = new Weather(10);
     private static final Weather WEATHER_2 = new Weather(100);
     private static final List<Weather> FORECAST_LIST = Lists.newArrayList(WEATHER_1, WEATHER_2);
@@ -49,12 +52,12 @@ public class DetailPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         mPresenter = new DetailPresenter(mRepository, mView);
-        mPresenter.setParameters(CITY_ID, CITY_NAME, TEMPERATURE, ICON);
+        mPresenter.setParameters(CITY_ID, CITY_NAME, WEATHER_DETAILS);
         when(mView.isActive()).thenReturn(true);
     }
 
     private void verifyHeaderLoading() {
-        verify(mView).displayHeader(CITY_NAME, TEMPERATURE, ICON);
+        verify(mView).displayCurrentWeatherDetails(CITY_NAME, WEATHER_DETAILS);
     }
 
     @Test
