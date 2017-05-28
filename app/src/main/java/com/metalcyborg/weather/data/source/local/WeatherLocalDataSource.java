@@ -350,6 +350,23 @@ public class WeatherLocalDataSource implements LocalDataSource {
         }
     }
 
+    @Override
+    public void deleteCityFromChosenCityListByName(String cityName) {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+
+        try {
+            // Delete from chosen city table
+            db.delete(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME,
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + "=?",
+                    new String[]{cityName});
+
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
     private ContentValues generateContentValues(Weather weather) {
         ContentValues cv = new ContentValues();
         cv.put(WeatherPersistenceContract.WeatherTable.COLUMN_DATE,

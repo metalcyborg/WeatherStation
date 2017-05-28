@@ -276,4 +276,9 @@ public class WeatherRepository implements WeatherDataSource {
             mCachedWeather.remove(cityWeather.getCity().getOpenWeatherId());
         }
     }
+
+    @Override
+    public void deleteCityFromChosenCityListByName(String cityName) {
+        mLocalDataSource.deleteCityFromChosenCityListByName(cityName);
+    }
 }

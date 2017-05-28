@@ -57,4 +57,6 @@ public interface WeatherDataSource {
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 
     void deleteCitiesFromChosenCityList(List<CityWeather> cityWeatherList);
+
+    void deleteCityFromChosenCityListByName(String cityName);
 }

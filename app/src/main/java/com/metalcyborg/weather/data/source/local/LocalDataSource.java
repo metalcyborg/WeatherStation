@@ -62,6 +62,8 @@ public interface LocalDataSource {
 
     void deleteCitiesFromChosenCityList(List<CityWeather> items);
 
+    void deleteCityFromChosenCityListByName(String cityName);
+
     void updateCurrentWeather(String cityId, Weather weather);
 
     void update3HForecast(String cityId, List<Weather> forecast);
