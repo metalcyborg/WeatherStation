@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.Utils;
+import com.metalcyborg.weather.util.WeatherUtils;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 
@@ -24,14 +24,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private List<Weather> m3HForecast = new ArrayList<>();
     private List<Weather> mDayForecast = new ArrayList<>();
     private WeatherDetails mCurrentWeatherDetails;
-    private Utils.TemperatureUnits mTemperatureUnits = Utils.TemperatureUnits.CELSIUS;
-    private Utils.PressureUnits mPressureUnits;
-    private Utils.SpeedUnits mSpeedUnits;
-    private Utils.TimeUnits mTimeUnits;
+    private WeatherUtils.TemperatureUnits mTemperatureUnits = WeatherUtils.TemperatureUnits.CELSIUS;
+    private WeatherUtils.PressureUnits mPressureUnits;
+    private WeatherUtils.SpeedUnits mSpeedUnits;
+    private WeatherUtils.TimeUnits mTimeUnits;
 
-    public ForecastAdapter(Utils.TemperatureUnits temperatureUnits,
-                           Utils.PressureUnits pressureUnits, Utils.SpeedUnits speedUnits,
-                           Utils.TimeUnits timeUnits) {
+    public ForecastAdapter(WeatherUtils.TemperatureUnits temperatureUnits,
+                           WeatherUtils.PressureUnits pressureUnits, WeatherUtils.SpeedUnits speedUnits,
+                           WeatherUtils.TimeUnits timeUnits) {
         mTemperatureUnits = temperatureUnits;
         mPressureUnits = pressureUnits;
         mSpeedUnits = speedUnits;
@@ -114,14 +114,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     private void bindDayForecast(DayForecastViewHolder holder, int position) {
         Weather weather = mDayForecast.get(position - 4);
-        String date = Utils.convertLongToDateString(weather.getDateTime() * 1000);
-        String day = Utils.convertLongToDayString(weather.getDateTime() * 1000);
+        String date = WeatherUtils.convertLongToDateString(weather.getDateTime() * 1000);
+        String day = WeatherUtils.convertLongToDayString(weather.getDateTime() * 1000);
         holder.mDateTextView.setText(date);
         holder.mDayTextView.setText(day);
         if (weather.getMain() != null) {
-            String dayTemp = Utils.getTemperatureString(weather.getMain().getDayTemp(),
+            String dayTemp = WeatherUtils.getTemperatureString(weather.getMain().getDayTemp(),
                     mTemperatureUnits);
-            String nightTemp = Utils.getTemperatureString(weather.getMain().getNightTemp(),
+            String nightTemp = WeatherUtils.getTemperatureString(weather.getMain().getNightTemp(),
                     mTemperatureUnits);
             holder.mDayTemperatureTextView.setText(dayTemp);
             holder.mNightTemperature.setText(nightTemp);
@@ -129,7 +129,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         if(weather.getWeatherDescription() != null) {
             if(weather.getWeatherDescription().getIcon() != null) {
-                int iconId = Utils.getIconId(weather.getWeatherDescription().getIcon());
+                int iconId = WeatherUtils.getIconId(weather.getWeatherDescription().getIcon());
                 if(iconId != -1) {
                     holder.mIconImageView.setImageResource(iconId);
                 }
@@ -142,17 +142,17 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             return;
 
         for(int i = 0; i < ThreeHoursForecastViewHolder.FORECAST_COUNT; ++i) {
-            String time = Utils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000,
+            String time = WeatherUtils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000,
                     mTimeUnits);
             holder.mTimeArray[i].setText(time);
-            String temp = Utils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp(),
+            String temp = WeatherUtils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp(),
                     mTemperatureUnits);
             holder.mTempArray[i].setText(temp);
 
             Weather.WeatherDescription description = m3HForecast.get(i).getWeatherDescription();
             if(description != null) {
                 if(description.getIcon() != null) {
-                    int iconId = Utils.getIconId(description.getIcon());
+                    int iconId = WeatherUtils.getIconId(description.getIcon());
                     holder.mImageArray[i].setImageResource(iconId);
                 }
             }
@@ -163,31 +163,31 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         if(mCurrentWeatherDetails == null)
             return;
 
-        String pressureString = Utils.getPressureString(mCurrentWeatherDetails.getPressure(),
+        String pressureString = WeatherUtils.getPressureString(mCurrentWeatherDetails.getPressure(),
                 mPressureUnits);
         holder.mPressureTextView.setText(pressureString);
 
-        holder.mHumidityTextView.setText(Utils.getHumidityString(
+        holder.mHumidityTextView.setText(WeatherUtils.getHumidityString(
                 mCurrentWeatherDetails.getHumidity()));
 
-        String windSpeedStr = Utils.getSpeedString(mCurrentWeatherDetails.getWindSpeed(),
+        String windSpeedStr = WeatherUtils.getSpeedString(mCurrentWeatherDetails.getWindSpeed(),
                 mSpeedUnits);
         holder.mWindSpeedTextView.setText(windSpeedStr);
 
-        String sunriseTimeStr = Utils.convertLongToTimeString(mCurrentWeatherDetails.getSunrise() * 1000,
+        String sunriseTimeStr = WeatherUtils.convertLongToTimeString(mCurrentWeatherDetails.getSunrise() * 1000,
                 mTimeUnits);
         holder.mSunriseTextView.setText(sunriseTimeStr);
 
-        String sunsetTimeStr = Utils.convertLongToTimeString(mCurrentWeatherDetails.getSunset() * 1000,
+        String sunsetTimeStr = WeatherUtils.convertLongToTimeString(mCurrentWeatherDetails.getSunset() * 1000,
                 mTimeUnits);
         holder.mSunsetTextView.setText(sunsetTimeStr);
 
-        String dayLightStr = Utils.convertLongToDurationString(
+        String dayLightStr = WeatherUtils.convertLongToDurationString(
                 (mCurrentWeatherDetails.getSunset() - mCurrentWeatherDetails.getSunrise()) * 1000
         );
         holder.mDayLightTime.setText(dayLightStr);
 
-        Utils.Wind wind = Utils.getWindDirectionByAngle(mCurrentWeatherDetails.getWindDeg());
+        WeatherUtils.Wind wind = WeatherUtils.getWindDirectionByAngle(mCurrentWeatherDetails.getWindDeg());
         holder.mWindDegImageView.setImageResource(getWindDegIcon(wind));
     }
 
@@ -211,7 +211,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    private int getWindDegIcon(Utils.Wind wind) {
+    private int getWindDegIcon(WeatherUtils.Wind wind) {
         switch (wind) {
 
             case N:

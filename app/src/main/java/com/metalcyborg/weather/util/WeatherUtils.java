@@ -1,16 +1,16 @@
-package com.metalcyborg.weather;
+package com.metalcyborg.weather.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.metalcyborg.weather.settings.SettingsActivity;
+import com.metalcyborg.weather.R;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public class Utils {
+public class WeatherUtils {
 
     private static final String UNITS_H_PA = "hPa";
     private static final String UNITS_MM_HG = "mmHg";
@@ -223,12 +223,12 @@ public class Utils {
                 .getDefaultSharedPreferences(context);
         String tempUnitsStr = sharedPreferences
                 .getString(context.getString(R.string.key_pref_temperature), "");
-        Utils.TemperatureUnits tempUnits;
+        WeatherUtils.TemperatureUnits tempUnits;
         try {
-            tempUnits = Utils.TemperatureUnits.valueOf(tempUnitsStr);
+            tempUnits = WeatherUtils.TemperatureUnits.valueOf(tempUnitsStr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
-            tempUnits = Utils.TemperatureUnits.CELSIUS;
+            tempUnits = WeatherUtils.TemperatureUnits.CELSIUS;
         }
 
         return tempUnits;
@@ -239,9 +239,9 @@ public class Utils {
                 .getDefaultSharedPreferences(context);
         String pressureUnitsStr = sharedPreferences
                 .getString(context.getString(R.string.key_pref_pressure), "");
-        Utils.PressureUnits pressureUnits;
+        WeatherUtils.PressureUnits pressureUnits;
         try {
-            pressureUnits = Utils.PressureUnits.valueOf(pressureUnitsStr);
+            pressureUnits = WeatherUtils.PressureUnits.valueOf(pressureUnitsStr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             pressureUnits = PressureUnits.H_PA;
@@ -255,9 +255,9 @@ public class Utils {
                 .getDefaultSharedPreferences(context);
         String speedUnitsStr = sharedPreferences
                 .getString(context.getString(R.string.key_pref_speed), "");
-        Utils.SpeedUnits speedUnits;
+        WeatherUtils.SpeedUnits speedUnits;
         try {
-            speedUnits = Utils.SpeedUnits.valueOf(speedUnitsStr);
+            speedUnits = WeatherUtils.SpeedUnits.valueOf(speedUnitsStr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             speedUnits = SpeedUnits.M_SEC;
@@ -271,9 +271,9 @@ public class Utils {
                 .getDefaultSharedPreferences(context);
         String timeUnitsStr = sharedPreferences
                 .getString(context.getString(R.string.key_pref_time), "");
-        Utils.TimeUnits timeUnits;
+        WeatherUtils.TimeUnits timeUnits;
         try {
-            timeUnits = Utils.TimeUnits.valueOf(timeUnitsStr);
+            timeUnits = WeatherUtils.TimeUnits.valueOf(timeUnitsStr);
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             timeUnits = TimeUnits.CLOCK_12_H;

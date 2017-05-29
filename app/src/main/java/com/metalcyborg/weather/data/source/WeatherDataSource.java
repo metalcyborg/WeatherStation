@@ -59,4 +59,6 @@ public interface WeatherDataSource {
     void deleteCitiesFromChosenCityList(List<CityWeather> cityWeatherList);
 
     void deleteCityFromChosenCityListByName(String cityName);
+
+    void deleteAllDataFromCityAndWeatherLists();
 }

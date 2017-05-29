@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.util.EspressoIdlingResource;
 
 import java.util.List;
 
@@ -101,9 +102,11 @@ public class CityListPresenter implements CityListContract.Presenter {
     }
 
     private void loadWeatherData() {
+        EspressoIdlingResource.increment();
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override
             public void onDataListLoaded(List<CityWeather> weatherData) {
+                EspressoIdlingResource.decrement();
                 mView.showWeatherList(weatherData);
                 mView.setProgressVisibility(false);
             }

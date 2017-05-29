@@ -281,4 +281,18 @@ public class WeatherRepository implements WeatherDataSource {
     public void deleteCityFromChosenCityListByName(String cityName) {
         mLocalDataSource.deleteCityFromChosenCityListByName(cityName);
     }
+
+    @Override
+    public void deleteAllDataFromCityAndWeatherLists() {
+        if(mCachedWeather != null) {
+            mCachedWeather.clear();
+        }
+        if(mCached3hForecast != null) {
+            mCached3hForecast.clear();
+        }
+        if(mCached13DForecast != null) {
+            mCached13DForecast.clear();
+        }
+        mLocalDataSource.deleteAllCitiesAndForecastData();
+    }
 }

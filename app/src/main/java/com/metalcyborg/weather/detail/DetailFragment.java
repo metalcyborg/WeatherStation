@@ -1,9 +1,7 @@
 package com.metalcyborg.weather.detail;
 
 
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -17,10 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.Utils;
+import com.metalcyborg.weather.util.WeatherUtils;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
-import com.metalcyborg.weather.settings.SettingsActivity;
 
 import java.util.List;
 
@@ -68,10 +65,10 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
         mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
         mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mForecastAdapter = new ForecastAdapter(Utils.getCurrentTempUnits(getActivity()),
-                Utils.getCurrentPressureUnits(getActivity()),
-                Utils.getCurrentSpeedUnits(getActivity()),
-                Utils.getCurrentTimeUnits(getActivity()));
+        mForecastAdapter = new ForecastAdapter(WeatherUtils.getCurrentTempUnits(getActivity()),
+                WeatherUtils.getCurrentPressureUnits(getActivity()),
+                WeatherUtils.getCurrentSpeedUnits(getActivity()),
+                WeatherUtils.getCurrentTimeUnits(getActivity()));
         mForecastRecycler.setAdapter(mForecastAdapter);
 
         return view;
@@ -131,12 +128,12 @@ public class DetailFragment extends Fragment implements DetailContract.View {
         if(mActionBar != null) {
             mActionBar.setTitle(cityName);
             if(details.getTemperature() != DetailActivity.WRONG_TEMP_VALUE) {
-                mHeaderTemp.setText(Utils.getTemperatureString(details.getTemperature(),
-                        Utils.getCurrentTempUnits(getActivity())));
+                mHeaderTemp.setText(WeatherUtils.getTemperatureString(details.getTemperature(),
+                        WeatherUtils.getCurrentTempUnits(getActivity())));
             }
 
             if(details.getIcon() != null) {
-                int imageId = Utils.getWeatherImageId(details.getIcon());
+                int imageId = WeatherUtils.getWeatherImageId(details.getIcon());
                 if(imageId != -1) {
                     mHeaderImage.setImageResource(imageId);
                 }

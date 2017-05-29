@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.Utils;
+import com.metalcyborg.weather.util.WeatherUtils;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
@@ -21,7 +21,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
     private RecyclerView mRecyclerView;
     private WeatherClickListener mClickListener;
     private List<CityWeather> mItems = new ArrayList<>();
-    private Utils.TemperatureUnits mTempUnits = Utils.TemperatureUnits.CELSIUS;
+    private WeatherUtils.TemperatureUnits mTempUnits = WeatherUtils.TemperatureUnits.CELSIUS;
     private SparseBooleanArray mSelectedPositions = new SparseBooleanArray();
 
     public interface WeatherClickListener {
@@ -52,7 +52,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         holder.mCityName.setText(cityWeather.getCity().getName());
         holder.mCountryName.setText(cityWeather.getCity().getCountry());
         if(cityWeather.getWeather() != null) {
-            String temp = Utils.getTemperatureString(
+            String temp = WeatherUtils.getTemperatureString(
                     cityWeather.getWeather().getMain().getDayTemp(),
                     mTempUnits);
             holder.mTemperature.setText(temp);
@@ -60,7 +60,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
             Weather.WeatherDescription description = cityWeather.getWeather().getWeatherDescription();
             if(description != null) {
                 if(description.getIcon() != null) {
-                    int iconId = Utils.getIconId(description.getIcon());
+                    int iconId = WeatherUtils.getIconId(description.getIcon());
                     if(iconId != -1) {
                         holder.mIcon.setImageResource(iconId);
                     }
@@ -71,7 +71,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         holder.mContainer.setSelected(mSelectedPositions.get(position));
     }
 
-    public void setItems(List<CityWeather> items, Utils.TemperatureUnits temperatureUnits) {
+    public void setItems(List<CityWeather> items, WeatherUtils.TemperatureUnits temperatureUnits) {
         mTempUnits = temperatureUnits;
         mItems = items;
     }

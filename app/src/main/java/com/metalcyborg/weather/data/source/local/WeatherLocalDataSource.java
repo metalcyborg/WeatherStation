@@ -206,7 +206,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
         String selection = WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?" +
                 " AND" + WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST + "=?" +
                 " AND" + WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST_3H + "=?";
-        String[] selectionArgs = new String[] {cityId, "1", forecast3H ? "1" : "0"};
+        String[] selectionArgs = new String[]{cityId, "1", forecast3H ? "1" : "0"};
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
         builder.setTables(WeatherPersistenceContract.WeatherTable.TABLE_NAME);
@@ -214,7 +214,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
                 selection, selectionArgs, null, null, null);
 
         List<Weather> weatherList = new ArrayList<>();
-        while(cursor.moveToNext()) {
+        while (cursor.moveToNext()) {
             Weather weather = generateWeatherObject(cursor);
             weatherList.add(weather);
         }
@@ -363,6 +363,29 @@ public class WeatherLocalDataSource implements LocalDataSource {
         } catch (SQLiteException e) {
             e.printStackTrace();
         } finally {
+            db.close();
+        }
+    }
+
+    @Override
+    public void deleteAllCitiesAndForecastData() {
+        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
+
+        try {
+            db.beginTransaction();
+
+            // Delete all data from chosen city table
+            db.delete(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, null);
+
+            // Delete all data from weather table
+            db.delete(WeatherPersistenceContract.WeatherTable.TABLE_NAME, null, null);
+
+            db.setTransactionSuccessful();
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+
+        } finally {
+            db.endTransaction();
             db.close();
         }
     }

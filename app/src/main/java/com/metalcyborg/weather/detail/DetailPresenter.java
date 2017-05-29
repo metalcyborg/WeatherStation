@@ -1,10 +1,12 @@
 package com.metalcyborg.weather.detail;
 
 import android.support.annotation.NonNull;
+import android.support.test.espresso.IdlingResource;
 
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.util.EspressoIdlingResource;
 
 import java.util.List;
 
@@ -42,9 +44,16 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     private void loadForecastData() {
         mView.setLoadingIndicator(true);
+
+        EspressoIdlingResource.increment();
+
         mRepository.load3HForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
             @Override
             public void onDataLoaded(List<Weather> forecast) {
+                if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
+
                 mView.setLoadingIndicator(false);
                 mView.show3HForecast(forecast);
             }

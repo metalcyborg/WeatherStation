@@ -23,7 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.Utils;
+import com.metalcyborg.weather.util.WeatherUtils;
 import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.City;
@@ -72,7 +72,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
+        View view = inflater.inflate(R.layout.fragment_city_list, container, false);
 
         mFab = (FloatingActionButton) getActivity().findViewById(R.id.fab);
         mFab.setOnClickListener(new View.OnClickListener() {
@@ -223,7 +223,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showWeatherList(List<CityWeather> weatherList) {
-        mWeatherAdapter.setItems(weatherList, Utils.getCurrentTempUnits(getActivity()));
+        mWeatherAdapter.setItems(weatherList, WeatherUtils.getCurrentTempUnits(getActivity()));
         mWeatherAdapter.notifyDataSetChanged();
     }
 
