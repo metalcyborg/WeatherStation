@@ -331,7 +331,7 @@ public class WeatherUtils {
     }
 
     public static Wind getWindDirectionByAngle(float angle) {
-        if((angle >= 337.5 && angle < 360) || (angle >=0 && angle < 22.5)) {
+        if((angle >= 337.5 && angle <= 360) || (angle >= 0 && angle < 22.5)) {
             return Wind.N;
         } else if(angle >= 22.5 && angle < (45 + 22.5)) {
             return Wind.NE;
@@ -347,8 +347,6 @@ public class WeatherUtils {
             return Wind.W;
         } else if(angle >= (270 + 22.5) && angle < (315 + 22.5)) {
             return Wind.NW;
-        } else if(angle >= (315 + 22.5) && angle < 360) {
-            return Wind.N;
         }
 
         return null;

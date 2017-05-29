@@ -236,8 +236,10 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             @Override
             public void onResponse(Call<Forecast3Hours> call, Response<Forecast3Hours> response) {
                 Forecast3Hours forecast3Hours = response.body();
-                List<Weather> forecast = generate3HForecastList(forecast3Hours);
-                callback.onDataLoaded(forecast);
+                if(forecast3Hours != null) {
+                    List<Weather> forecast = generate3HForecastList(forecast3Hours);
+                    callback.onDataLoaded(forecast);
+                }
             }
 
             @Override
