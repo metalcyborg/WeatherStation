@@ -42,7 +42,7 @@ public interface LocalDataSource {
 
         void onDataLoaded(Weather weatherData);
 
-        void onError();
+        void onDataNotAvailable();
     }
 
     boolean isCitiesDataAdded();

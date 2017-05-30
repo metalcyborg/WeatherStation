@@ -203,7 +203,49 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void getWeatherByCityId(String id, GetWeatherCallback callback) {
+        String[] columns = new String[] {
+                WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATE,
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME,
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME,
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY,
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT,
+                WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE,
+                WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION,
+                WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
+                WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
+                WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H,
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H,
+                WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST
+        };
 
+        SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
+        builder.setTables(WeatherPersistenceContract.WeatherTable.TABLE_NAME);
+
+        Cursor cursor = builder.query(mDatabaseHelper.getReadableDatabase(), columns,
+                WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?",
+                new String[] {id}, null, null, null);
+
+        Weather weather = null;
+        if (cursor.moveToFirst()) {
+            if (cursor.getInt(cursor.getColumnIndex(
+                    WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED.trim())) == 1) {
+                // Data was received
+                weather = generateWeatherObject(cursor);
+            }
+        }
+
+        if (weather == null) {
+            callback.onDataNotAvailable();
+        } else {
+            callback.onDataLoaded(weather);
+        }
     }
 
     private void loadForecast(String cityId, boolean forecast3H, LoadForecastCallback callback) {
@@ -225,7 +267,11 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
         cursor.close();
 
-        callback.onDataLoaded(weatherList);
+        if(weatherList.isEmpty()) {
+            callback.onDataNotAvailable();
+        } else {
+            callback.onDataLoaded(weatherList);
+        }
     }
 
     @Override

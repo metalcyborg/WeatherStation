@@ -33,6 +33,7 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     @Override
     public void start() {
+        EspressoIdlingResource.increment();
         mView.displayCurrentWeatherDetails(mCityName, mDetails);
         loadForecastData();
     }
@@ -44,8 +45,6 @@ public class DetailPresenter implements DetailContract.Presenter {
 
     private void loadForecastData() {
         mView.setLoadingIndicator(true);
-
-        EspressoIdlingResource.increment();
 
         mRepository.load3HForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
             @Override

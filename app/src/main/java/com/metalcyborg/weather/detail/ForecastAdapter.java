@@ -188,7 +188,9 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.mDayLightTime.setText(dayLightStr);
 
         WeatherUtils.Wind wind = WeatherUtils.getWindDirectionByAngle(mCurrentWeatherDetails.getWindDeg());
-        holder.mWindDegImageView.setImageResource(getWindDegIcon(wind));
+        if(wind != null) {
+            holder.mWindDegImageView.setImageResource(getWindDegIcon(wind));
+        }
     }
 
     private void bindHeaderForecast(HeaderViewHolder holder, int position) {
