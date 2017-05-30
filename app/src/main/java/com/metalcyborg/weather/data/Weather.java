@@ -142,6 +142,33 @@ public class Weather {
         public void setHumidity(float humidity) {
             mHumidity = humidity;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Main main = (Main) o;
+
+            if (Float.compare(main.mDayTemp, mDayTemp) != 0) return false;
+            if (Float.compare(main.mMorningTemp, mMorningTemp) != 0) return false;
+            if (Float.compare(main.mEveningTemp, mEveningTemp) != 0) return false;
+            if (Float.compare(main.mNightTemp, mNightTemp) != 0) return false;
+            if (Float.compare(main.mPressure, mPressure) != 0) return false;
+            return Float.compare(main.mHumidity, mHumidity) == 0;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (mDayTemp != +0.0f ? Float.floatToIntBits(mDayTemp) : 0);
+            result = 31 * result + (mMorningTemp != +0.0f ? Float.floatToIntBits(mMorningTemp) : 0);
+            result = 31 * result + (mEveningTemp != +0.0f ? Float.floatToIntBits(mEveningTemp) : 0);
+            result = 31 * result + (mNightTemp != +0.0f ? Float.floatToIntBits(mNightTemp) : 0);
+            result = 31 * result + (mPressure != +0.0f ? Float.floatToIntBits(mPressure) : 0);
+            result = 31 * result + (mHumidity != +0.0f ? Float.floatToIntBits(mHumidity) : 0);
+            return result;
+        }
     }
 
     public static class WeatherDescription {
@@ -189,6 +216,30 @@ public class Weather {
         public void setIcon(String icon) {
             mIcon = icon;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            WeatherDescription that = (WeatherDescription) o;
+
+            if (mId != that.mId) return false;
+            if (mMain != null ? !mMain.equals(that.mMain) : that.mMain != null) return false;
+            if (mDetail != null ? !mDetail.equals(that.mDetail) : that.mDetail != null)
+                return false;
+            return mIcon != null ? mIcon.equals(that.mIcon) : that.mIcon == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = mId;
+            result = 31 * result + (mMain != null ? mMain.hashCode() : 0);
+            result = 31 * result + (mDetail != null ? mDetail.hashCode() : 0);
+            result = 31 * result + (mIcon != null ? mIcon.hashCode() : 0);
+            return result;
+        }
     }
 
     public static class Wind {
@@ -216,6 +267,25 @@ public class Weather {
         public void setDeg(float deg) {
             mDeg = deg;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Wind wind = (Wind) o;
+
+            if (Float.compare(wind.mSpeed, mSpeed) != 0) return false;
+            return Float.compare(wind.mDeg, mDeg) == 0;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (mSpeed != +0.0f ? Float.floatToIntBits(mSpeed) : 0);
+            result = 31 * result + (mDeg != +0.0f ? Float.floatToIntBits(mDeg) : 0);
+            return result;
+        }
     }
 
     public static class Clouds {
@@ -232,6 +302,22 @@ public class Weather {
 
         public void setCloudiness(int cloudiness) {
             mCloudiness = cloudiness;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Clouds clouds = (Clouds) o;
+
+            return mCloudiness == clouds.mCloudiness;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return mCloudiness;
         }
     }
 
@@ -260,6 +346,25 @@ public class Weather {
         public void setSunset(long sunset) {
             mSunset = sunset;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Sys sys = (Sys) o;
+
+            if (mSunrise != sys.mSunrise) return false;
+            return mSunset == sys.mSunset;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = (int) (mSunrise ^ (mSunrise >>> 32));
+            result = 31 * result + (int) (mSunset ^ (mSunset >>> 32));
+            return result;
+        }
     }
 
     public static class Rain {
@@ -276,6 +381,22 @@ public class Weather {
 
         public void setVolume3H(float volume3H) {
             mVolume3H = volume3H;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Rain rain = (Rain) o;
+
+            return Float.compare(rain.mVolume3H, mVolume3H) == 0;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return (mVolume3H != +0.0f ? Float.floatToIntBits(mVolume3H) : 0);
         }
     }
 
@@ -294,5 +415,55 @@ public class Weather {
         public void setVolume3H(float volume3H) {
             mVolume3H = volume3H;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Snow snow = (Snow) o;
+
+            return Float.compare(snow.mVolume3H, mVolume3H) == 0;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return (mVolume3H != +0.0f ? Float.floatToIntBits(mVolume3H) : 0);
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Weather)) return false;
+
+        Weather weather = (Weather) o;
+
+        if (mDateTime != weather.mDateTime) return false;
+        if (mWeatherDescription != null ? !mWeatherDescription.equals(weather.mWeatherDescription)
+                : weather.mWeatherDescription != null)
+            return false;
+        if (mMain != null ? !mMain.equals(weather.mMain) : weather.mMain != null) return false;
+        if (mWind != null ? !mWind.equals(weather.mWind) : weather.mWind != null) return false;
+        if (mClouds != null ? !mClouds.equals(weather.mClouds) : weather.mClouds != null)
+            return false;
+        if (mSys != null ? !mSys.equals(weather.mSys) : weather.mSys != null) return false;
+        if (mRain != null ? !mRain.equals(weather.mRain) : weather.mRain != null) return false;
+        return mSnow != null ? mSnow.equals(weather.mSnow) : weather.mSnow == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (int) (mDateTime ^ (mDateTime >>> 32));
+        result = 31 * result + (mWeatherDescription != null ? mWeatherDescription.hashCode() : 0);
+        result = 31 * result + (mMain != null ? mMain.hashCode() : 0);
+        result = 31 * result + (mWind != null ? mWind.hashCode() : 0);
+        result = 31 * result + (mClouds != null ? mClouds.hashCode() : 0);
+        result = 31 * result + (mSys != null ? mSys.hashCode() : 0);
+        result = 31 * result + (mRain != null ? mRain.hashCode() : 0);
+        result = 31 * result + (mSnow != null ? mSnow.hashCode() : 0);
+        return result;
     }
 }
