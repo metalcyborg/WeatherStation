@@ -183,9 +183,8 @@ public class WeatherLocalDataSource implements LocalDataSource {
             City city = new City(
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID.trim())),
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME.trim())),
-                    cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME.trim())),
-                    0,
-                    0);
+                    cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME.trim()))
+            );
             Weather weather = null;
             if (cursor.getInt(cursor.getColumnIndex(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED.trim())) == 1) {
                 // Data was received
@@ -200,6 +199,11 @@ public class WeatherLocalDataSource implements LocalDataSource {
         } else {
             callback.onDataLoaded(cityWeatherList);
         }
+    }
+
+    @Override
+    public void getWeatherByCityId(String id, GetWeatherCallback callback) {
+
     }
 
     private void loadForecast(String cityId, boolean forecast3H, LoadForecastCallback callback) {
@@ -257,9 +261,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
         List<City> cityList = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getLong(4), cursor.getLong(5)
-            );
+            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3));
             cityList.add(city);
         }
 
@@ -322,22 +324,22 @@ public class WeatherLocalDataSource implements LocalDataSource {
     }
 
     @Override
-    public void deleteCitiesFromChosenCityList(List<CityWeather> items) {
+    public void deleteCitiesFromChosenCityList(List<City> items) {
         SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
 
         try {
             db.beginTransaction();
 
-            for (CityWeather cityWeather : items) {
+            for (City city : items) {
                 // Delete from chosen city table
                 db.delete(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME,
                         WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + "=?",
-                        new String[]{cityWeather.getCity().getOpenWeatherId()});
+                        new String[]{city.getOpenWeatherId()});
 
                 // Delete from weather table
                 db.delete(WeatherPersistenceContract.WeatherTable.TABLE_NAME,
                         WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID + "=?",
-                        new String[]{cityWeather.getCity().getOpenWeatherId()});
+                        new String[]{city.getOpenWeatherId()});
             }
 
             db.setTransactionSuccessful();
@@ -346,23 +348,6 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
         } finally {
             db.endTransaction();
-            db.close();
-        }
-    }
-
-    @Override
-    public void deleteCityFromChosenCityListByName(String cityName) {
-        SQLiteDatabase db = mDatabaseHelper.getWritableDatabase();
-
-        try {
-            // Delete from chosen city table
-            db.delete(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME,
-                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + "=?",
-                    new String[]{cityName});
-
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-        } finally {
             db.close();
         }
     }

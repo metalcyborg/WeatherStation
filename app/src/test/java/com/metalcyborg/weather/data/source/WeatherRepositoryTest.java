@@ -42,9 +42,9 @@ public class WeatherRepositoryTest {
     private static final String CITY_ID_1 = "1";
     private static final String CITY_ID_2 = "2";
     private static final String CITY_ID_3 = "3";
-    private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1", 10, 20);
-    private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2", 20, 40);
-    private static final City CITY_3 = new City(CITY_ID_3, "City 3", "Country 3", 30, 60);
+    private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1");
+    private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2");
+    private static final City CITY_3 = new City(CITY_ID_3, "City 3", "Country 3");
     private static final Weather WEATHER_1 = new Weather(100);
     private static final Weather WEATHER_2 = new Weather(200);
     private static final Weather WEATHER_3 = new Weather(300);
@@ -132,7 +132,7 @@ public class WeatherRepositoryTest {
 
     @Test
     public void addNewCityToWeatherList() {
-        City city = new City("0", "City 0", "Country 0", 100, 200);
+        City city = new City("0", "City 0", "Country 0");
         mWeatherRepository.addNewCityToChosenCityList(city);
 
         verify(mLocalDataSource).addNewCityToChosenCityList(city);
@@ -306,7 +306,7 @@ public class WeatherRepositoryTest {
 
     @Test
     public void deleteCitiesFromChosenCityList() {
-        List<CityWeather> deletedCityList = Lists.newArrayList(CITY_WEATHER_1, CITY_WEATHER_2);
+        List<City> deletedCityList = Lists.newArrayList(CITY_1, CITY_2);
         fillCurrentWeatherCache();
         assertThat(mWeatherRepository.mCachedWeather.size(), is(CITY_WEATHER_LIST.size()));
 

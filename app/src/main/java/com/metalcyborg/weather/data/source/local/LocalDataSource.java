@@ -7,6 +7,7 @@ import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.List;
 
@@ -52,6 +53,8 @@ public interface LocalDataSource {
 
     void loadWeatherData(LoadWeatherListCallback callback);
 
+    void getWeatherByCityId(String id, GetWeatherCallback callback);
+
     void load3HForecastData(String cityId, LoadForecastCallback callback);
 
     void load13DForecastData(String cityId, LoadForecastCallback callback);
@@ -60,9 +63,7 @@ public interface LocalDataSource {
 
     void addNewCityToChosenCityList(City city) throws SQLiteException;
 
-    void deleteCitiesFromChosenCityList(List<CityWeather> items);
-
-    void deleteCityFromChosenCityListByName(String cityName);
+    void deleteCitiesFromChosenCityList(List<City> items);
 
     void deleteAllCitiesAndForecastData();
 

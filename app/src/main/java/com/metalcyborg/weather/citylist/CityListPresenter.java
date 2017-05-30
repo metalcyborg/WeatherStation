@@ -2,11 +2,13 @@ package com.metalcyborg.weather.citylist;
 
 import android.support.annotation.NonNull;
 
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 import com.metalcyborg.weather.util.EspressoIdlingResource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -98,7 +100,11 @@ public class CityListPresenter implements CityListContract.Presenter {
     @Override
     public void deleteItems(List<CityWeather> items) {
         mView.deleteSelectedItems();
-        mRepository.deleteCitiesFromChosenCityList(items);
+        List<City> cityList = new ArrayList<>();
+        for(CityWeather cityWeather : items) {
+            cityList.add(cityWeather.getCity());
+        }
+        mRepository.deleteCitiesFromChosenCityList(cityList);
     }
 
     private void loadWeatherData() {
