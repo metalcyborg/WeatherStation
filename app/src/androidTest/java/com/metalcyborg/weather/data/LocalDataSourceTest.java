@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.metalcyborg.weather.util.WeatherUtils.generateTestWeatherData;
 import static junit.framework.Assert.assertNull;
 import static junit.framework.Assert.fail;
 import static org.hamcrest.core.Is.is;
@@ -239,30 +240,5 @@ public class LocalDataSourceTest {
         mLocalDataSource.updateCurrentWeather(city.getOpenWeatherId(), currentWeather);
         mLocalDataSource.update3HForecast(city.getOpenWeatherId(), forecast3H);
         mLocalDataSource.update13DForecast(city.getOpenWeatherId(), dailyForecast);
-    }
-
-    private Weather generateTestWeatherData() {
-        Random r = new Random();
-        Weather weather = new Weather(r.nextLong());
-        Weather.Main main = new Weather.Main(r.nextFloat(), r.nextFloat(), r.nextFloat(),
-                r.nextFloat());
-        Weather.WeatherDescription weatherDescription = new Weather.WeatherDescription(
-                r.nextInt(), "main", "detail", "icon"
-        );
-        Weather.Clouds clouds = new Weather.Clouds(r.nextInt());
-        Weather.Rain rain = new Weather.Rain(r.nextFloat());
-        Weather.Snow snow = new Weather.Snow(r.nextFloat());
-        Weather.Wind wind = new Weather.Wind(r.nextFloat(), r.nextFloat());
-        Weather.Sys sys = new Weather.Sys(r.nextLong(), r.nextLong());
-
-        weather.setMain(main);
-        weather.setWeatherDescription(weatherDescription);
-        weather.setClouds(clouds);
-        weather.setRain(rain);
-        weather.setSnow(snow);
-        weather.setWind(wind);
-        weather.setSys(sys);
-
-        return weather;
     }
 }

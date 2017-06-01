@@ -5,10 +5,15 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.WeatherDetails;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public class WeatherUtils {
 
@@ -113,26 +118,29 @@ public class WeatherUtils {
 
     public static String getTemperatureString(float temp, TemperatureUnits units) {
         String tempStr;
+        float convertedTemp = 0f;
 
         switch (units) {
 
             case KELVIN:
-                tempStr = String.valueOf(Math.round(temp)) + "K";
+                convertedTemp = temp;
+                tempStr = String.valueOf(Math.round(convertedTemp)) + "K";
                 break;
             case FAHRENHEIT:
-                tempStr = String.valueOf(Math.round(convertKelvinToFahrenheit(temp))) + (char)0x00B0;
+                convertedTemp = convertKelvinToFahrenheit(temp);
+                tempStr = String.valueOf(Math.round(convertedTemp)) + (char)0x00B0;
                 break;
             case CELSIUS:
-                tempStr = String.valueOf(Math.round(convertKelvinToCelsius(temp))) + (char)0x00B0;
+                convertedTemp = convertKelvinToCelsius(temp);
+                tempStr = String.valueOf(Math.round(convertedTemp)) + (char)0x00B0;
                 break;
             default:
-                tempStr = String.valueOf(Math.round(temp)) + "K";
+                convertedTemp = temp;
+                tempStr = String.valueOf(Math.round(convertedTemp)) + "K";
         }
 
         if(units != TemperatureUnits.KELVIN) {
-            if (temp < 0) {
-                tempStr = "-" + tempStr;
-            } else if (temp > 0) {
+            if (convertedTemp > 0) {
                 tempStr = "+" + tempStr;
             }
         }
@@ -350,5 +358,55 @@ public class WeatherUtils {
         }
 
         return null;
+    }
+
+    public static Weather generateTestWeatherData() {
+        Random r = new Random();
+        Weather weather = new Weather(System.currentTimeMillis() / 1000 - r.nextInt(3600));
+        Weather.Main main = new Weather.Main(r.nextInt(100) + 200, r.nextInt(100) + 200,
+                r.nextInt(1000), r.nextInt(100));
+        Weather.WeatherDescription weatherDescription = new Weather.WeatherDescription(
+                r.nextInt(), "main", "detail", "01d"
+        );
+        Weather.Clouds clouds = new Weather.Clouds(r.nextInt());
+        Weather.Rain rain = new Weather.Rain(r.nextInt(100));
+        Weather.Snow snow = new Weather.Snow(r.nextInt(100));
+        Weather.Wind wind = new Weather.Wind(r.nextInt(20), r.nextInt(360));
+        Weather.Sys sys = new Weather.Sys(System.currentTimeMillis() / 1000,
+                System.currentTimeMillis() / 1000);
+
+        weather.setMain(main);
+        weather.setWeatherDescription(weatherDescription);
+        weather.setClouds(clouds);
+        weather.setRain(rain);
+        weather.setSnow(snow);
+        weather.setWind(wind);
+        weather.setSys(sys);
+
+        return weather;
+    }
+
+    public static WeatherDetails generateTestWeatherDetailsData() {
+        Random r = new Random();
+
+        return new WeatherDetails(
+                r.nextInt(100) + 200,
+                r.nextInt(1000),
+                r.nextInt(100),
+                r.nextInt(20),
+                r.nextInt(360),
+                System.currentTimeMillis() / 1000 - r.nextInt(36000),
+                System.currentTimeMillis() / 1000 + r.nextInt(36000),
+                "01d"
+        );
+    }
+
+    public static List<Weather> generateWeatherList(int size) {
+        List<Weather> weatherList = new ArrayList<>();
+        for(int i = 0; i < size; ++i) {
+            weatherList.add(generateTestWeatherData());
+        }
+
+        return weatherList;
     }
 }

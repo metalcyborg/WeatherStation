@@ -1,6 +1,8 @@
 package com.metalcyborg.weather.citylist;
 
 import android.support.test.InstrumentationRegistry;
+import android.support.test.espresso.NoMatchingViewException;
+import android.support.test.espresso.ViewAssertion;
 import android.support.test.espresso.ViewInteraction;
 import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 
 import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.TestUtils;
 import com.metalcyborg.weather.citysearch.CityAdapter;
 import com.metalcyborg.weather.data.source.WeatherRepository;
 
@@ -32,6 +35,7 @@ import static android.support.test.espresso.action.ViewActions.longClick;
 import static android.support.test.espresso.action.ViewActions.typeTextIntoFocusedView;
 import static android.support.test.espresso.assertion.ViewAssertions.doesNotExist;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.assertThat;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
@@ -39,7 +43,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static com.google.common.base.Preconditions.checkArgument;
+import static junit.framework.Assert.fail;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 
 @RunWith(AndroidJUnit4.class)
@@ -50,61 +56,6 @@ public class CityListScreenTest {
     private static final String TEST_COUNTRY_NAME = "RU";
     private static final String TEST_CITY_NAME_2 = "Moscow";
     private static final String TEST_COUNTRY_NAME_2 = "RU";
-
-    public static Matcher<RecyclerView.ViewHolder> withHolderCityNameView(final String cityName) {
-        return new BoundedMatcher<RecyclerView.ViewHolder, CityAdapter.CityViewHolder>(
-                CityAdapter.CityViewHolder.class) {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("No ViewHolder found with city name: " + cityName);
-            }
-
-            @Override
-            protected boolean matchesSafely(CityAdapter.CityViewHolder item) {
-                TextView cityNameTextView = (TextView) item.itemView.findViewById(R.id.cityName);
-                if(cityName == null) {
-                    return false;
-                }
-                return cityNameTextView.getText().toString().equals(cityName);
-            }
-        };
-    }
-
-    public static Matcher<RecyclerView.ViewHolder> withHolderCountryNameView(final String countryName) {
-        return new BoundedMatcher<RecyclerView.ViewHolder, CityAdapter.CityViewHolder>(
-                CityAdapter.CityViewHolder.class) {
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("No ViewHolder found with country name: " + countryName);
-            }
-
-            @Override
-            protected boolean matchesSafely(CityAdapter.CityViewHolder item) {
-                TextView countryNameTextView = (TextView) item.itemView.findViewById(R.id.countryName);
-                if(countryName == null) {
-                    return false;
-                }
-                return countryNameTextView.getText().toString().equals(countryName);
-            }
-        };
-    }
-
-    private Matcher<View> withItemText(final String itemText) {
-        checkArgument(!TextUtils.isEmpty(itemText), "itemText cannot be null or empty");
-        return new TypeSafeMatcher<View>() {
-            @Override
-            public boolean matchesSafely(View item) {
-                return allOf(
-                        isDescendantOfA(isAssignableFrom(RecyclerView.class)),
-                        withText(itemText)).matches(item);
-            }
-
-            @Override
-            public void describeTo(Description description) {
-                description.appendText("is isDescendantOfA RV with text " + itemText);
-            }
-        };
-    }
 
     private static ViewInteraction matchToolbarTitle(
             CharSequence title) {
@@ -122,7 +73,7 @@ public class CityListScreenTest {
                 protected void beforeActivityLaunched() {
                     super.beforeActivityLaunched();
 
-                    // Delete test city from city list
+                    // Delete all cities
                     WeatherRepository repository = Injection
                             .provideWeatherRepository(InstrumentationRegistry.getTargetContext());
                     repository.deleteAllDataFromCityAndWeatherLists();
@@ -138,15 +89,10 @@ public class CityListScreenTest {
     }
 
     @Test
-    public void clickRecyclerViewItem_showForecast() {
-
-    }
-
-    @Test
     public void addCityToList() {
         addNewCity(TEST_CITY_NAME, TEST_COUNTRY_NAME);
         // Find test city name in recyclerView on the CityListActivity
-        onView(withItemText(TEST_CITY_NAME)).check(matches(isDisplayed()));
+        onView(TestUtils.withItemText(TEST_CITY_NAME)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -159,7 +105,7 @@ public class CityListScreenTest {
         // Click delete button
         onView(withId(R.id.delete)).perform(click());
         // Verify that test city is not shown in the list
-        onView(withItemText(TEST_CITY_NAME)).check(doesNotExist());
+        onView(TestUtils.withItemText(TEST_CITY_NAME)).check(doesNotExist());
     }
 
     @Test
@@ -173,8 +119,8 @@ public class CityListScreenTest {
         // Click delete button
         onView(withId(R.id.delete)).perform(click());
         // Verify that only one city was deleted
-        onView(withItemText(TEST_CITY_NAME)).check(doesNotExist());
-        onView(withItemText(TEST_CITY_NAME_2)).check(matches(isDisplayed()));
+        onView(TestUtils.withItemText(TEST_CITY_NAME)).check(doesNotExist());
+        onView(TestUtils.withItemText(TEST_CITY_NAME_2)).check(matches(isDisplayed()));
     }
 
     @Test
@@ -207,7 +153,7 @@ public class CityListScreenTest {
         onView(withId(R.id.cityRecycler))
                 .perform(RecyclerViewActions
                         .actionOnHolderItem(allOf(
-                                withHolderCityNameView(cityName),
-                                withHolderCountryNameView(countryName)), click()));
+                                TestUtils.withHolderCityNameView(cityName),
+                                TestUtils.withHolderCountryNameView(countryName)), click()));
     }
 }
