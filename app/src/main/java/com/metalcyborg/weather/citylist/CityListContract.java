@@ -56,6 +56,8 @@ public interface CityListContract {
         void showSettings();
 
         void deleteSelectedItems();
+
+        void showCopyDatabaseError();
     }
 
     interface Presenter extends BasePresenter {
