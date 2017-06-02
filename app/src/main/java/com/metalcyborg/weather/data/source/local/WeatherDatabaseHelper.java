@@ -13,7 +13,7 @@ import com.metalcyborg.weather.data.Weather;
 public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "Weather.db";
+    public static final String DB_NAME = "Weather.db";
 
     private static final String COMMA = ", ";
     private static final String TYPE_TEXT = " TEXT";

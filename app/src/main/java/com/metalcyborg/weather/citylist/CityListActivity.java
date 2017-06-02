@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 
 import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.data.source.WeatherDataSource;
 
 public class CityListActivity extends AppCompatActivity {
 
@@ -35,8 +36,11 @@ public class CityListActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
         }
 
+        WeatherDataSource weatherRepository = Injection.provideWeatherRepository(getApplicationContext());
         mPresenter = new CityListPresenter(
-                Injection.provideWeatherRepository(getApplicationContext()),
-                fragment);
+                weatherRepository,
+                fragment,
+                new DbLoader(getApplicationContext(), weatherRepository),
+                getSupportLoaderManager());
     }
 }

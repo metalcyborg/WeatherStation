@@ -3,11 +3,15 @@ package com.metalcyborg.weather.util;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,6 +27,7 @@ public class WeatherUtils {
     private static final String UNITS_KM_H = "km/h";
     private static final String UNITS_MI_H = "mi/h";
     private static final String UNITS_HUMIDITY = "%";
+    private static final String TAG = "WeatherUtils";
 
     public enum TemperatureUnits {
         KELVIN,
@@ -408,5 +413,40 @@ public class WeatherUtils {
         }
 
         return weatherList;
+    }
+
+    public static void copyDatabaseFromAssets(Context context, String dbName) throws IOException {
+        Log.d(TAG, "copyDatabaseFromAssets");
+        InputStream is = null;
+        FileOutputStream os = null;
+        try {
+            is = context.getAssets().open(dbName + ".sqlite");
+            os = new FileOutputStream(context.getDatabasePath(dbName));
+            int length = 0;
+            byte[] buffer = new byte[1024];
+            while((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IOException("Error while copying database from assets");
+        } finally {
+            if(os != null) {
+                try {
+                    os.flush();
+                    os.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if(is != null) {
+                try {
+                    is.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
     }
 }

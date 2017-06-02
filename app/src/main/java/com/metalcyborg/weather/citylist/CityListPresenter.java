@@ -1,6 +1,9 @@
 package com.metalcyborg.weather.citylist;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
@@ -14,15 +17,22 @@ import java.util.List;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 
-public class CityListPresenter implements CityListContract.Presenter {
+public class CityListPresenter implements CityListContract.Presenter,
+        LoaderManager.LoaderCallbacks<Boolean> {
 
     private WeatherDataSource mRepository;
     private CityListContract.View mView;
+    private DbLoader mDbLoader;
+    private LoaderManager mLoaderManager;
 
     public CityListPresenter(@NonNull WeatherDataSource repository,
-                             @NonNull CityListContract.View view) {
+                             @NonNull CityListContract.View view,
+                             @NonNull DbLoader dbLoader,
+                             @NonNull LoaderManager loaderManager) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
+        mDbLoader = checkNotNull(dbLoader);
+        mLoaderManager = checkNotNull(loaderManager);
 
         mView.setPresenter(this);
     }
@@ -34,7 +44,11 @@ public class CityListPresenter implements CityListContract.Presenter {
             mView.setFabVisibility(true);
             loadWeatherData();
         } else {
-            mView.bindParseService();
+            if(mLoaderManager.getLoader(0) != null && mLoaderManager.getLoader(0).isStarted()) {
+                mLoaderManager.initLoader(0, null, this);
+            } else {
+                mLoaderManager.initLoader(0, null, this).forceLoad();
+            }
         }
     }
 
@@ -133,5 +147,26 @@ public class CityListPresenter implements CityListContract.Presenter {
                 mView.updateItem(cityId, null);
             }
         });
+    }
+
+    @Override
+    public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+        return mDbLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
+        if(data) {
+            mView.setParseCitiesDataMessageVisibility(false);
+            mView.setFabVisibility(true);
+            loadWeatherData();
+        } else {
+            mView.showCopyDatabaseError();
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Boolean> loader) {
+        mView.showCopyDatabaseError();
     }
 }
