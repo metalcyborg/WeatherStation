@@ -1,12 +1,10 @@
 package com.metalcyborg.weather.citylist;
 
 
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -23,9 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.metalcyborg.weather.R;
-import com.metalcyborg.weather.data.source.local.WeatherDatabaseHelper;
-import com.metalcyborg.weather.util.WeatherUtils;
-import com.metalcyborg.weather.citylist.parseservice.ParseCitiesService;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
@@ -33,9 +28,8 @@ import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.detail.DetailActivity;
 import com.metalcyborg.weather.settings.SettingsActivity;
+import com.metalcyborg.weather.util.WeatherUtils;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -49,7 +43,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private RecyclerView mRecyclerView;
     private WeatherAdapter mWeatherAdapter;
     private ServiceConnection mServiceConnection;
-    private ParseCitiesService.ParseBinder mServiceBinder;
     private Handler mUiHandler = new Handler();
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
@@ -228,78 +221,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     public void showWeatherList(List<CityWeather> weatherList) {
         mWeatherAdapter.setItems(weatherList, WeatherUtils.getCurrentTempUnits(getActivity()));
         mWeatherAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void bindParseService() {
-        mServiceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                mServiceBinder = (ParseCitiesService.ParseBinder) service;
-                mPresenter.onParseServiceBound();
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-
-            }
-        };
-
-        ParseCitiesService.bind(getActivity().getApplicationContext(), mServiceConnection);
-    }
-
-    @Override
-    public boolean isServiceRunning() {
-        if(mServiceBinder != null) {
-            return mServiceBinder.getService().isRunning();
-        }
-
-        return false;
-    }
-
-    @Override
-    public void parseCitiesData() {
-        ParseCitiesService.startActionParse(getActivity().getApplicationContext(),
-                CITY_LIST_ZIP_NAME);
-    }
-
-    @Override
-    public void registerParseCompleteListener(final CityListContract.ParseCompleteListener listener) {
-        if(mServiceBinder == null)
-            return;
-
-        mServiceBinder.registerParseCompleteListener(new ParseCitiesService.CompleteListener() {
-            @Override
-            public void onParseComplete() {
-                mUiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onParseComplete();
-                    }
-                });
-            }
-
-            @Override
-            public void onParseError() {
-                mUiHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        listener.onParseError();
-                    }
-                });
-            }
-        });
-    }
-
-    @Override
-    public void stopServiceInteractions() {
-        if(mServiceBinder == null || mServiceConnection == null)
-            return;
-
-        mServiceBinder.unregisterParseCompleteListener();
-        ParseCitiesService.unbind(getActivity().getApplicationContext(), mServiceConnection);
-        mServiceBinder = null;
-        mServiceConnection = null;
     }
 
     @Override

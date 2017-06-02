@@ -4,11 +4,10 @@ import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 
-import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
-import com.metalcyborg.weather.data.source.local.LocalDataSource;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
+import com.metalcyborg.weather.data.source.local.LocalDataSource;
 import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.ArrayList;
@@ -62,11 +61,6 @@ public class WeatherRepository implements WeatherDataSource {
     @Override
     public void setCitiesDataAdded() {
         mLocalDataSource.setCitiesDataAdded();
-    }
-
-    @Override
-    public void addCitiesData(CityData[] data) {
-        mLocalDataSource.addCitiesData(data);
     }
 
     @Override

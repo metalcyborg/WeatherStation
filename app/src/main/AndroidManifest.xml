@@ -26,11 +26,6 @@
         <activity android:name=".citysearch.CitySearchActivity">
         </activity>
 
-        <service
-            android:name=".citylist.parseservice.ParseCitiesService"
-            android:exported="false">
-        </service>
-
         <activity android:name=".settings.SettingsActivity"
                   android:label="@string/activity_settings_label"
             android:theme="@style/AppTheme.Settings">

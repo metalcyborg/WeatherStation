@@ -10,7 +10,6 @@ import android.database.sqlite.SQLiteQueryBuilder;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
@@ -59,41 +58,6 @@ public class WeatherLocalDataSource implements LocalDataSource {
         mSharedPreferences.edit()
                 .putBoolean(KEY_CITIES_DATA_ADDED, true)
                 .apply();
-    }
-
-    @Override
-    public void addCitiesData(CityData[] data) throws SQLiteException {
-        SQLiteDatabase db = null;
-        try {
-            db = mDatabaseHelper.getWritableDatabase();
-            db.beginTransaction();
-
-            for (CityData cityData : data) {
-                ContentValues cv = new ContentValues();
-                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_OPEN_WEATHER_ID,
-                        cityData.getId());
-                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_CITY_NAME,
-                        cityData.getCityName());
-                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_COUNTRY_NAME,
-                        cityData.getCountryName());
-                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_LONGITUDE,
-                        cityData.getCoord().getLon());
-                cv.put(WeatherPersistenceContract.FtsCityTable.COLUMN_LATITUDE,
-                        cityData.getCoord().getLat());
-                db.insertOrThrow(WeatherPersistenceContract.FtsCityTable.TABLE_NAME, null,
-                        cv);
-            }
-
-            db.setTransactionSuccessful();
-        } catch (SQLiteException e) {
-            e.printStackTrace();
-            throw new SQLiteException("City data insertion error");
-        } finally {
-            if (db != null) {
-                db.endTransaction();
-                db.close();
-            }
-        }
     }
 
     private Weather generateWeatherObject(Cursor cursor) {

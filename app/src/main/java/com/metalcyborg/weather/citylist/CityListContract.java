@@ -39,16 +39,6 @@ public interface CityListContract {
 
         void showWeatherList(List<CityWeather> weatherList);
 
-        void bindParseService();
-
-        boolean isServiceRunning();
-
-        void parseCitiesData();
-
-        void registerParseCompleteListener(ParseCompleteListener listener);
-
-        void stopServiceInteractions();
-
         void updateItem(String cityId, Weather weather);
 
         void showForecast(CityWeather cityWeather);
@@ -62,8 +52,6 @@ public interface CityListContract {
 
     interface Presenter extends BasePresenter {
         void addNewCity();
-
-        void onParseServiceBound();
 
         void onWeatherItemClicked(CityWeather cityWeather);
 

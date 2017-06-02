@@ -1,7 +1,6 @@
 package com.metalcyborg.weather.data.source;
 
 import com.google.common.collect.Lists;
-import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
@@ -26,18 +25,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.junit.Assert.assertThat;
 
-/**
- * Created by metalcyborg on 18.04.17.
- */
-
 public class WeatherRepositoryTest {
-
-    private static final CityData CITY_DATA_0 = new CityData(0, "City_0", "Country_0",
-            new CityData.Coord(10.0, 20.0));
-    private static final CityData CITY_DATA_1 = new CityData(1, "City_1", "Country_1",
-            new CityData.Coord(20.0, 30.0));
-    private static final CityData[] CITY_DATA = new CityData[]{CITY_DATA_0, CITY_DATA_1};
-
 
     private static final String CITY_ID_1 = "1";
     private static final String CITY_ID_2 = "2";
@@ -110,13 +98,6 @@ public class WeatherRepositoryTest {
         mWeatherRepository.isCitiesDataAdded();
 
         verify(mLocalDataSource).isCitiesDataAdded();
-    }
-
-    @Test
-    public void addCitiesData() {
-        mWeatherRepository.addCitiesData(CITY_DATA);
-
-        verify(mLocalDataSource).addCitiesData(CITY_DATA);
     }
 
     @Test

@@ -28,10 +28,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-/**
- * Created by metalcyborg on 16.04.17.
- */
-
 public class CityListPresenterTest {
 
     private static final List<CityWeather> WEATHER_LIST = new ArrayList<>();
@@ -140,62 +136,6 @@ public class CityListPresenterTest {
     }
 
     @Test
-    public void parseServiceBinded_serviceNotRunning_parseComplete() {
-        when(mView.isServiceRunning()).thenReturn(false);
-
-        mPresenter.onParseServiceBound();
-
-        verify(mView).setProgressVisibility(true);
-        verify(mView).registerParseCompleteListener(mParseCompleteListenerCaptor.capture());
-        verify(mView).parseCitiesData();
-        verifyParseComplete();
-    }
-
-    @Test
-    public void parseServiceBinded_serviceNotRunning_parseError() {
-        when(mView.isServiceRunning()).thenReturn(false);
-
-        mPresenter.onParseServiceBound();
-
-        verify(mView).registerParseCompleteListener(mParseCompleteListenerCaptor.capture());
-        verify(mView).parseCitiesData();
-        verifyParseError();
-    }
-
-    @Test
-    public void parseServiceBinded_serviceRunning() {
-        when(mView.isServiceRunning()).thenReturn(true);
-
-        mPresenter.onParseServiceBound();
-
-        verify(mView).setProgressVisibility(true);
-        verify(mView).setParseCitiesDataMessageVisibility(true);
-        verify(mView).registerParseCompleteListener(mParseCompleteListenerCaptor.capture());
-        verifyParseComplete();
-    }
-
-    private void verifyParseComplete() {
-        verify(mView).setParseCitiesDataMessageVisibility(true);
-
-        mParseCompleteListenerCaptor.getValue().onParseComplete();
-        verify(mView).stopServiceInteractions();
-        verify(mRepository).setCitiesDataAdded();
-        verify(mView).setParseCitiesDataMessageVisibility(false);
-        verify(mView).setFabVisibility(true);
-        verifyWeatherDataLoading();
-    }
-
-    private void verifyParseError() {
-        verify(mView).setProgressVisibility(true);
-        verify(mView).setParseCitiesDataMessageVisibility(true);
-
-        mParseCompleteListenerCaptor.getValue().onParseError();
-        verify(mView).stopServiceInteractions();
-        verify(mView).setParseCitiesDataMessageVisibility(false);
-        verify(mView).setParseErrorMessageVisibility(true);
-    }
-
-    @Test
     public void fabClick_openCitySearchActivity() {
         mPresenter.addNewCity();
 
@@ -205,7 +145,6 @@ public class CityListPresenterTest {
     @Test
     public void stopPresenter() {
         mPresenter.stop();
-        verify(mView).stopServiceInteractions();
     }
 
     @Test

@@ -54,44 +54,12 @@ public class CityListPresenter implements CityListContract.Presenter,
 
     @Override
     public void stop() {
-        mView.stopServiceInteractions();
+
     }
 
     @Override
     public void addNewCity() {
         mView.showCitySearch();
-    }
-
-    @Override
-    public void onParseServiceBound() {
-        mView.setProgressVisibility(true);
-
-        CityListContract.ParseCompleteListener parseCompleteListener =
-                new CityListContract.ParseCompleteListener() {
-            @Override
-            public void onParseComplete() {
-                mView.stopServiceInteractions();
-                mRepository.setCitiesDataAdded();
-                mView.setParseCitiesDataMessageVisibility(false);
-                mView.setFabVisibility(true);
-                loadWeatherData();
-            }
-
-            @Override
-            public void onParseError() {
-                mView.stopServiceInteractions();
-                mView.setParseCitiesDataMessageVisibility(false);
-                mView.setParseErrorMessageVisibility(true);
-            }
-        };
-
-        mView.registerParseCompleteListener(parseCompleteListener);
-        mView.setParseCitiesDataMessageVisibility(true);
-
-        if(!mView.isServiceRunning()) {
-            // Run service
-            mView.parseCitiesData();
-        }
     }
 
     @Override
@@ -151,6 +119,7 @@ public class CityListPresenter implements CityListContract.Presenter,
 
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
+        EspressoIdlingResource.increment();
         return mDbLoader;
     }
 
@@ -163,6 +132,7 @@ public class CityListPresenter implements CityListContract.Presenter,
         } else {
             mView.showCopyDatabaseError();
         }
+        EspressoIdlingResource.decrement();
     }
 
     @Override

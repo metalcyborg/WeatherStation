@@ -2,12 +2,9 @@ package com.metalcyborg.weather.data.source.local;
 
 import android.database.sqlite.SQLiteException;
 
-import com.metalcyborg.weather.citylist.parseservice.CityData;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
-import com.metalcyborg.weather.data.source.WeatherDataSource;
-import com.metalcyborg.weather.data.source.remote.RemoteDataSource;
 
 import java.util.List;
 
@@ -48,8 +45,6 @@ public interface LocalDataSource {
     boolean isCitiesDataAdded();
 
     void setCitiesDataAdded();
-
-    void addCitiesData(CityData[] data) throws SQLiteException;
 
     void loadWeatherData(LoadWeatherListCallback callback);
 
