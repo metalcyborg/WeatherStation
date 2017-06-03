@@ -91,7 +91,6 @@ public class CityListPresenterTest {
     public void onDbLoaderLoaded() {
         mPresenter.onLoadFinished(mDbLoader, true);
 
-        verify(mView).setParseCitiesDataMessageVisibility(false);
         verify(mView).setFabVisibility(true);
         verifyWeatherDataLoading();
     }
@@ -123,7 +122,7 @@ public class CityListPresenterTest {
         // Data loading error
         mLoadWeatherCallbackCaptor.getValue().onDataListNotAvailable();
         verify(mView, times(2)).setProgressVisibility(false);
-        verify(mView).setWeatherLoadingErrorMessageVisibility(true);
+        verify(mView).showWeatherLoadingErrorMessage();
 
         // Weather update
         mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_WEATHER_1.getCity().getOpenWeatherId(),

@@ -102,7 +102,7 @@ public class CityListPresenter implements CityListContract.Presenter,
             @Override
             public void onDataListNotAvailable() {
                 mView.setProgressVisibility(false);
-                mView.setWeatherLoadingErrorMessageVisibility(true);
+                mView.showWeatherLoadingErrorMessage();
             }
 
             @Override
@@ -126,7 +126,6 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
         if(data) {
-            mView.setParseCitiesDataMessageVisibility(false);
             mView.setFabVisibility(true);
             loadWeatherData();
         } else {

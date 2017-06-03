@@ -198,17 +198,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
-    public void setParseCitiesDataMessageVisibility(boolean visibility) {
-
-    }
-
-    @Override
-    public void setParseErrorMessageVisibility(boolean visibility) {
-
-    }
-
-    @Override
-    public void setWeatherLoadingErrorMessageVisibility(boolean visibility) {
+    public void showWeatherLoadingErrorMessage() {
 
     }
 
