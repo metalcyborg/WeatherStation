@@ -26,4 +26,6 @@
     <string name="weather_icon_description">Weather icon</string>
     <string name="details_header">Current weather details</string>
     <string name="add_city_message">Please add city</string>
+    <string name="copy_db_error">Error copying city database</string>
+    <string name="weather_loading_error">Wather data cannot be loaded</string>
 </resources>

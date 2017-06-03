@@ -2,11 +2,11 @@ package com.metalcyborg.weather.citylist;
 
 
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -36,17 +36,15 @@ import java.util.List;
 
 public class CityListFragment extends Fragment implements CityListContract.View {
 
-    private static final String CITY_LIST_ZIP_NAME = "cityList";
     private CityListContract.Presenter mPresenter;
     private FloatingActionButton mFab;
     private RecyclerView mRecyclerView;
     private WeatherAdapter mWeatherAdapter;
-    private ServiceConnection mServiceConnection;
-    private Handler mUiHandler = new Handler();
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
     private TextView mMessageView;
     private ProgressBar mProgressBar;
+    private CoordinatorLayout mCoordinatorLayout;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -81,6 +79,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
         mMessageView = (TextView) view.findViewById(R.id.message);
         mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+        mCoordinatorLayout = (CoordinatorLayout) getActivity().findViewById(R.id.coordinator_layout);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         mWeatherAdapter = new WeatherAdapter(mRecyclerView);
@@ -203,7 +202,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showWeatherLoadingErrorMessage() {
-
+        showSnackbarMessage(R.string.weather_loading_error);
     }
 
     @Override
@@ -285,7 +284,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showCopyDatabaseError() {
-
+        showSnackbarMessage(R.string.copy_db_error);
     }
 
     @Override
@@ -307,5 +306,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         mRecyclerView.setVisibility(View.GONE);
         mMessageView.setText(textResource);
         mMessageView.setVisibility(View.VISIBLE);
+    }
+
+    private void showSnackbarMessage(int textResource) {
+        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_SHORT).show();
     }
 }
