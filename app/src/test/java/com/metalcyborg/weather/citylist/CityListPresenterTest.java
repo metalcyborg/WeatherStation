@@ -121,6 +121,7 @@ public class CityListPresenterTest {
         verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
         mLoadWeatherCallbackCaptor.getValue().onDataListLoaded(new ArrayList<CityWeather>());
 
+        verify(mView).setProgressVisibility(false);
         verify(mView).showAddCityMessage();
     }
 
@@ -131,6 +132,7 @@ public class CityListPresenterTest {
         verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
         mLoadWeatherCallbackCaptor.getValue().onDataListLoaded(WEATHER_LIST);
 
+        verify(mView).setProgressVisibility(false);
         verify(mView).showWeatherList(WEATHER_LIST);
     }
 
