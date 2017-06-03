@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.citylist;
 
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -44,6 +45,12 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void start() {
         EspressoIdlingResource.increment();
+
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if(networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
+            mView.showMissingInternetConnectionMessage();
+        }
+
         mView.setProgressVisibility(true);
         if(mRepository.isCitiesDataAdded()) {
             mView.setFabVisibility(true);
@@ -67,7 +74,9 @@ public class CityListPresenter implements CityListContract.Presenter,
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override
             public void onDataListLoaded(List<CityWeather> weatherData) {
-                EspressoIdlingResource.decrement();
+                if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
 
                 mView.setProgressVisibility(false);
                 if(weatherData.isEmpty()) {
@@ -79,7 +88,9 @@ public class CityListPresenter implements CityListContract.Presenter,
 
             @Override
             public void onDataListNotAvailable() {
-                EspressoIdlingResource.decrement();
+                if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                    EspressoIdlingResource.decrement();
+                }
                 mView.setProgressVisibility(false);
                 mView.showWeatherLoadingErrorMessage();
             }
@@ -145,7 +156,10 @@ public class CityListPresenter implements CityListContract.Presenter,
         } else {
             mView.showCopyDatabaseError();
         }
-        EspressoIdlingResource.decrement();
+
+        if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+            EspressoIdlingResource.decrement();
+        }
     }
 
     @Override

@@ -293,7 +293,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showMissingInternetConnectionMessage() {
-
+        showSnackbarMessage(R.string.missing_internet);
     }
 
     @Override
@@ -313,6 +313,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     private void showSnackbarMessage(int textResource) {
-        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_LONG).show();
     }
 }
