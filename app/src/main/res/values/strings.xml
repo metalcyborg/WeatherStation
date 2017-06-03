@@ -25,4 +25,5 @@
     <string name="menu_item_delete">Delete</string>
     <string name="weather_icon_description">Weather icon</string>
     <string name="details_header">Current weather details</string>
+    <string name="add_city_message">Please add city</string>
 </resources>

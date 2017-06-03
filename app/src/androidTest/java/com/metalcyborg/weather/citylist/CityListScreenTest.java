@@ -96,6 +96,15 @@ public class CityListScreenTest {
     }
 
     @Test
+    public void emptyCityList_showAddCityMessage() {
+        onView(withId(R.id.message)).check(matches(allOf(
+                isDisplayed(),
+                withText(R.string.add_city_message)
+        )));
+        onView((withId(R.id.recycler))).check(matches(not(isDisplayed())));
+    }
+
+    @Test
     public void addOneCity_deleteOneCity() {
         // Add city
         addNewCity(TEST_CITY_NAME, TEST_COUNTRY_NAME);
