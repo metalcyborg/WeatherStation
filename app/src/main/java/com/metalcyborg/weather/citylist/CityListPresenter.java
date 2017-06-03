@@ -64,8 +64,13 @@ public class CityListPresenter implements CityListContract.Presenter,
             @Override
             public void onDataListLoaded(List<CityWeather> weatherData) {
                 EspressoIdlingResource.decrement();
-                mView.showWeatherList(weatherData);
+
                 mView.setProgressVisibility(false);
+                if(weatherData.isEmpty()) {
+                    mView.showAddCityMessage();
+                } else {
+                    mView.showWeatherList(weatherData);
+                }
             }
 
             @Override
