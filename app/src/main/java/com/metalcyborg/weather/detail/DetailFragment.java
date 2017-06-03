@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.detail;
 
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.util.WeatherUtils;
 import com.metalcyborg.weather.data.Weather;
@@ -156,6 +158,18 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
             mForecastAdapter.setWeatherDetails(details);
         }
+    }
+
+    @Override
+    public void registerConnectivityReceiver(ConnectivityReceiver receiver) {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void unregisterConnectivityReceiver(ConnectivityReceiver receiver) {
+        getActivity().unregisterReceiver(receiver);
     }
 
     private void showSnackbarError(int textResource) {

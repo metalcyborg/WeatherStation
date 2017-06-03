@@ -2,6 +2,7 @@ package com.metalcyborg.weather.detail;
 
 import com.metalcyborg.weather.BasePresenter;
 import com.metalcyborg.weather.BaseView;
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 
@@ -26,10 +27,16 @@ public interface DetailContract {
         void setLoadingIndicator(boolean indicator);
 
         void displayCurrentWeatherDetails(String cityName, WeatherDetails details);
+
+        void registerConnectivityReceiver(ConnectivityReceiver receiver);
+
+        void unregisterConnectivityReceiver(ConnectivityReceiver receiver);
     }
 
     interface Presenter extends BasePresenter {
 
         void setParameters(String cityId, String cityName, WeatherDetails details);
+
+        void loadForecastData();
     }
 }

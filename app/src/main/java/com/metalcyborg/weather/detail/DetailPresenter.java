@@ -5,6 +5,7 @@ import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -14,11 +15,9 @@ import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
-/**
- * Created by metalcyborg on 16.04.17.
- */
 
-public class DetailPresenter implements DetailContract.Presenter {
+public class DetailPresenter implements DetailContract.Presenter,
+        ConnectivityReceiver.ConnectivityListener {
 
     private WeatherDataSource mRepository;
     private DetailContract.View mView;
@@ -26,6 +25,7 @@ public class DetailPresenter implements DetailContract.Presenter {
     private String mCityName;
     private WeatherDetails mDetails;
     private ConnectivityManager mConnectivityManager;
+    private ConnectivityReceiver mConnectivityReceiver;
 
     public DetailPresenter(@NonNull WeatherDataSource repository,
                            @NonNull DetailContract.View view,
@@ -47,14 +47,19 @@ public class DetailPresenter implements DetailContract.Presenter {
 
         mView.displayCurrentWeatherDetails(mCityName, mDetails);
         loadForecastData();
+
+        mConnectivityReceiver = new ConnectivityReceiver();
+        mConnectivityReceiver.setConnectivityListener(this);
+        mView.registerConnectivityReceiver(mConnectivityReceiver);
     }
 
     @Override
     public void stop() {
-
+        mView.unregisterConnectivityReceiver(mConnectivityReceiver);
     }
 
-    private void loadForecastData() {
+    @Override
+    public void loadForecastData() {
         mView.setLoadingIndicator(true);
 
         mRepository.load3HForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
@@ -93,5 +98,14 @@ public class DetailPresenter implements DetailContract.Presenter {
         mCityId = cityId;
         mCityName = cityName;
         mDetails = details;
+    }
+
+    @Override
+    public void onConnectionChanged(boolean connected) {
+        if(connected) {
+            loadForecastData();
+        } else {
+            mView.showMissingInternetConnectionMessage();
+        }
     }
 }

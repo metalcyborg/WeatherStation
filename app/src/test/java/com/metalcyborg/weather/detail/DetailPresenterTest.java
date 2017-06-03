@@ -4,6 +4,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.google.common.collect.Lists;
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -18,10 +19,12 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -76,14 +79,22 @@ public class DetailPresenterTest {
         mPresenter.start();
 
         verify(mView).showMissingInternetConnectionMessage();
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
     }
 
     @Test
-    public void loadForecastData_forecastDataLoaded() {
+    public void loadForecastDataOnStart() {
         mPresenter.start();
-        InOrder inOrder = inOrder(mView);
 
         verifyHeaderLoading();
+        spy(mPresenter).loadForecastData();
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    @Test
+    public void loadForecastData_dataLoaded() {
+        InOrder inOrder = inOrder(mView);
+        mPresenter.loadForecastData();
 
         verify(mRepository).load3HForecastData(anyString(),mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
@@ -99,11 +110,9 @@ public class DetailPresenterTest {
     }
 
     @Test
-    public void loadForecastData_forecastDataNotAvailable() {
-        mPresenter.start();
+    public void loadForecastData_dataNotAvailable() {
         InOrder inOrder = inOrder(mView);
-
-        verifyHeaderLoading();
+        mPresenter.loadForecastData();
 
         verify(mRepository).load3HForecastData(anyString(), mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
@@ -116,5 +125,26 @@ public class DetailPresenterTest {
         mLoad13DForecastCallbackCaptor.getValue().onDataNotAvailable();
 
         verify(mView).show13DForecastError();
+    }
+
+    @Test
+    public void stopPresenter() {
+        mPresenter.stop();
+
+        verify(mView).unregisterConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    @Test
+    public void connectivityChangedTrue_reloadData() {
+        mPresenter.onConnectionChanged(true);
+
+        spy(mPresenter).loadForecastData();
+    }
+
+    @Test
+    public void connectivityChangedFalse_showMissingConnectionMessage() {
+        mPresenter.onConnectionChanged(false);
+
+        verify(mView).showMissingInternetConnectionMessage();
     }
 }
