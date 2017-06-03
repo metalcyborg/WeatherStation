@@ -282,4 +282,9 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     public void showCopyDatabaseError() {
 
     }
+
+    @Override
+    public void showAddCityMessage() {
+
+    }
 }

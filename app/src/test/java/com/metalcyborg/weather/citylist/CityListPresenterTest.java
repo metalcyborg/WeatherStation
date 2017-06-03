@@ -24,6 +24,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -92,7 +93,7 @@ public class CityListPresenterTest {
         mPresenter.onLoadFinished(mDbLoader, true);
 
         verify(mView).setFabVisibility(true);
-        verifyWeatherDataLoading();
+        spy(mPresenter).loadCityList();
     }
 
     @Test
@@ -110,27 +111,57 @@ public class CityListPresenterTest {
 
         verify(mView).setFabVisibility(true);
         verify(mView).setProgressVisibility(true);
-        verifyWeatherDataLoading();
+        spy(mPresenter).loadCityList();
     }
 
-    private void verifyWeatherDataLoading() {
+    @Test
+    public void loadEmptyCityListFromRepository_showAddCityMessage() {
+        mPresenter.loadCityList();
+
+        verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
+        mLoadWeatherCallbackCaptor.getValue().onDataListLoaded(new ArrayList<CityWeather>());
+
+        verify(mView).showAddCityMessage();
+    }
+
+    @Test
+    public void loadCityList_displayCurrentWeatherData() {
+        mPresenter.loadCityList();
+
         verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
         mLoadWeatherCallbackCaptor.getValue().onDataListLoaded(WEATHER_LIST);
 
         verify(mView).showWeatherList(WEATHER_LIST);
+    }
 
-        // Data loading error
+    @Test
+    public void loadCityListWithError_showErrorMessage() {
+        mPresenter.loadCityList();
+
+        verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
         mLoadWeatherCallbackCaptor.getValue().onDataListNotAvailable();
-        verify(mView, times(2)).setProgressVisibility(false);
+
         verify(mView).showWeatherLoadingErrorMessage();
+    }
 
-        // Weather update
-        mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_WEATHER_1.getCity().getOpenWeatherId(),
+    @Test
+    public void updateWeatherData() {
+        mPresenter.loadCityList();
+
+        verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
+        mLoadWeatherCallbackCaptor.getValue().onDataLoaded(CITY_1.getOpenWeatherId(),
                 WEATHER_1);
-        verify(mView).updateItem(CITY_WEATHER_1.getCity().getOpenWeatherId(), WEATHER_1);
 
-        // Weather data not available for the concrete city
+        verify(mView).updateItem(CITY_1.getOpenWeatherId(), WEATHER_1);
+    }
+
+    @Test
+    public void updateWeatherDataWithError() {
+        mPresenter.loadCityList();
+
+        verify(mRepository).loadWeatherData(mLoadWeatherCallbackCaptor.capture());
         mLoadWeatherCallbackCaptor.getValue().onDataNotAvailable(CITY_1.getOpenWeatherId());
+
         verify(mView).updateItem(CITY_1.getOpenWeatherId(), null);
     }
 

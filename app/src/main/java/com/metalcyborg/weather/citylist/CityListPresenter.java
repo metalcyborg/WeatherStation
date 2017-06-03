@@ -42,7 +42,7 @@ public class CityListPresenter implements CityListContract.Presenter,
         mView.setProgressVisibility(true);
         if(mRepository.isCitiesDataAdded()) {
             mView.setFabVisibility(true);
-            loadWeatherData();
+            loadCityList();
         } else {
             if(mLoaderManager.getLoader(0) != null && mLoaderManager.getLoader(0).isStarted()) {
                 mLoaderManager.initLoader(0, null, this);
@@ -55,6 +55,35 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void stop() {
 
+    }
+
+    @Override
+    public void loadCityList() {
+        EspressoIdlingResource.increment();
+        mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
+            @Override
+            public void onDataListLoaded(List<CityWeather> weatherData) {
+                EspressoIdlingResource.decrement();
+                mView.showWeatherList(weatherData);
+                mView.setProgressVisibility(false);
+            }
+
+            @Override
+            public void onDataListNotAvailable() {
+                mView.setProgressVisibility(false);
+                mView.showWeatherLoadingErrorMessage();
+            }
+
+            @Override
+            public void onDataLoaded(String cityId, Weather weather) {
+                mView.updateItem(cityId, weather);
+            }
+
+            @Override
+            public void onDataNotAvailable(String cityId) {
+                mView.updateItem(cityId, null);
+            }
+        });
     }
 
     @Override
@@ -89,34 +118,6 @@ public class CityListPresenter implements CityListContract.Presenter,
         mRepository.deleteCitiesFromChosenCityList(cityList);
     }
 
-    private void loadWeatherData() {
-        EspressoIdlingResource.increment();
-        mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
-            @Override
-            public void onDataListLoaded(List<CityWeather> weatherData) {
-                EspressoIdlingResource.decrement();
-                mView.showWeatherList(weatherData);
-                mView.setProgressVisibility(false);
-            }
-
-            @Override
-            public void onDataListNotAvailable() {
-                mView.setProgressVisibility(false);
-                mView.showWeatherLoadingErrorMessage();
-            }
-
-            @Override
-            public void onDataLoaded(String cityId, Weather weather) {
-                mView.updateItem(cityId, weather);
-            }
-
-            @Override
-            public void onDataNotAvailable(String cityId) {
-                mView.updateItem(cityId, null);
-            }
-        });
-    }
-
     @Override
     public Loader<Boolean> onCreateLoader(int id, Bundle args) {
         EspressoIdlingResource.increment();
@@ -127,7 +128,7 @@ public class CityListPresenter implements CityListContract.Presenter,
     public void onLoadFinished(Loader<Boolean> loader, Boolean data) {
         if(data) {
             mView.setFabVisibility(true);
-            loadWeatherData();
+            loadCityList();
         } else {
             mView.showCopyDatabaseError();
         }

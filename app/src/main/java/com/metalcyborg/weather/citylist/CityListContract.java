@@ -38,9 +38,14 @@ public interface CityListContract {
         void showWeatherLoadingErrorMessage();
 
         void showCopyDatabaseError();
+
+        void showAddCityMessage();
     }
 
     interface Presenter extends BasePresenter {
+
+        void loadCityList();
+
         void addNewCity();
 
         void onWeatherItemClicked(CityWeather cityWeather);
