@@ -312,7 +312,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void unregisterConnectivityReceiver(ConnectivityReceiver receiver) {
-
+        getActivity().unregisterReceiver(receiver);
     }
 
     private void showRecyclerView() {
