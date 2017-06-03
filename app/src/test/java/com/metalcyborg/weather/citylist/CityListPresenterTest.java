@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
@@ -27,7 +28,6 @@ import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -92,6 +92,8 @@ public class CityListPresenterTest {
 
         verify(mView).setProgressVisibility(true);
         verify(loader).forceLoad();
+
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
     }
 
     @Test
@@ -103,6 +105,8 @@ public class CityListPresenterTest {
         verify(mView).setFabVisibility(true);
         verify(mView).setProgressVisibility(true);
         spy(mPresenter).loadCityList();
+
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
     }
 
     @Test
@@ -116,6 +120,13 @@ public class CityListPresenterTest {
         mPresenter.start();
 
         verify(mView).showMissingInternetConnectionMessage();
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    @Test
+    public void onStop_unregisterConnectivityReceiver() {
+        mPresenter.stop();
+        verify(mView).unregisterConnectivityReceiver(any(ConnectivityReceiver.class));
     }
 
     @Test
@@ -212,5 +223,19 @@ public class CityListPresenterTest {
         verify(mView).deleteSelectedItems();
         // Delete from local db
         verify(mRepository).deleteCitiesFromChosenCityList(anyListOf(City.class));
+    }
+
+    @Test
+    public void connectivityChangedTrue_reloadData() {
+        mPresenter.onConnectionChanged(true);
+
+        spy(mPresenter).loadCityList();
+    }
+
+    @Test
+    public void connectivityChangedFalse_showMissingConnectionMessage() {
+        mPresenter.onConnectionChanged(false);
+
+        verify(mView).showMissingInternetConnectionMessage();
     }
 }

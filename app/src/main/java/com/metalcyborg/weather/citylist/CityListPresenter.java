@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
@@ -20,13 +21,14 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 
 public class CityListPresenter implements CityListContract.Presenter,
-        LoaderManager.LoaderCallbacks<Boolean> {
+        LoaderManager.LoaderCallbacks<Boolean>,ConnectivityReceiver.ConnectivityListener {
 
     private WeatherDataSource mRepository;
     private CityListContract.View mView;
     private DbLoader mDbLoader;
     private LoaderManager mLoaderManager;
     private ConnectivityManager mConnectivityManager;
+    private ConnectivityReceiver mConnectivityReceiver;
 
     public CityListPresenter(@NonNull WeatherDataSource repository,
                              @NonNull CityListContract.View view,
@@ -62,11 +64,16 @@ public class CityListPresenter implements CityListContract.Presenter,
                 mLoaderManager.initLoader(0, null, this).forceLoad();
             }
         }
+
+        mConnectivityReceiver = new ConnectivityReceiver();
+        mConnectivityReceiver.setConnectivityListener(this);
+        mView.registerConnectivityReceiver(mConnectivityReceiver);
     }
 
     @Override
     public void stop() {
-
+        mView.unregisterConnectivityReceiver(mConnectivityReceiver);
+        mConnectivityReceiver = null;
     }
 
     @Override
@@ -165,5 +172,14 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void onLoaderReset(Loader<Boolean> loader) {
         mView.showCopyDatabaseError();
+    }
+
+    @Override
+    public void onConnectionChanged(boolean connected) {
+        if(connected) {
+            loadCityList();
+        } else {
+            mView.showMissingInternetConnectionMessage();
+        }
     }
 }

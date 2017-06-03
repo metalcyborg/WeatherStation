@@ -2,6 +2,7 @@ package com.metalcyborg.weather.citylist;
 
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
 import com.metalcyborg.weather.data.City;
@@ -299,6 +301,18 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     @Override
     public int getCityCount() {
         return mWeatherAdapter.getItemCount();
+    }
+
+    @Override
+    public void registerConnectivityReceiver(ConnectivityReceiver receiver) {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        getActivity().registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void unregisterConnectivityReceiver(ConnectivityReceiver receiver) {
+
     }
 
     private void showRecyclerView() {

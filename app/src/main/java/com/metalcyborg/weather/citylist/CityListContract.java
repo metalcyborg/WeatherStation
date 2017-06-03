@@ -2,6 +2,7 @@ package com.metalcyborg.weather.citylist;
 
 import com.metalcyborg.weather.BasePresenter;
 import com.metalcyborg.weather.BaseView;
+import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 
@@ -44,6 +45,10 @@ public interface CityListContract {
         void showMissingInternetConnectionMessage();
 
         int getCityCount();
+
+        void registerConnectivityReceiver(ConnectivityReceiver receiver);
+
+        void unregisterConnectivityReceiver(ConnectivityReceiver receiver);
     }
 
     interface Presenter extends BasePresenter {

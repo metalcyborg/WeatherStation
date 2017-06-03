@@ -27,8 +27,9 @@
         <activity android:name=".citysearch.CitySearchActivity">
         </activity>
 
-        <activity android:name=".settings.SettingsActivity"
-                  android:label="@string/activity_settings_label"
+        <activity
+            android:name=".settings.SettingsActivity"
+            android:label="@string/activity_settings_label"
             android:theme="@style/AppTheme.Settings">
         </activity>
     </application>

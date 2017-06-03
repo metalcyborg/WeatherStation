@@ -51,17 +51,20 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         CityWeather cityWeather = mItems.get(position);
         holder.mCityName.setText(cityWeather.getCity().getName());
         holder.mCountryName.setText(cityWeather.getCity().getCountry());
-        if(cityWeather.getWeather() != null) {
+        if (cityWeather.getWeather() == null) {
+            holder.mTemperature.setText("");
+            holder.mIcon.setImageBitmap(null);
+        } else {
             String temp = WeatherUtils.getTemperatureString(
                     cityWeather.getWeather().getMain().getDayTemp(),
                     mTempUnits);
             holder.mTemperature.setText(temp);
 
             Weather.WeatherDescription description = cityWeather.getWeather().getWeatherDescription();
-            if(description != null) {
-                if(description.getIcon() != null) {
+            if (description != null) {
+                if (description.getIcon() != null) {
                     int iconId = WeatherUtils.getIconId(description.getIcon());
-                    if(iconId != -1) {
+                    if (iconId != -1) {
                         holder.mIcon.setImageResource(iconId);
                     }
                 }
@@ -78,14 +81,14 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     public void updateItem(String cityId, Weather weather) {
         int position = getPosition(cityId);
-        if(position != -1) {
+        if (position != -1) {
             mItems.get(position).setWeather(weather);
             notifyItemChanged(position);
         }
     }
 
     public int changeItemSelection(int position) {
-        if(mSelectedPositions.get(position)) {
+        if (mSelectedPositions.get(position)) {
             mSelectedPositions.delete(position);
         } else {
             mSelectedPositions.put(position, true);
@@ -102,8 +105,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
         int position = -1;
 
         int i = 0;
-        while(position == -1 && i < mItems.size()) {
-            if(mItems.get(i).getCity().getOpenWeatherId().equals(cityId)) {
+        while (position == -1 && i < mItems.size()) {
+            if (mItems.get(i).getCity().getOpenWeatherId().equals(cityId)) {
                 position = i;
             }
             ++i;
@@ -114,7 +117,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     public List<CityWeather> getSelectedItems() {
         List<CityWeather> items = new ArrayList<>();
-        for(int i = 0; i < mSelectedPositions.size(); ++i) {
+        for (int i = 0; i < mSelectedPositions.size(); ++i) {
             int position = mSelectedPositions.keyAt(i);
             items.add(mItems.get(position));
         }
@@ -128,7 +131,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
     public void deleteSelectedItems() {
         List<CityWeather> selectedItems = getSelectedItems();
-        for(CityWeather cityWeather : selectedItems) {
+        for (CityWeather cityWeather : selectedItems) {
             mItems.remove(cityWeather);
         }
     }
@@ -167,7 +170,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.WeatherV
 
         @Override
         public boolean onLongClick(View v) {
-            if(mClickListener != null) {
+            if (mClickListener != null) {
                 int position = mRecyclerView.getLayoutManager().getPosition(v);
                 mClickListener.onLongClick(mItems.get(position), position);
             }
