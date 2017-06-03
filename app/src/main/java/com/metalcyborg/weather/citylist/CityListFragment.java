@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.citysearch.CitySearchActivity;
@@ -46,6 +47,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private Handler mUiHandler = new Handler();
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
+    private TextView mMessageView;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -77,6 +79,8 @@ public class CityListFragment extends Fragment implements CityListContract.View 
                 mPresenter.addNewCity();
             }
         });
+
+        mMessageView = (TextView) view.findViewById(R.id.message);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         mWeatherAdapter = new WeatherAdapter(mRecyclerView);
@@ -209,6 +213,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showWeatherList(List<CityWeather> weatherList) {
+        showRecyclerView();
         mWeatherAdapter.setItems(weatherList, WeatherUtils.getCurrentTempUnits(getActivity()));
         mWeatherAdapter.notifyDataSetChanged();
     }
@@ -285,6 +290,22 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void showAddCityMessage() {
+        showMessageView(R.string.add_city_message);
+    }
 
+    @Override
+    public int getCityCount() {
+        return mWeatherAdapter.getItemCount();
+    }
+
+    private void showRecyclerView() {
+        mMessageView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    private void showMessageView(int textResource) {
+        mRecyclerView.setVisibility(View.GONE);
+        mMessageView.setText(textResource);
+        mMessageView.setVisibility(View.VISIBLE);
     }
 }

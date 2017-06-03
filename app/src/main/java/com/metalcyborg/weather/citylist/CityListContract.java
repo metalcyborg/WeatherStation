@@ -40,6 +40,8 @@ public interface CityListContract {
         void showCopyDatabaseError();
 
         void showAddCityMessage();
+
+        int getCityCount();
     }
 
     interface Presenter extends BasePresenter {

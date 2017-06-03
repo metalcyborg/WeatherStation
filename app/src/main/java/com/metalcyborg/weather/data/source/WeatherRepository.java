@@ -85,7 +85,9 @@ public class WeatherRepository implements WeatherDataSource {
 
                 @Override
                 public void onDataNotAvailable() {
-                    callback.onDataListNotAvailable();
+                    // Send empty list to callback
+                    callback.onDataListLoaded(new ArrayList<CityWeather>());
+                    clearCurrentWeatherCache();
                 }
             });
         }
@@ -146,13 +148,17 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     private void refreshCurrentWeatherCache(List<CityWeather> weatherList) {
+        clearCurrentWeatherCache();
+        for(CityWeather cityWeather : weatherList) {
+            mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(), cityWeather);
+        }
+    }
+
+    private void clearCurrentWeatherCache() {
         if(mCachedWeather == null) {
             mCachedWeather = new LinkedHashMap<>();
         }
         mCachedWeather.clear();
-        for(CityWeather cityWeather : weatherList) {
-            mCachedWeather.put(cityWeather.getCity().getOpenWeatherId(), cityWeather);
-        }
     }
 
     private void addToCurrentWeatherCache(CityWeather cityWeather) {

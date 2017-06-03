@@ -116,6 +116,9 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void deleteItems(List<CityWeather> items) {
         mView.deleteSelectedItems();
+        if(mView.getCityCount() == 0) {
+            mView.showAddCityMessage();
+        }
         List<City> cityList = new ArrayList<>();
         for(CityWeather cityWeather : items) {
             cityList.add(cityWeather.getCity());
