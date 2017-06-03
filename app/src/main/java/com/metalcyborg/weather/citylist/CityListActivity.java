@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.citylist;
 
+import android.net.ConnectivityManager;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -41,6 +42,7 @@ public class CityListActivity extends AppCompatActivity {
                 weatherRepository,
                 fragment,
                 new DbLoader(getApplicationContext(), weatherRepository),
-                getSupportLoaderManager());
+                getSupportLoaderManager(),
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE));
     }
 }

@@ -292,6 +292,11 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     }
 
     @Override
+    public void showMissingInternetConnectionMessage() {
+
+    }
+
+    @Override
     public int getCityCount() {
         return mWeatherAdapter.getItemCount();
     }

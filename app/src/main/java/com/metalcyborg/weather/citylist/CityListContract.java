@@ -41,6 +41,8 @@ public interface CityListContract {
 
         void showAddCityMessage();
 
+        void showMissingInternetConnectionMessage();
+
         int getCityCount();
     }
 

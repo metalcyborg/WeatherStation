@@ -1,5 +1,7 @@
 package com.metalcyborg.weather.citylist;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
@@ -53,6 +55,9 @@ public class CityListPresenterTest {
     @Mock
     private LoaderManager mLoaderManager;
 
+    @Mock
+    private ConnectivityManager mConnectivityManager;
+
     @Captor
     private ArgumentCaptor<WeatherDataSource.LoadCityDataCallback> mLoadCityDataCallbackCaptor;
 
@@ -69,7 +74,8 @@ public class CityListPresenterTest {
         WEATHER_LIST.add(CITY_WEATHER_1);
         WEATHER_LIST.add(CITY_WEATHER_2);
 
-        mPresenter = new CityListPresenter(mRepository, mView, mDbLoader, mLoaderManager);
+        mPresenter = new CityListPresenter(mRepository, mView, mDbLoader, mLoaderManager,
+                mConnectivityManager);
 
         when(mView.isActive()).thenReturn(true);
     }
@@ -89,6 +95,30 @@ public class CityListPresenterTest {
     }
 
     @Test
+    public void startPresenter_cityListAdded() {
+        when(mRepository.isCitiesDataAdded()).thenReturn(true);
+
+        mPresenter.start();
+
+        verify(mView).setFabVisibility(true);
+        verify(mView).setProgressVisibility(true);
+        spy(mPresenter).loadCityList();
+    }
+
+    @Test
+    public void internetConnectionIsMissingOnStart_showMessage() {
+        when(mRepository.isCitiesDataAdded()).thenReturn(true);
+
+        NetworkInfo networkInfo = mock(NetworkInfo.class);
+        when(mConnectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
+        when(networkInfo.isConnectedOrConnecting()).thenReturn(false);
+
+        mPresenter.start();
+
+        verify(mView).showMissingInternetConnectionMessage();
+    }
+
+    @Test
     public void onDbLoaderLoaded() {
         mPresenter.onLoadFinished(mDbLoader, true);
 
@@ -101,17 +131,6 @@ public class CityListPresenterTest {
         mPresenter.onLoadFinished(mDbLoader, false);
 
         verify(mView).showCopyDatabaseError();
-    }
-
-    @Test
-    public void startPresenter_cityListAdded() {
-        when(mRepository.isCitiesDataAdded()).thenReturn(true);
-
-        mPresenter.start();
-
-        verify(mView).setFabVisibility(true);
-        verify(mView).setProgressVisibility(true);
-        spy(mPresenter).loadCityList();
     }
 
     @Test

@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.citylist;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
@@ -24,15 +25,18 @@ public class CityListPresenter implements CityListContract.Presenter,
     private CityListContract.View mView;
     private DbLoader mDbLoader;
     private LoaderManager mLoaderManager;
+    private ConnectivityManager mConnectivityManager;
 
     public CityListPresenter(@NonNull WeatherDataSource repository,
                              @NonNull CityListContract.View view,
                              @NonNull DbLoader dbLoader,
-                             @NonNull LoaderManager loaderManager) {
+                             @NonNull LoaderManager loaderManager,
+                             @NonNull ConnectivityManager connectivityManager) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
         mDbLoader = checkNotNull(dbLoader);
         mLoaderManager = checkNotNull(loaderManager);
+        mConnectivityManager = checkNotNull(connectivityManager);
 
         mView.setPresenter(this);
     }
