@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.detail;
 
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 
@@ -23,11 +24,14 @@ public class DetailPresenter implements DetailContract.Presenter {
     private String mCityId;
     private String mCityName;
     private WeatherDetails mDetails;
+    private ConnectivityManager mConnectivityManager;
 
     public DetailPresenter(@NonNull WeatherDataSource repository,
-                           @NonNull DetailContract.View view) {
+                           @NonNull DetailContract.View view,
+                           @NonNull ConnectivityManager connectivityManager) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
+        mConnectivityManager = checkNotNull(connectivityManager);
         mView.setPresenter(this);
     }
 

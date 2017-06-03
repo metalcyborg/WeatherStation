@@ -21,6 +21,8 @@ public interface DetailContract {
 
         void show13DForecastError();
 
+        void showMissingInternetConnectionMessage();
+
         void setLoadingIndicator(boolean indicator);
 
         void displayCurrentWeatherDetails(String cityName, WeatherDetails details);

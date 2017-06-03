@@ -1,5 +1,8 @@
 package com.metalcyborg.weather.detail;
 
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.google.common.collect.Lists;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
@@ -18,6 +21,7 @@ import java.util.List;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +45,9 @@ public class DetailPresenterTest {
     @Mock
     private DetailContract.View mView;
 
+    @Mock
+    private ConnectivityManager mConnectivityManager;
+
     @Captor
     ArgumentCaptor<WeatherDataSource.LoadForecastCallback> mLoad3HForecastCallbackCaptor;
 
@@ -51,13 +58,24 @@ public class DetailPresenterTest {
     public void setupPresenter() {
         MockitoAnnotations.initMocks(this);
 
-        mPresenter = new DetailPresenter(mRepository, mView);
+        mPresenter = new DetailPresenter(mRepository, mView, mConnectivityManager);
         mPresenter.setParameters(CITY_ID, CITY_NAME, WEATHER_DETAILS);
         when(mView.isActive()).thenReturn(true);
     }
 
     private void verifyHeaderLoading() {
         verify(mView).displayCurrentWeatherDetails(CITY_NAME, WEATHER_DETAILS);
+    }
+
+    @Test
+    public void internetConnectionIsMissingOnStart_showMessage() {
+        NetworkInfo networkInfo = mock(NetworkInfo.class);
+        when(mConnectivityManager.getActiveNetworkInfo()).thenReturn(networkInfo);
+        when(networkInfo.isConnectedOrConnecting()).thenReturn(false);
+
+        mPresenter.start();
+
+        verify(mView).showMissingInternetConnectionMessage();
     }
 
     @Test

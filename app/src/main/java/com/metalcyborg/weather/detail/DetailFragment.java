@@ -129,6 +129,11 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     }
 
     @Override
+    public void showMissingInternetConnectionMessage() {
+
+    }
+
+    @Override
     public void setLoadingIndicator(boolean indicator) {
         mProgressBar.setVisibility(indicator ? View.VISIBLE : View.GONE);
     }
