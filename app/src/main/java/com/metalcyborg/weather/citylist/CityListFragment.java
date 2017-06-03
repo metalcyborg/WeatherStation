@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
@@ -33,9 +34,6 @@ import com.metalcyborg.weather.util.WeatherUtils;
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class CityListFragment extends Fragment implements CityListContract.View {
 
     private static final String CITY_LIST_ZIP_NAME = "cityList";
@@ -48,6 +46,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
     private ActionMode mActionMode = null;
     private ActionMode.Callback mActionModeCallback = null;
     private TextView mMessageView;
+    private ProgressBar mProgressBar;
 
     public CityListFragment() {
         // Required empty public constructor
@@ -81,6 +80,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         });
 
         mMessageView = (TextView) view.findViewById(R.id.message);
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
 
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         mWeatherAdapter = new WeatherAdapter(mRecyclerView);
@@ -198,7 +198,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
 
     @Override
     public void setProgressVisibility(boolean visibility) {
-
+        mProgressBar.setVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
     @Override

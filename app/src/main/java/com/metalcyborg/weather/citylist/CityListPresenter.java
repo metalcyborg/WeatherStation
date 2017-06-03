@@ -39,6 +39,7 @@ public class CityListPresenter implements CityListContract.Presenter,
 
     @Override
     public void start() {
+        EspressoIdlingResource.increment();
         mView.setProgressVisibility(true);
         if(mRepository.isCitiesDataAdded()) {
             mView.setFabVisibility(true);
@@ -59,7 +60,6 @@ public class CityListPresenter implements CityListContract.Presenter,
 
     @Override
     public void loadCityList() {
-        EspressoIdlingResource.increment();
         mRepository.loadWeatherData(new WeatherDataSource.LoadWeatherCallback() {
             @Override
             public void onDataListLoaded(List<CityWeather> weatherData) {
@@ -75,6 +75,7 @@ public class CityListPresenter implements CityListContract.Presenter,
 
             @Override
             public void onDataListNotAvailable() {
+                EspressoIdlingResource.decrement();
                 mView.setProgressVisibility(false);
                 mView.showWeatherLoadingErrorMessage();
             }
