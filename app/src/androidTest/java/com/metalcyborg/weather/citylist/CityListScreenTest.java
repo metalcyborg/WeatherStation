@@ -115,6 +115,11 @@ public class CityListScreenTest {
         onView(withId(R.id.delete)).perform(click());
         // Verify that test city is not shown in the list
         onView(TestUtils.withItemText(TEST_CITY_NAME)).check(doesNotExist());
+        // Verify that add city message is displayed
+        onView(withId(R.id.message)).check(matches(allOf(
+                isDisplayed(),
+                withText(R.string.add_city_message)
+        )));
     }
 
     @Test
@@ -130,6 +135,8 @@ public class CityListScreenTest {
         // Verify that only one city was deleted
         onView(TestUtils.withItemText(TEST_CITY_NAME)).check(doesNotExist());
         onView(TestUtils.withItemText(TEST_CITY_NAME_2)).check(matches(isDisplayed()));
+        // Verify that add city message is not displayed
+        onView(withId(R.id.message)).check(matches(not(isDisplayed())));
     }
 
     @Test

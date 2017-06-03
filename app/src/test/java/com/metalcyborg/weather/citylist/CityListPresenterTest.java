@@ -191,7 +191,7 @@ public class CityListPresenterTest {
 
         // Delete from list
         verify(mView).deleteSelectedItems();
-        // Delete form local db
+        // Delete from local db
         verify(mRepository).deleteCitiesFromChosenCityList(anyListOf(City.class));
     }
 }
