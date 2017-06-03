@@ -4,6 +4,16 @@
              android:layout_height="wrap_content"
              android:stretchColumns="*">
 
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/secondary_text"
+        android:text="@string/data_not_available"
+        android:visibility="gone"
+        android:layout_marginStart="16dp"/>
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -11,37 +21,31 @@
 
         <TextView
             android:id="@+id/time1"
-            android:text="13:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/time2"
-            android:text="16:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/time3"
-            android:text="19:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/time4"
-            android:text="22:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/time5"
-            android:text="01:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/time6"
-            android:text="04:00"
             android:textAlignment="center"
             android:textSize="14sp"/>
 
@@ -93,37 +97,31 @@
 
         <TextView
             android:id="@+id/temp1"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/temp2"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/temp3"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/temp4"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/temp5"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/temp6"
-            android:text="+10"
             android:textAlignment="center"
             android:textSize="16sp"/>
 

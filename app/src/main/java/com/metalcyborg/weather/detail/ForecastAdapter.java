@@ -28,6 +28,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private WeatherUtils.PressureUnits mPressureUnits;
     private WeatherUtils.SpeedUnits mSpeedUnits;
     private WeatherUtils.TimeUnits mTimeUnits;
+    private boolean mDayForecastError = false;
+    private boolean m3HForecastError = false;
 
     public ForecastAdapter(WeatherUtils.TemperatureUnits temperatureUnits,
                            WeatherUtils.PressureUnits pressureUnits, WeatherUtils.SpeedUnits speedUnits,
@@ -62,10 +64,14 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     @Override
     public int getItemCount() {
-        if(mDayForecast.size() == 0) {
-            return 0;
+        if(mDayForecastError) {
+            return 6;
         } else {
-            return mDayForecast.size() + 4;
+            if (mDayForecast.size() == 0 && m3HForecast.size() == 0) {
+                return 0;
+            } else {
+                return mDayForecast.size() + 4;
+            }
         }
     }
 
@@ -101,11 +107,21 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     public void setDayForecast(List<Weather> dayForecast) {
+        mDayForecastError = false;
         mDayForecast = dayForecast;
     }
 
+    public void showDayForecastError() {
+        mDayForecastError = true;
+    }
+
     public void set3HForecast(List<Weather> forecast) {
+        m3HForecastError = false;
         m3HForecast = forecast;
+    }
+
+    public void show3HForecastError() {
+        m3HForecastError = true;
     }
 
     public void setWeatherDetails(WeatherDetails details) {
@@ -113,6 +129,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bindDayForecast(DayForecastViewHolder holder, int position) {
+        if(mDayForecastError) {
+            holder.mError.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            holder.mError.setVisibility(View.GONE);
+        }
+
         Weather weather = mDayForecast.get(position - 4);
         String date = WeatherUtils.convertLongToDateString(weather.getDateTime() * 1000);
         String day = WeatherUtils.convertLongToDayString(weather.getDateTime() * 1000);
@@ -138,6 +161,13 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     private void bind3HoursForecast(ThreeHoursForecastViewHolder holder) {
+        if(m3HForecastError) {
+            holder.mError.setVisibility(View.VISIBLE);
+            return;
+        } else {
+            holder.mError.setVisibility(View.GONE);
+        }
+
         if(m3HForecast == null || m3HForecast.size() < ThreeHoursForecastViewHolder.FORECAST_COUNT)
             return;
 
@@ -239,6 +269,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public class DayForecastViewHolder extends RecyclerView.ViewHolder {
 
+        private TextView mError;
         private TextView mDateTextView;
         private TextView mDayTextView;
         private ImageView mIconImageView;
@@ -248,6 +279,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         public DayForecastViewHolder(View itemView) {
             super(itemView);
 
+            mError = (TextView) itemView.findViewById(R.id.error);
             mDateTextView = (TextView) itemView.findViewById(R.id.date);
             mDayTextView = (TextView) itemView.findViewById(R.id.day);
             mIconImageView = (ImageView) itemView.findViewById(R.id.icon);
@@ -259,12 +291,15 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     public class ThreeHoursForecastViewHolder extends RecyclerView.ViewHolder {
 
         public static final int FORECAST_COUNT = 6;
+        private TextView mError;
         private TextView[] mTimeArray = new TextView[FORECAST_COUNT];
         private ImageView[] mImageArray = new ImageView[FORECAST_COUNT];
         private TextView[] mTempArray = new TextView[FORECAST_COUNT];
 
         public ThreeHoursForecastViewHolder(View itemView) {
             super(itemView);
+
+            mError = (TextView) itemView.findViewById(R.id.error);
 
             mTimeArray[0] = (TextView) itemView.findViewById(R.id.time1);
             mTimeArray[1] = (TextView) itemView.findViewById(R.id.time2);

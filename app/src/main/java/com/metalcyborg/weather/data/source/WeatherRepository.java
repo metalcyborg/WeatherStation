@@ -274,6 +274,12 @@ public class WeatherRepository implements WeatherDataSource {
         mLocalDataSource.deleteCitiesFromChosenCityList(cityList);
         for(City city : cityList) {
             mCachedWeather.remove(city.getOpenWeatherId());
+            if(mCached3hForecast != null) {
+                mCached3hForecast.remove(city.getOpenWeatherId());
+            }
+            if(mCached13DForecast != null) {
+                mCached13DForecast.remove(city.getOpenWeatherId());
+            }
         }
     }
 

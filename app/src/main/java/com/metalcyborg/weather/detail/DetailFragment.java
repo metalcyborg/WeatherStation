@@ -2,6 +2,8 @@ package com.metalcyborg.weather.detail;
 
 
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.metalcyborg.weather.R;
@@ -32,6 +35,8 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     private ActionBar mActionBar;
     private TextView mHeaderTemp;
     private ImageView mHeaderImage;
+    private ProgressBar mProgressBar;
+    private CoordinatorLayout mCoordinatorLayout;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -59,6 +64,9 @@ public class DetailFragment extends Fragment implements DetailContract.View {
             mActionBar.setHomeButtonEnabled(true);
             mActionBar.setTitle("");
         }
+
+        mProgressBar = (ProgressBar) view.findViewById(R.id.progress);
+        mCoordinatorLayout = (CoordinatorLayout) view.findViewById(R.id.coordinator_layout);
 
         mHeaderTemp = (TextView) view.findViewById(R.id.header_temp);
         mHeaderImage = (ImageView) view.findViewById(R.id.header_image);
@@ -110,17 +118,19 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void show3hForecastError() {
-
+        mForecastAdapter.show3HForecastError();
+        mForecastAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void show13DForecastError() {
-
+        mForecastAdapter.showDayForecastError();
+        mForecastAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void setLoadingIndicator(boolean indicator) {
-
+        mProgressBar.setVisibility(indicator ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -141,5 +151,9 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
             mForecastAdapter.setWeatherDetails(details);
         }
+    }
+
+    private void showSnackbarError(int textResource) {
+        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_SHORT);
     }
 }

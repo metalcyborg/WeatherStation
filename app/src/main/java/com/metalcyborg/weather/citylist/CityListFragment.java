@@ -270,7 +270,6 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         mWeatherAdapter.deleteSelectedItems();
 
         for(int i = 0; i < selectedItems.size(); ++i) {
-            // FIXME: animation not running
             int position = selectedItems.keyAt(i);
             mWeatherAdapter.notifyItemRemoved(position);
         }

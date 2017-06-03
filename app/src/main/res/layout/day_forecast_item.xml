@@ -11,17 +11,29 @@
     tools:layout_editor_absoluteX="0dp">
 
     <TextView
+        android:id="@+id/error"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@color/secondary_text"
+        android:visibility="gone"
+        android:text="@string/data_not_available"
+        android:layout_marginStart="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
         android:id="@+id/date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/main_text"
+        android:layout_marginStart="16dp"
         app:layout_constraintVertical_chainStyle="packed"
-        android:text="May 5"
         app:layout_constraintBottom_toTopOf="@+id/day"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginStart="16dp"/>
+        app:layout_constraintLeft_toLeftOf="parent"/>
 
     <TextView
         android:id="@+id/day"
@@ -29,7 +41,6 @@
         android:layout_height="wrap_content"
         android:textColor="@color/secondary_text"
         android:textSize="14sp"
-        android:text="Mon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date"
         app:layout_constraintLeft_toLeftOf="@+id/date"/>
@@ -40,7 +51,6 @@
         android:layout_height="wrap_content"
         android:textSize="20sp"
         android:textColor="@color/main_text"
-        android:text="+10\u00B0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/nightTemperature"
@@ -52,7 +62,6 @@
         android:id="@+id/icon"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        app:srcCompat="@drawable/ic_weather_sunny"
         android:contentDescription="@string/weather_icon_description"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -65,14 +74,13 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:textColor="@color/secondary_text"
-        android:text="+20\u00B0"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/dayTemperature"
         app:layout_constraintVertical_bias="0.5"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintHorizontal_bias="0.5"
-        android:layout_marginStart="8dp"/>
+        app:layout_constraintHorizontal_bias="0.5"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -28,4 +28,5 @@
     <string name="add_city_message">Please add city</string>
     <string name="copy_db_error">Error copying city database</string>
     <string name="weather_loading_error">Wather data cannot be loaded</string>
+    <string name="data_not_available">Data not available</string>
 </resources>
