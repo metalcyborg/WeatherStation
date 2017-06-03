@@ -1,6 +1,7 @@
 package com.metalcyborg.weather.detail;
 
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 
@@ -38,6 +39,12 @@ public class DetailPresenter implements DetailContract.Presenter {
     @Override
     public void start() {
         EspressoIdlingResource.increment();
+
+        NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
+        if(networkInfo == null || !networkInfo.isConnected()) {
+            mView.showMissingInternetConnectionMessage();
+        }
+
         mView.displayCurrentWeatherDetails(mCityName, mDetails);
         loadForecastData();
     }

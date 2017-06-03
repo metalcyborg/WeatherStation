@@ -47,7 +47,7 @@ public class CityListPresenter implements CityListContract.Presenter,
         EspressoIdlingResource.increment();
 
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if(networkInfo == null || !networkInfo.isConnectedOrConnecting()) {
+        if(networkInfo == null || !networkInfo.isConnected()) {
             mView.showMissingInternetConnectionMessage();
         }
 

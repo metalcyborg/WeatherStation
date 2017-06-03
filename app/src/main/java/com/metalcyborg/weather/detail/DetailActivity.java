@@ -1,5 +1,6 @@
 package com.metalcyborg.weather.detail;
 
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -30,7 +31,8 @@ public class DetailActivity extends AppCompatActivity {
 
         mPresenter = new DetailPresenter(
                 Injection.provideWeatherRepository(getApplicationContext()),
-                fragment
+                fragment,
+                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE)
         );
 
         // Extras

@@ -130,7 +130,7 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
     @Override
     public void showMissingInternetConnectionMessage() {
-
+        showSnackbarError(R.string.missing_internet);
     }
 
     @Override
@@ -159,6 +159,6 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     }
 
     private void showSnackbarError(int textResource) {
-        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_SHORT);
+        Snackbar.make(mCoordinatorLayout, textResource, Snackbar.LENGTH_LONG);
     }
 }
