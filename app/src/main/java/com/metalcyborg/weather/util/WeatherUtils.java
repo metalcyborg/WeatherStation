@@ -190,38 +190,38 @@ public class WeatherUtils {
         return -1;
     }
 
-    public static int getWeatherImageId(String icon) {
+    public static int getWeatherLargeIcon(String icon) {
         switch (icon) {
             case "01d":
-                return R.drawable.ic_clear_day;
+                return R.drawable.ic_clear_day_large;
             case "01n":
-                return R.drawable.ic_clear_night;
+                return R.drawable.ic_clear_night_large;
             case "02d":
-                return R.drawable.ic_clouds_few_day;
+                return R.drawable.ic_clouds_few_day_large;
             case "02n":
-                return R.drawable.ic_clouds_few_night;
+                return R.drawable.ic_clouds_few_night_large;
             case "03d":
             case "03n":
-                return R.drawable.ic_clouds_scattered;
+                return R.drawable.ic_clouds_scattered_large;
             case "04d":
             case "04n":
-                return R.drawable.ic_clouds_broken;
+                return R.drawable.ic_clouds_broken_large;
             case "09d":
             case "09n":
-                return R.drawable.ic_rain_shower;
+                return R.drawable.ic_rain_shower_large;
             case "10d":
-                return R.drawable.ic_rain_day;
+                return R.drawable.ic_rain_day_large;
             case "10n":
-                return R.drawable.ic_rain_night;
+                return R.drawable.ic_rain_night_large;
             case "11d":
             case "11n":
-                return R.drawable.ic_thunderstorm;
+                return R.drawable.ic_thunderstorm_large;
             case "13d":
             case "13n":
-                return R.drawable.ic_snow;
+                return R.drawable.ic_snow_large;
             case "50d":
             case "50n":
-                return R.drawable.ic_mist;
+                return R.drawable.ic_mist_large;
         }
 
         return -1;

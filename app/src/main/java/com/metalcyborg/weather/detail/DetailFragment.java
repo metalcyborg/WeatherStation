@@ -152,7 +152,7 @@ public class DetailFragment extends Fragment implements DetailContract.View {
             }
 
             if(details.getIcon() != null) {
-                int imageId = WeatherUtils.getWeatherImageId(details.getIcon());
+                int imageId = WeatherUtils.getWeatherLargeIcon(details.getIcon());
                 if(imageId != -1) {
                     mHeaderIcon.setImageResource(imageId);
                 }
