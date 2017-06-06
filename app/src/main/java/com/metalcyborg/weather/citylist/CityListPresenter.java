@@ -29,6 +29,7 @@ public class CityListPresenter implements CityListContract.Presenter,
     private LoaderManager mLoaderManager;
     private ConnectivityManager mConnectivityManager;
     private ConnectivityReceiver mConnectivityReceiver;
+    private boolean mFirstConnection = true;
 
     public CityListPresenter(@NonNull WeatherDataSource repository,
                              @NonNull CityListContract.View view,
@@ -177,9 +178,14 @@ public class CityListPresenter implements CityListContract.Presenter,
     @Override
     public void onConnectionChanged(boolean connected) {
         if(connected) {
-            loadCityList();
+            if(!mFirstConnection && mRepository.isCitiesDataAdded()) {
+                loadCityList();
+            } else {
+                mFirstConnection = false;
+            }
         } else {
             mView.showMissingInternetConnectionMessage();
+            mFirstConnection = false;
         }
     }
 }

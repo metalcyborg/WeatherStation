@@ -26,6 +26,7 @@ public class DetailPresenter implements DetailContract.Presenter,
     private WeatherDetails mDetails;
     private ConnectivityManager mConnectivityManager;
     private ConnectivityReceiver mConnectivityReceiver;
+    private boolean mFirstConnection = true;
 
     public DetailPresenter(@NonNull WeatherDataSource repository,
                            @NonNull DetailContract.View view,
@@ -103,9 +104,14 @@ public class DetailPresenter implements DetailContract.Presenter,
     @Override
     public void onConnectionChanged(boolean connected) {
         if(connected) {
-            loadForecastData();
+            if(!mFirstConnection) {
+                loadForecastData();
+            } else {
+                mFirstConnection = false;
+            }
         } else {
             mView.showMissingInternetConnectionMessage();
+            mFirstConnection = false;
         }
     }
 }
