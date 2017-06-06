@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#EF5350</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
+    <color name="colorPrimaryDark">#C62828</color>
     <color name="colorAccent">#00B8D4</color>
     <color name="drawer_header_color">#ffaaaaaa</color>
     <color name="transparent">#00ffffff</color>
