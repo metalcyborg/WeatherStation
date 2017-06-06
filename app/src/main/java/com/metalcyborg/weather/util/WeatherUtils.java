@@ -156,33 +156,35 @@ public class WeatherUtils {
     public static int getIconId(String icon) {
         switch (icon) {
             case "01d":
-                return R.drawable.ic_weather_sunny;
+                return R.drawable.ic_clear_day;
             case "01n":
-                return R.drawable.ic_weather_night;
+                return R.drawable.ic_clear_night;
             case "02d":
+                return R.drawable.ic_clouds_few_day;
             case "02n":
-                return R.drawable.ic_weather_partlycloudy;
+                return R.drawable.ic_clouds_few_night;
             case "03d":
             case "03n":
-                return R.drawable.ic_weather_cloudy;
+                return R.drawable.ic_clouds_scattered;
             case "04d":
             case "04n":
-                return R.drawable.ic_weather_cloudy;
+                return R.drawable.ic_clouds_broken;
             case "09d":
             case "09n":
-                return R.drawable.ic_weather_pouring;
+                return R.drawable.ic_rain_shower;
             case "10d":
+                return R.drawable.ic_rain_day;
             case "10n":
-                return R.drawable.ic_weather_rainy;
+                return R.drawable.ic_rain_night;
             case "11d":
             case "11n":
-                return R.drawable.ic_weather_lightning;
+                return R.drawable.ic_thunderstorm;
             case "13d":
             case "13n":
-                return R.drawable.ic_weather_hail;
+                return R.drawable.ic_snow;
             case "50d":
             case "50n":
-                return R.drawable.ic_weather_fog;
+                return R.drawable.ic_mist;
         }
 
         return -1;
@@ -191,33 +193,35 @@ public class WeatherUtils {
     public static int getWeatherImageId(String icon) {
         switch (icon) {
             case "01d":
-                return R.drawable.ic_weather_sunny;
+                return R.drawable.ic_clear_day;
             case "01n":
-                return R.drawable.ic_weather_night;
+                return R.drawable.ic_clear_night;
             case "02d":
+                return R.drawable.ic_clouds_few_day;
             case "02n":
-                return R.drawable.ic_weather_partlycloudy;
+                return R.drawable.ic_clouds_few_night;
             case "03d":
             case "03n":
-                return R.drawable.ic_weather_cloudy;
+                return R.drawable.ic_clouds_scattered;
             case "04d":
             case "04n":
-                return R.drawable.ic_weather_cloudy;
+                return R.drawable.ic_clouds_broken;
             case "09d":
             case "09n":
-                return R.drawable.ic_weather_pouring;
+                return R.drawable.ic_rain_shower;
             case "10d":
+                return R.drawable.ic_rain_day;
             case "10n":
-                return R.drawable.ic_weather_rainy;
+                return R.drawable.ic_rain_night;
             case "11d":
             case "11n":
-                return R.drawable.ic_weather_lightning;
+                return R.drawable.ic_thunderstorm;
             case "13d":
             case "13n":
-                return R.drawable.ic_weather_hail;
+                return R.drawable.ic_snow;
             case "50d":
             case "50n":
-                return R.drawable.ic_weather_fog;
+                return R.drawable.ic_mist;
         }
 
         return -1;
