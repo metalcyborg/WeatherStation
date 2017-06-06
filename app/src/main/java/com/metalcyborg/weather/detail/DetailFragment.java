@@ -37,6 +37,7 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     private ActionBar mActionBar;
     private TextView mHeaderTemp;
     private ImageView mHeaderImage;
+    private ImageView mHeaderIcon;
     private ProgressBar mProgressBar;
     private CoordinatorLayout mCoordinatorLayout;
 
@@ -72,6 +73,7 @@ public class DetailFragment extends Fragment implements DetailContract.View {
 
         mHeaderTemp = (TextView) view.findViewById(R.id.header_temp);
         mHeaderImage = (ImageView) view.findViewById(R.id.header_image);
+        mHeaderIcon = (ImageView) view.findViewById(R.id.header_icon);
 
         mForecastRecycler = (RecyclerView) view.findViewById(R.id.forecastRecycler);
         mForecastRecycler.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -152,8 +154,16 @@ public class DetailFragment extends Fragment implements DetailContract.View {
             if(details.getIcon() != null) {
                 int imageId = WeatherUtils.getWeatherImageId(details.getIcon());
                 if(imageId != -1) {
-                    mHeaderImage.setImageResource(imageId);
+                    mHeaderIcon.setImageResource(imageId);
                 }
+                if(WeatherUtils.isNightIcon(details.getIcon())) {
+                    mHeaderImage.setBackgroundColor(
+                            getResources().getColor(R.color.toolbar_night_background));
+                } else {
+                    mHeaderImage.setBackgroundColor(getResources().getColor(R.color.transparent));
+                }
+            } else {
+                mHeaderImage.setBackgroundColor(getResources().getColor(R.color.transparent));
             }
 
             mForecastAdapter.setWeatherDetails(details);

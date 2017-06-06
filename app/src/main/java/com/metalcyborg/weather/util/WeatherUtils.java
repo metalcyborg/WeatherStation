@@ -227,6 +227,15 @@ public class WeatherUtils {
         return -1;
     }
 
+    public static boolean isNightIcon(String icon) {
+
+        if(icon == null || icon.isEmpty()) {
+            return false;
+        }
+
+        return icon.contains("n");
+    }
+
     public static float convertKelvinToFahrenheit(float kelvin) {
         return kelvin * 9 / 5 - 459.67f;
     }
