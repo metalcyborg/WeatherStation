@@ -101,7 +101,6 @@ public class CitySearchFragment extends Fragment implements CitySearchContract.V
             @Override
             public boolean onQueryTextChange(String newText) {
                 mPresenter.findCitiesByPartOfTheName(newText);
-                Log.d(TAG, "onQueryTextChange: " + newText);
                 return true;
             }
         });
