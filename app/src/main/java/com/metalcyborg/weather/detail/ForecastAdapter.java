@@ -17,6 +17,10 @@ import java.util.List;
 
 public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
+    public static final int POSITION_WEATHER_DETAILS = 1;
+    public static final int POSITION_FORECAST_3H = 3;
+    public static final int POSITION_FORECAST_DAILY = 5;
+
     private static final int TYPE_3_HOURS_FORECAST = 0;
     private static final int TYPE_DAY_FORECAST = 1;
     private static final int TYPE_DETAILS = 2;
@@ -126,6 +130,10 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
     public void setWeatherDetails(WeatherDetails details) {
         mCurrentWeatherDetails = details;
+    }
+
+    public int getDailyForecastCount() {
+        return mDayForecast.size();
     }
 
     private void bindDayForecast(DayForecastViewHolder holder, int position) {

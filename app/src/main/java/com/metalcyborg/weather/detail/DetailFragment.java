@@ -111,25 +111,26 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     @Override
     public void show3HForecast(List<Weather> forecast) {
         mForecastAdapter.set3HForecast(forecast);
-        mForecastAdapter.notifyItemChanged(0);
+        mForecastAdapter.notifyItemChanged(ForecastAdapter.POSITION_FORECAST_3H);
     }
 
     @Override
     public void show13DForecast(List<Weather> forecast) {
         mForecastAdapter.setDayForecast(forecast);
-        mForecastAdapter.notifyDataSetChanged();
+        mForecastAdapter.notifyItemRangeChanged(ForecastAdapter.POSITION_FORECAST_DAILY,
+                mForecastAdapter.getDailyForecastCount());
     }
 
     @Override
     public void show3hForecastError() {
         mForecastAdapter.show3HForecastError();
-        mForecastAdapter.notifyDataSetChanged();
+        mForecastAdapter.notifyItemChanged(ForecastAdapter.POSITION_FORECAST_3H);
     }
 
     @Override
     public void show13DForecastError() {
         mForecastAdapter.showDayForecastError();
-        mForecastAdapter.notifyDataSetChanged();
+        mForecastAdapter.notifyItemChanged(ForecastAdapter.POSITION_FORECAST_DAILY);
     }
 
     @Override
