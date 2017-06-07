@@ -35,7 +35,6 @@
                 android:layout_width="64dp"
                 android:layout_height="64dp"
                 android:fitsSystemWindows="true"
-                android:src="@drawable/ic_clouds_few_day"
                 android:layout_gravity="top|end"
                 android:scaleType="fitXY"
                 android:layout_margin="16dp"

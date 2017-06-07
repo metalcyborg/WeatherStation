@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.util.Log;
 
 import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.City;
@@ -23,6 +24,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class CityListPresenter implements CityListContract.Presenter,
         LoaderManager.LoaderCallbacks<Boolean>,ConnectivityReceiver.ConnectivityListener {
 
+    private static final String TAG = "CityListPresenter";
     private WeatherDataSource mRepository;
     private CityListContract.View mView;
     private DbLoader mDbLoader;
@@ -47,6 +49,7 @@ public class CityListPresenter implements CityListContract.Presenter,
 
     @Override
     public void start() {
+        mFirstConnection = true;
         EspressoIdlingResource.increment();
 
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
