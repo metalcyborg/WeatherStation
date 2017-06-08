@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather</string>
+    <string name="app_name">Weather report</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="city_list">City list</string>
