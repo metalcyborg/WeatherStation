@@ -107,29 +107,31 @@ public class WeatherLocalDataSource implements LocalDataSource {
     @Override
     public void loadWeatherData(LoadWeatherListCallback callback) {
         String[] columns = new String[]{
-                "t1." + WeatherPersistenceContract.ChosenCitiesTable._ID, // 0
-                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID, // 1
-                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME, // 2
-                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME, // 3
-                "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID, // 4
-                WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED, // 5
-                WeatherPersistenceContract.WeatherTable.COLUMN_DATE, // 6
-                WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME, // 7
-                WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME, // 8
-                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY, // 9
-                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT, // 10
-                WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE, // 11
-                WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY, // 12
-                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED, // 13
-                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION, // 14
-                WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS, // 15
-                WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID, // 16
-                WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP, // 17
-                WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION, // 18
-                WeatherPersistenceContract.WeatherTable.COLUMN_ICON, // 19
-                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H, // 20
-                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H, // 21
-                WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST // 22
+                "t1." + WeatherPersistenceContract.ChosenCitiesTable._ID,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE,
+                "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DATE,
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNRISE_TIME,
+                WeatherPersistenceContract.WeatherTable.COLUMN_SUNSET_TIME,
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_DAY,
+                WeatherPersistenceContract.WeatherTable.COLUMN_TEMPERATURE_NIGHT,
+                WeatherPersistenceContract.WeatherTable.COLUMN_PRESSURE,
+                WeatherPersistenceContract.WeatherTable.COLUMN_HUMIDITY,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_SPEED,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WIND_DIRECTION,
+                WeatherPersistenceContract.WeatherTable.COLUMN_CLOUDINESS,
+                WeatherPersistenceContract.WeatherTable.COLUMN_CONDITION_ID,
+                WeatherPersistenceContract.WeatherTable.COLUMN_WEATHER_GROUP,
+                WeatherPersistenceContract.WeatherTable.COLUMN_DESCRIPTION,
+                WeatherPersistenceContract.WeatherTable.COLUMN_ICON,
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_RAIN_3H,
+                WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H,
+                WeatherPersistenceContract.WeatherTable.COLUMN_FORECAST
         };
 
         SQLiteQueryBuilder builder = new SQLiteQueryBuilder();
@@ -147,7 +149,9 @@ public class WeatherLocalDataSource implements LocalDataSource {
             City city = new City(
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID.trim())),
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME.trim())),
-                    cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME.trim()))
+                    cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME.trim())),
+                    cursor.getFloat(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE.trim())),
+                    cursor.getFloat(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE.trim()))
             );
             Weather weather = null;
             if (cursor.getInt(cursor.getColumnIndex(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED.trim())) == 1) {
@@ -271,7 +275,8 @@ public class WeatherLocalDataSource implements LocalDataSource {
         List<City> cityList = new ArrayList<>();
 
         while (cursor.moveToNext()) {
-            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3));
+            City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
+                    cursor.getFloat(4), cursor.getFloat(5));
             cityList.add(city);
         }
 

@@ -12,7 +12,7 @@ import com.metalcyborg.weather.data.Weather;
 
 public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
-    private static final int DB_VERSION = 1;
+    private static final int DB_VERSION = 2;
     public static final String DB_NAME = "Weather.db";
 
     private static final String COMMA = ", ";
@@ -37,7 +37,9 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
             WeatherPersistenceContract.ChosenCitiesTable._ID + TYPE_INTEGER + " PRIMARY KEY AUTOINCREMENT" + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + TYPE_TEXT + COMMA +
             WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME + TYPE_TEXT + COMMA +
-            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME + TYPE_TEXT +
+            WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME + TYPE_TEXT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_LONGITUDE + TYPE_FLOAT + COMMA +
+            WeatherPersistenceContract.FtsCityTable.COLUMN_LATITUDE + TYPE_FLOAT +
             " )";
 
     private static final String CREATE_WEATHER_TABLE = "CREATE TABLE" +
