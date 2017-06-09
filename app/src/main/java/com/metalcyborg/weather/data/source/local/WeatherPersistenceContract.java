@@ -24,6 +24,7 @@ public class WeatherPersistenceContract {
         public static final String COLUMN_COUNTRY_NAME = " CountryName";
         public static final String COLUMN_LONGITUDE = " Longitude";
         public static final String COLUMN_LATITUDE = " Latitude";
+        public static final String COLUMN_TIMEZONE = " TimeZone";
     }
 
     public static class WeatherTable implements BaseColumns {
