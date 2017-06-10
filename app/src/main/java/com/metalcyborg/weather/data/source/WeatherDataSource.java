@@ -39,6 +39,13 @@ public interface WeatherDataSource {
         void onDataNotAvailable();
     }
 
+    interface LoadTimeZoneCallback {
+
+        void onTimeZoneLoaded(String cityId, String timeZone);
+
+        void onDataNotAvailable();
+    }
+
     boolean isCitiesDataAdded();
 
     void setCitiesDataAdded();
@@ -48,6 +55,8 @@ public interface WeatherDataSource {
     void load3HForecastData(String cityId, LoadForecastCallback callback);
 
     void load13DForecastData(String cityId, LoadForecastCallback callback);
+
+    void loadTimeZone(String cityId, float altitude, float longitude, LoadTimeZoneCallback callback);
 
     void findCitiesByPartOfTheName(String partOfTheName, int count, FindCityListCallback callback);
 

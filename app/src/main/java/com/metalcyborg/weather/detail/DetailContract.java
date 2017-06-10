@@ -38,6 +38,6 @@ public interface DetailContract {
 
         void setParameters(City city, WeatherDetails details);
 
-        void loadForecastData();
+        void loadForecastData(String cityId, String timeZone);
     }
 }

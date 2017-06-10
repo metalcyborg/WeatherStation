@@ -147,6 +147,11 @@ public class WeatherRepository implements WeatherDataSource {
         check13DForecastOnServer(cityId, callback);
     }
 
+    @Override
+    public void loadTimeZone(String cityId, float altitude, float longitude, LoadTimeZoneCallback callback) {
+
+    }
+
     private void refreshCurrentWeatherCache(List<CityWeather> weatherList) {
         clearCurrentWeatherCache();
         for(CityWeather cityWeather : weatherList) {

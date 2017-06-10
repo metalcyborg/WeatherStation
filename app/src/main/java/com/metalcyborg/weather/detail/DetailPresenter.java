@@ -47,7 +47,7 @@ public class DetailPresenter implements DetailContract.Presenter,
         }
 
         mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, mCity.getTimeZone());
-        loadForecastData();
+        loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
 
         mConnectivityReceiver = new ConnectivityReceiver();
         mConnectivityReceiver.setConnectivityListener(this);
@@ -60,7 +60,7 @@ public class DetailPresenter implements DetailContract.Presenter,
     }
 
     @Override
-    public void loadForecastData() {
+    public void loadForecastData(String cityId, String timeZone) {
         mView.setLoadingIndicator(true);
 
         mRepository.load3HForecastData(mCity.getOpenWeatherId(), new WeatherDataSource.LoadForecastCallback() {
@@ -105,7 +105,7 @@ public class DetailPresenter implements DetailContract.Presenter,
     public void onConnectionChanged(boolean connected) {
         if(connected) {
             if(!mFirstConnection) {
-                loadForecastData();
+                loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
             } else {
                 mFirstConnection = false;
             }

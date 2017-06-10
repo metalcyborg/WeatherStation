@@ -21,10 +21,12 @@ import org.mockito.MockitoAnnotations;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyFloat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -58,6 +60,9 @@ public class DetailPresenterTest {
     @Captor
     ArgumentCaptor<WeatherDataSource.LoadForecastCallback> mLoad13DForecastCallbackCaptor;
 
+    @Captor
+    ArgumentCaptor<WeatherDataSource.LoadTimeZoneCallback> mLoadTimeZoneCallbackCaptor;
+
     @Before
     public void setupPresenter() {
         MockitoAnnotations.initMocks(this);
@@ -80,19 +85,60 @@ public class DetailPresenterTest {
     }
 
     @Test
-    public void loadForecastDataOnStart() {
+    public void loadTimeZoneAndWeatherDataOnStart_timeZoneLoaded() {
         mPresenter.start();
 
-        verify(mView).displayCurrentWeatherDetails(CITY.getName(), WEATHER_DETAILS,
+        verify(mRepository).loadTimeZone(eq(CITY.getOpenWeatherId()), eq(CITY.getLatitude()),
+                eq(CITY.getLongitude()), mLoadTimeZoneCallbackCaptor.capture());
+
+        mLoadTimeZoneCallbackCaptor.getValue().onTimeZoneLoaded(CITY.getOpenWeatherId(),
+                TIME_ZONE);
+
+        CITY.setTimeZone(TIME_ZONE);
+
+        verifyWeatherDataLoading(CITY.getOpenWeatherId(), CITY.getName(), WEATHER_DETAILS,
                 CITY.getTimeZone());
-        spy(mPresenter).loadForecastData();
+
         verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    @Test
+    public void loadTimeZoneAndWeatherDataOnStart_timeZoneNotAvailable() {
+        mPresenter.start();
+
+        verify(mRepository).loadTimeZone(eq(CITY.getOpenWeatherId()), eq(CITY.getLatitude()),
+                eq(CITY.getLongitude()), mLoadTimeZoneCallbackCaptor.capture());
+
+        mLoadTimeZoneCallbackCaptor.getValue().onDataNotAvailable();
+
+        verifyWeatherDataLoading(CITY.getOpenWeatherId(), CITY.getName(), WEATHER_DETAILS, null);
+
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    @Test
+    public void timeZoneNotNull_loadForecastData() {
+        CITY.setTimeZone(TIME_ZONE);
+        mPresenter.start();
+
+        verify(mRepository, never()).loadTimeZone(anyString(), anyFloat(), anyFloat(),
+                any(WeatherDataSource.LoadTimeZoneCallback.class));
+
+        verifyWeatherDataLoading(CITY.getOpenWeatherId(), CITY.getName(), WEATHER_DETAILS, null);
+
+        verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
+    }
+
+    private void verifyWeatherDataLoading(String cityId, String cityName,
+                                          WeatherDetails weatherDetails, String timeZone) {
+        verify(mView).displayCurrentWeatherDetails(cityName, weatherDetails, timeZone);
+        spy(mPresenter).loadForecastData(cityId, timeZone);
     }
 
     @Test
     public void loadForecastData_dataLoaded() {
         InOrder inOrder = inOrder(mView);
-        mPresenter.loadForecastData();
+        mPresenter.loadForecastData(CITY.getOpenWeatherId(), TIME_ZONE);
 
         verify(mRepository).load3HForecastData(anyString(),mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
@@ -110,7 +156,7 @@ public class DetailPresenterTest {
     @Test
     public void loadForecastData_dataNotAvailable() {
         InOrder inOrder = inOrder(mView);
-        mPresenter.loadForecastData();
+        mPresenter.loadForecastData(CITY.getOpenWeatherId(), TIME_ZONE);
 
         verify(mRepository).load3HForecastData(anyString(), mLoad3HForecastCallbackCaptor.capture());
         inOrder.verify(mView).setLoadingIndicator(true);
@@ -136,7 +182,7 @@ public class DetailPresenterTest {
     public void connectivityChangedTrue_reloadData() {
         mPresenter.onConnectionChanged(true);
 
-        spy(mPresenter).loadForecastData();
+        spy(mPresenter).loadForecastData(CITY.getOpenWeatherId(), TIME_ZONE);
     }
 
     @Test

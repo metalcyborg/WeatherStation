@@ -68,6 +68,10 @@ public class City implements Parcelable {
         return mTimeZone;
     }
 
+    public void setTimeZone(String timeZone) {
+        mTimeZone = timeZone;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
