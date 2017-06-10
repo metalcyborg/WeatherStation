@@ -488,7 +488,25 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
     @Override
     public void updateTimeZone(String cityId, String timeZone) {
+        SQLiteDatabase db = null;
+        try {
+            db = mDatabaseHelper.getWritableDatabase();
 
+            ContentValues cv = new ContentValues();
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_TIMEZONE, timeZone);
+
+            String whereClause = WeatherPersistenceContract.ChosenCitiesTable.COLUMN_OPEN_WEATHER_ID + "=?";
+
+            db.update(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, cv,
+                    whereClause, new String[]{cityId});
+        } catch (SQLiteException e) {
+            e.printStackTrace();
+            throw new SQLiteException("Error of updating the ChosenCities table");
+        } finally {
+            if (db != null) {
+                db.close();
+            }
+        }
     }
 
     private void updateForecast(String cityId, List<Weather> forecast, boolean forecast3H) {

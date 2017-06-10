@@ -155,7 +155,11 @@ public class WeatherRepository implements WeatherDataSource {
         mRemoteDataSource.loadTimeZone(cityId, altitude, longitude, new RemoteDataSource.GetTimeZoneCallback() {
             @Override
             public void onTimeZoneLoaded(String cityId, float latitude, float longitude, String timeZone) {
+                // Update DB
                 mLocalDataSource.updateTimeZone(cityId, timeZone);
+                // Update cache
+                mCachedWeather.get(cityId).getCity().setTimeZone(timeZone);
+                // Notify listener
                 callback.onTimeZoneLoaded(cityId, timeZone);
                 Log.d(TAG, "TimeZone: " + timeZone);
             }
