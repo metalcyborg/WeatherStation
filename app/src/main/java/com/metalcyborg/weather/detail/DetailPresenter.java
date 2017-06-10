@@ -46,7 +46,7 @@ public class DetailPresenter implements DetailContract.Presenter,
             mView.showMissingInternetConnectionMessage();
         }
 
-        mView.displayCurrentWeatherDetails(mCity.getName(), mDetails);
+        mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, mCity.getTimeZone());
         loadForecastData();
 
         mConnectivityReceiver = new ConnectivityReceiver();
@@ -71,7 +71,7 @@ public class DetailPresenter implements DetailContract.Presenter,
                 }
 
                 mView.setLoadingIndicator(false);
-                mView.show3HForecast(forecast);
+                mView.show3HForecast(forecast, mCity.getTimeZone());
             }
 
             @Override
@@ -84,7 +84,8 @@ public class DetailPresenter implements DetailContract.Presenter,
         mRepository.load13DForecastData(mCity.getOpenWeatherId(), new WeatherDataSource.LoadForecastCallback() {
             @Override
             public void onDataLoaded(List<Weather> forecast) {
-                mView.show13DForecast(forecast);
+                mView.show13DForecast(forecast,
+                        mCity.getTimeZone());
             }
 
             @Override

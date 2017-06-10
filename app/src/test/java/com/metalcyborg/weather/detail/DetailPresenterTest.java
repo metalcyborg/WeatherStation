@@ -67,10 +67,6 @@ public class DetailPresenterTest {
         when(mView.isActive()).thenReturn(true);
     }
 
-    private void verifyHeaderLoading() {
-        verify(mView).displayCurrentWeatherDetails(CITY.getName(), WEATHER_DETAILS);
-    }
-
     @Test
     public void internetConnectionIsMissingOnStart_showMessage() {
         NetworkInfo networkInfo = mock(NetworkInfo.class);
@@ -87,7 +83,8 @@ public class DetailPresenterTest {
     public void loadForecastDataOnStart() {
         mPresenter.start();
 
-        verifyHeaderLoading();
+        verify(mView).displayCurrentWeatherDetails(CITY.getName(), WEATHER_DETAILS,
+                CITY.getTimeZone());
         spy(mPresenter).loadForecastData();
         verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
     }
@@ -102,12 +99,12 @@ public class DetailPresenterTest {
         mLoad3HForecastCallbackCaptor.getValue().onDataLoaded(FORECAST_LIST);
 
         inOrder.verify(mView).setLoadingIndicator(false);
-        verify(mView).show3HForecast(FORECAST_LIST);
+        verify(mView).show3HForecast(FORECAST_LIST, CITY.getTimeZone());
 
         verify(mRepository).load13DForecastData(anyString(), mLoad13DForecastCallbackCaptor.capture());
         mLoad13DForecastCallbackCaptor.getValue().onDataLoaded(FORECAST_LIST);
 
-        verify(mView).show13DForecast(FORECAST_LIST);
+        verify(mView).show13DForecast(FORECAST_LIST, CITY.getTimeZone());
     }
 
     @Test

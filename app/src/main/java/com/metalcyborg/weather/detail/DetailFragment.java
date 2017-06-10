@@ -109,13 +109,13 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     }
 
     @Override
-    public void show3HForecast(List<Weather> forecast) {
+    public void show3HForecast(List<Weather> forecast, String timeZone) {
         mForecastAdapter.set3HForecast(forecast);
         mForecastAdapter.notifyItemChanged(ForecastAdapter.POSITION_FORECAST_3H);
     }
 
     @Override
-    public void show13DForecast(List<Weather> forecast) {
+    public void show13DForecast(List<Weather> forecast, String timeZone) {
         mForecastAdapter.setDayForecast(forecast);
         mForecastAdapter.notifyItemRangeChanged(ForecastAdapter.POSITION_FORECAST_DAILY,
                 mForecastAdapter.getDailyForecastCount());
@@ -144,7 +144,8 @@ public class DetailFragment extends Fragment implements DetailContract.View {
     }
 
     @Override
-    public void displayCurrentWeatherDetails(String cityName, WeatherDetails details) {
+    public void displayCurrentWeatherDetails(String cityName, WeatherDetails details,
+                                             String timeZone) {
         if(mActionBar != null) {
             mActionBar.setTitle(cityName);
             if(details.getTemperature() != DetailActivity.WRONG_TEMP_VALUE) {

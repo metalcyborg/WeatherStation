@@ -15,9 +15,9 @@ public interface DetailContract {
 
         boolean isActive();
 
-        void show3HForecast(List<Weather> forecast);
+        void show3HForecast(List<Weather> forecast, String timeZone);
 
-        void show13DForecast(List<Weather> forecast);
+        void show13DForecast(List<Weather> forecast, String timeZone);
 
         void show3hForecastError();
 
@@ -27,7 +27,7 @@ public interface DetailContract {
 
         void setLoadingIndicator(boolean indicator);
 
-        void displayCurrentWeatherDetails(String cityName, WeatherDetails details);
+        void displayCurrentWeatherDetails(String cityName, WeatherDetails details, String timeZone);
 
         void registerConnectivityReceiver(ConnectivityReceiver receiver);
 
