@@ -47,9 +47,9 @@ public class CitySearchPresenterTest {
 
         when(mView.isActive()).thenReturn(true);
 
-        CITIES.add(new City("0", "City 0", "Country 0", 10f, 20f));
-        CITIES.add(new City("1", "City 1", "Country 1", 30f, 40f));
-        CITIES.add(new City("2", "City 2", "Country 2", 50f, 60f));
+        CITIES.add(new City("0", "City 0", "Country 0", 10f, 20f, "TimeZone1"));
+        CITIES.add(new City("1", "City 1", "Country 1", 30f, 40f, "TimeZone2"));
+        CITIES.add(new City("2", "City 2", "Country 2", 50f, 60f, "TimeZone3"));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CitySearchPresenterTest {
 
     @Test
     public void clickOnCity_showCityListActivity() {
-        City city = new City("0", "City 0", "Country 0", 10f, 20f);
+        City city = new City("0", "City 0", "Country 0", 10f, 20f, "TimeZone1");
         mPresenter.addCityToWeatherList(city);
         verify(mRepository).addNewCityToChosenCityList(city);
         verify(mView).showWeatherList();

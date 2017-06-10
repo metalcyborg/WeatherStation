@@ -30,9 +30,12 @@ public class WeatherRepositoryTest {
     private static final String CITY_ID_1 = "1";
     private static final String CITY_ID_2 = "2";
     private static final String CITY_ID_3 = "3";
-    private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1", 10f, 20f);
-    private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2", 30f, 40f);
-    private static final City CITY_3 = new City(CITY_ID_3, "City 3", "Country 3", 50f, 60f);
+    private static final City CITY_1 = new City(CITY_ID_1, "City 1", "Country 1", 10f, 20f,
+            "TimeZone1");
+    private static final City CITY_2 = new City(CITY_ID_2, "City 2", "Country 2", 30f, 40f,
+            "TimeZone2");
+    private static final City CITY_3 = new City(CITY_ID_3, "City 3", "Country 3", 50f, 60f,
+            "TimeZone3");
     private static final Weather WEATHER_1 = new Weather(100);
     private static final Weather WEATHER_2 = new Weather(200);
     private static final Weather WEATHER_3 = new Weather(300);
@@ -113,7 +116,7 @@ public class WeatherRepositoryTest {
 
     @Test
     public void addNewCityToWeatherList() {
-        City city = new City("0", "City 0", "Country 0", 10f, 20f);
+        City city = new City("0", "City 0", "Country 0", 10f, 20f, "TimeZone1");
         mWeatherRepository.addNewCityToChosenCityList(city);
 
         verify(mLocalDataSource).addNewCityToChosenCityList(city);

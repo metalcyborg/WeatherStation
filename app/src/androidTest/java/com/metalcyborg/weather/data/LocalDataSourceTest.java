@@ -27,8 +27,10 @@ import static org.mockito.Mockito.verify;
 
 public class LocalDataSourceTest {
 
-    private static final City TEST_CITY = new City("0", "City 0", "Country 0", 10f, 20f);
-    private static final City TEST_CITY_2 = new City("1", "City 1", "Country 1", 30f, 40f);
+    private static final City TEST_CITY = new City("0", "City 0", "Country 0", 10f, 20f,
+            "TimeZone1");
+    private static final City TEST_CITY_2 = new City("1", "City 1", "Country 1", 30f, 40f,
+            "TimeZone2");
 
     private LocalDataSource mLocalDataSource;
 

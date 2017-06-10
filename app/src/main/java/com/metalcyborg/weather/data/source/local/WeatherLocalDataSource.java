@@ -113,6 +113,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE,
                 WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE,
+                WeatherPersistenceContract.ChosenCitiesTable.COLUMN_TIMEZONE,
                 "t2." + WeatherPersistenceContract.WeatherTable.COLUMN_CHOSEN_CITY_ID,
                 WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED,
                 WeatherPersistenceContract.WeatherTable.COLUMN_DATE,
@@ -151,7 +152,8 @@ public class WeatherLocalDataSource implements LocalDataSource {
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_CITY_NAME.trim())),
                     cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME.trim())),
                     cursor.getFloat(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE.trim())),
-                    cursor.getFloat(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE.trim()))
+                    cursor.getFloat(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE.trim())),
+                    cursor.getString(cursor.getColumnIndex(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_TIMEZONE.trim()))
             );
             Weather weather = null;
             if (cursor.getInt(cursor.getColumnIndex(WeatherPersistenceContract.WeatherTable.COLUMN_DATA_RECEIVED.trim())) == 1) {
@@ -276,7 +278,7 @@ public class WeatherLocalDataSource implements LocalDataSource {
 
         while (cursor.moveToNext()) {
             City city = new City(cursor.getString(1), cursor.getString(2), cursor.getString(3),
-                    cursor.getFloat(4), cursor.getFloat(5));
+                    cursor.getFloat(4), cursor.getFloat(5), null);
             cityList.add(city);
         }
 
