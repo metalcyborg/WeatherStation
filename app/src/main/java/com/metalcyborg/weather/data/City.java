@@ -1,6 +1,10 @@
 package com.metalcyborg.weather.data;
 
-public class City {
+import android.os.Parcel;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
+
+public class City implements Parcelable {
 
     private String mOpenWeatherId;
     private String mName;
@@ -10,7 +14,7 @@ public class City {
     private String mTimeZone;
 
     public City(String openWeatherId, String name, String country, float latitude, float longitude,
-                String timeZone) {
+                @Nullable String timeZone) {
         mOpenWeatherId = openWeatherId;
         mName = name;
         mCountry = country;
@@ -18,6 +22,27 @@ public class City {
         mLongitude = longitude;
         mTimeZone = timeZone;
     }
+
+    protected City(Parcel in) {
+        mOpenWeatherId = in.readString();
+        mName = in.readString();
+        mCountry = in.readString();
+        mLatitude = in.readFloat();
+        mLongitude = in.readFloat();
+        mTimeZone = in.readString();
+    }
+
+    public static final Creator<City> CREATOR = new Creator<City>() {
+        @Override
+        public City createFromParcel(Parcel in) {
+            return new City(in);
+        }
+
+        @Override
+        public City[] newArray(int size) {
+            return new City[size];
+        }
+    };
 
     public String getOpenWeatherId() {
         return mOpenWeatherId;
@@ -68,5 +93,20 @@ public class City {
         result = 31 * result + (mLongitude != +0.0f ? Float.floatToIntBits(mLongitude) : 0);
         result = 31 * result + (mTimeZone != null ? mTimeZone.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mOpenWeatherId);
+        dest.writeString(mName);
+        dest.writeString(mCountry);
+        dest.writeFloat(mLatitude);
+        dest.writeFloat(mLongitude);
+        dest.writeString(mTimeZone);
     }
 }
