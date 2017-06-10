@@ -149,8 +149,19 @@ public class WeatherRepository implements WeatherDataSource {
 
     @Override
     public void loadTimeZone(String cityId, float altitude, float longitude,
-                             LoadTimeZoneCallback callback) {
+                             final LoadTimeZoneCallback callback) {
+        mRemoteDataSource.loadTimeZone(cityId, altitude, longitude, new RemoteDataSource.GetTimeZoneCallback() {
+            @Override
+            public void onTimeZoneLoaded(String cityId, float latitude, float longitude, String timeZone) {
+                mLocalDataSource.updateTimeZone(cityId, timeZone);
+                callback.onTimeZoneLoaded(cityId, timeZone);
+            }
 
+            @Override
+            public void onTimeZoneNotAvailable() {
+                callback.onDataNotAvailable();
+            }
+        });
     }
 
     private void refreshCurrentWeatherCache(List<CityWeather> weatherList) {
