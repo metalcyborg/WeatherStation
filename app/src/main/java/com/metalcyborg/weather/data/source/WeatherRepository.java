@@ -148,7 +148,8 @@ public class WeatherRepository implements WeatherDataSource {
     }
 
     @Override
-    public void loadTimeZone(String cityId, float altitude, float longitude, LoadTimeZoneCallback callback) {
+    public void loadTimeZone(String cityId, float altitude, float longitude,
+                             LoadTimeZoneCallback callback) {
 
     }
 

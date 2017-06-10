@@ -68,4 +68,5 @@ public interface LocalDataSource {
 
     void update13DForecast(String cityId, List<Weather> forecast);
 
+    void updateTimeZone(String cityId, String timeZone);
 }

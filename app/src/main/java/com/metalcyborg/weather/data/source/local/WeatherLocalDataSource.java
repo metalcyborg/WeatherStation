@@ -482,6 +482,11 @@ public class WeatherLocalDataSource implements LocalDataSource {
         updateForecast(cityId, forecast, false);
     }
 
+    @Override
+    public void updateTimeZone(String cityId, String timeZone) {
+
+    }
+
     private void updateForecast(String cityId, List<Weather> forecast, boolean forecast3H) {
         SQLiteDatabase db = null;
         try {

@@ -267,4 +267,9 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             }
         });
     }
+
+    @Override
+    public void loadTimeZone(String cityId, float latitude, float longitude, GetTimeZoneCallback callback) {
+
+    }
 }

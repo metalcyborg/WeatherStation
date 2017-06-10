@@ -19,7 +19,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -66,6 +68,9 @@ public class WeatherRepositoryTest {
     @Mock
     private WeatherDataSource.LoadForecastCallback mLoad13DForecastCallback;
 
+    @Mock
+    private WeatherDataSource.LoadTimeZoneCallback mLoadTimeZoneCallback;
+
     @Captor
     private ArgumentCaptor<LocalDataSource.LoadWeatherListCallback> mLoadWeatherListCallbackCaptor;
 
@@ -83,6 +88,9 @@ public class WeatherRepositoryTest {
 
     @Captor
     private ArgumentCaptor<RemoteDataSource.GetForecastCallback> mGet13DForecastCallbackCaptor;
+
+    @Captor
+    private ArgumentCaptor<RemoteDataSource.GetTimeZoneCallback> mGetTimeZoneCallbackCaptor;
 
     @Before
     public void setupWeatherRepository() {
@@ -301,5 +309,36 @@ public class WeatherRepositoryTest {
         // Delete from cache
         assertThat(mWeatherRepository.mCachedWeather.size(),
                 is(CITY_WEATHER_LIST.size() - deletedCityList.size()));
+    }
+
+    @Test
+    public void loadTimeZone_dataLoaded() {
+        String testTimeZone = "timeZone";
+
+        mWeatherRepository.loadTimeZone(CITY_1.getOpenWeatherId(), CITY_1.getLatitude(),
+                CITY_1.getLongitude(), mLoadTimeZoneCallback);
+        // Load from remote repository
+        verify(mRemoteDataSource).loadTimeZone(eq(CITY_1.getOpenWeatherId()), eq(CITY_1.getLatitude()),
+                eq(CITY_1.getLongitude()), mGetTimeZoneCallbackCaptor.capture());
+        mGetTimeZoneCallbackCaptor.getValue().onTimeZoneLoaded(CITY_1.getOpenWeatherId(),
+                CITY_1.getLatitude(), CITY_1.getLongitude(), testTimeZone);
+        // Update local db
+        verify(mLocalDataSource).updateTimeZone(CITY_1.getOpenWeatherId(), testTimeZone);
+
+        verify(mLoadTimeZoneCallback).onTimeZoneLoaded(CITY_1.getOpenWeatherId(), testTimeZone);
+    }
+
+    @Test
+    public void loadTimeZone_dataNotAvailable() {
+        mWeatherRepository.loadTimeZone(CITY_1.getOpenWeatherId(), CITY_1.getLatitude(),
+                CITY_1.getLongitude(), mLoadTimeZoneCallback);
+        // Load from remote repository
+        verify(mRemoteDataSource).loadTimeZone(eq(CITY_1.getOpenWeatherId()), eq(CITY_1.getLatitude()),
+                eq(CITY_1.getLongitude()), mGetTimeZoneCallbackCaptor.capture());
+        mGetTimeZoneCallbackCaptor.getValue().onTimeZoneNotAvailable();
+
+        verify(mLocalDataSource, never()).updateTimeZone(anyString(), anyString());
+
+        verify(mLoadTimeZoneCallback).onDataNotAvailable();
     }
 }

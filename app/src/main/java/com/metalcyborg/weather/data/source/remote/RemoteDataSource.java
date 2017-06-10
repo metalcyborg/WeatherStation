@@ -14,9 +14,17 @@ public interface RemoteDataSource {
     }
 
     interface GetForecastCallback {
+
         void onDataLoaded(List<Weather> forecast);
 
         void onDataNotAvailable();
+    }
+
+    interface GetTimeZoneCallback {
+
+        void onTimeZoneLoaded(String cityId, float latitude, float longitude, String timeZone);
+
+        void onTimeZoneNotAvailable();
     }
 
     void loadWeatherData(String cityId, GetWeatherCallback callback);
@@ -24,4 +32,6 @@ public interface RemoteDataSource {
     void load3HForecastData(String cityId, GetForecastCallback callback);
 
     void load13DForecastData(String cityId, GetForecastCallback callback);
+
+    void loadTimeZone(String cityId, float latitude, float longitude, GetTimeZoneCallback callback);
 }
