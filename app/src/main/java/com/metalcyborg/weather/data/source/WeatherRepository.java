@@ -3,6 +3,7 @@ package com.metalcyborg.weather.data.source;
 import android.database.sqlite.SQLiteException;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
@@ -19,6 +20,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class WeatherRepository implements WeatherDataSource {
 
+    private static final String TAG = "WeatherRepository";
     private static volatile WeatherRepository mInstance;
     private LocalDataSource mLocalDataSource;
     private RemoteDataSource mRemoteDataSource;
@@ -155,11 +157,13 @@ public class WeatherRepository implements WeatherDataSource {
             public void onTimeZoneLoaded(String cityId, float latitude, float longitude, String timeZone) {
                 mLocalDataSource.updateTimeZone(cityId, timeZone);
                 callback.onTimeZoneLoaded(cityId, timeZone);
+                Log.d(TAG, "TimeZone: " + timeZone);
             }
 
             @Override
             public void onTimeZoneNotAvailable() {
                 callback.onDataNotAvailable();
+                Log.d(TAG, "TimeZone: not available");
             }
         });
     }

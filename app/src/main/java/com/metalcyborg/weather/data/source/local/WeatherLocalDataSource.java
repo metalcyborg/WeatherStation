@@ -314,6 +314,10 @@ public class WeatherLocalDataSource implements LocalDataSource {
                     city.getName());
             cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_COUNTRY_NAME,
                     city.getCountry());
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE,
+                    city.getLatitude());
+            cv.put(WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE,
+                    city.getLongitude());
             db.insertOrThrow(WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME, null, cv);
 
             // Add default data to the Weather table

@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by metalcyborg on 16.05.17.
- */
 
 public class Forecast13Days {
 

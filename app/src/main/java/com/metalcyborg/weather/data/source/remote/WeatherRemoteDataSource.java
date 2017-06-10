@@ -4,6 +4,7 @@ import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.remote.models.CurrentWeather;
 import com.metalcyborg.weather.data.source.remote.models.Forecast13Days;
 import com.metalcyborg.weather.data.source.remote.models.Forecast3Hours;
+import com.metalcyborg.weather.data.source.remote.models.TimeZone;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,19 +19,28 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
 
     private static volatile WeatherRemoteDataSource mInstance;
     private static final String API_KEY = "1d948a9f3798dae877b6b919f0301bd5";
+    private static final String TIME_ZONE_KEY = "AIzaSyClT3nJePHp6UpgDKV2rZXckY_8jBA56sw";
+    private static final String STATUS_OK = "OK";
     private static final int FORECAST_3_H_COUNT = 10;
     private CurrentWeatherService mCurrentWeatherService;
     private Forecast3HService mForecast3HoursService;
     private Forecast13DService mForecast13DService;
+    private TimeZoneService mTimeZoneService;
 
     private WeatherRemoteDataSource() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.openweathermap.org")
+                .baseUrl("http://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mCurrentWeatherService = retrofit.create(CurrentWeatherService.class);
         mForecast3HoursService = retrofit.create(Forecast3HService.class);
         mForecast13DService = retrofit.create(Forecast13DService.class);
+
+        Retrofit timeZoneRetrofit = new Retrofit.Builder()
+                .baseUrl("https://maps.googleapis.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        mTimeZoneService = timeZoneRetrofit.create(TimeZoneService.class);
     }
 
     public static WeatherRemoteDataSource getInstance() {
@@ -236,7 +246,7 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
             @Override
             public void onResponse(Call<Forecast3Hours> call, Response<Forecast3Hours> response) {
                 Forecast3Hours forecast3Hours = response.body();
-                if(forecast3Hours != null) {
+                if (forecast3Hours != null) {
                     List<Weather> forecast = generate3HForecastList(forecast3Hours);
                     callback.onDataLoaded(forecast);
                 }
@@ -269,7 +279,29 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     }
 
     @Override
-    public void loadTimeZone(String cityId, float latitude, float longitude, GetTimeZoneCallback callback) {
+    public void loadTimeZone(final String cityId, final float latitude, final float longitude,
+                             final GetTimeZoneCallback callback) {
 
+        String coordinates = "" + longitude + "," + latitude;
+
+        Call<TimeZone> timeZoneCall = mTimeZoneService
+                .timeZone(coordinates, System.currentTimeMillis() / 1000, TIME_ZONE_KEY);
+        timeZoneCall.enqueue(new Callback<TimeZone>() {
+            @Override
+            public void onResponse(Call<TimeZone> call, Response<TimeZone> response) {
+                TimeZone timeZone = response.body();
+                if (timeZone != null && timeZone.getStatus().equals(STATUS_OK)) {
+                    callback.onTimeZoneLoaded(cityId, latitude, longitude,
+                            timeZone.getTimeZoneId());
+                } else {
+                    callback.onTimeZoneNotAvailable();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TimeZone> call, Throwable t) {
+                callback.onTimeZoneNotAvailable();
+            }
+        });
     }
 }

@@ -3,6 +3,7 @@ package com.metalcyborg.weather.data.source.local;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
@@ -62,6 +63,8 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
             WeatherPersistenceContract.WeatherTable.COLUMN_VOLUME_SNOW_3H + TYPE_INTEGER +
             " )";
 
+    private static final String TAG = "DBHelper";
+
     public WeatherDatabaseHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
@@ -75,6 +78,20 @@ public class WeatherDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
+        if(newVersion == 2) {
+            // Add Longitude, Latitude and TimeZone columns
+            String queryLongitude = "ALTER TABLE" +
+                    WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " ADD COLUMN" +
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LONGITUDE + TYPE_FLOAT;
+            String queryLatitude = "ALTER TABLE" +
+                    WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " ADD COLUMN" +
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_LATITUDE + TYPE_FLOAT;
+            String queryTimeZone = "ALTER TABLE" +
+                    WeatherPersistenceContract.ChosenCitiesTable.TABLE_NAME + " ADD COLUMN" +
+                    WeatherPersistenceContract.ChosenCitiesTable.COLUMN_TIMEZONE + TYPE_TEXT;
+            db.execSQL(queryLongitude);
+            db.execSQL(queryLatitude);
+            db.execSQL(queryTimeZone);
+        }
     }
 }
