@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.test.espresso.IdlingResource;
 
 import com.metalcyborg.weather.ConnectivityReceiver;
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -21,8 +22,7 @@ public class DetailPresenter implements DetailContract.Presenter,
 
     private WeatherDataSource mRepository;
     private DetailContract.View mView;
-    private String mCityId;
-    private String mCityName;
+    private City mCity;
     private WeatherDetails mDetails;
     private ConnectivityManager mConnectivityManager;
     private ConnectivityReceiver mConnectivityReceiver;
@@ -46,7 +46,7 @@ public class DetailPresenter implements DetailContract.Presenter,
             mView.showMissingInternetConnectionMessage();
         }
 
-        mView.displayCurrentWeatherDetails(mCityName, mDetails);
+        mView.displayCurrentWeatherDetails(mCity.getName(), mDetails);
         loadForecastData();
 
         mConnectivityReceiver = new ConnectivityReceiver();
@@ -63,7 +63,7 @@ public class DetailPresenter implements DetailContract.Presenter,
     public void loadForecastData() {
         mView.setLoadingIndicator(true);
 
-        mRepository.load3HForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
+        mRepository.load3HForecastData(mCity.getOpenWeatherId(), new WeatherDataSource.LoadForecastCallback() {
             @Override
             public void onDataLoaded(List<Weather> forecast) {
                 if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
@@ -81,7 +81,7 @@ public class DetailPresenter implements DetailContract.Presenter,
             }
         });
 
-        mRepository.load13DForecastData(mCityId, new WeatherDataSource.LoadForecastCallback() {
+        mRepository.load13DForecastData(mCity.getOpenWeatherId(), new WeatherDataSource.LoadForecastCallback() {
             @Override
             public void onDataLoaded(List<Weather> forecast) {
                 mView.show13DForecast(forecast);
@@ -95,9 +95,8 @@ public class DetailPresenter implements DetailContract.Presenter,
     }
 
     @Override
-    public void setParameters(String cityId, String cityName, WeatherDetails details) {
-        mCityId = cityId;
-        mCityName = cityName;
+    public void setParameters(City city, WeatherDetails details) {
+        mCity = city;
         mDetails = details;
     }
 

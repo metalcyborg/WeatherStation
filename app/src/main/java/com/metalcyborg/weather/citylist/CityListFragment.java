@@ -254,8 +254,7 @@ public class CityListFragment extends Fragment implements CityListContract.View 
         intent.putExtra(DetailActivity.EXTRAS_WEATHER_DETAILS, details);
 
         if(city != null) {
-            intent.putExtra(DetailActivity.EXTRAS_CITY_ID, cityWeather.getCity().getOpenWeatherId());
-            intent.putExtra(DetailActivity.EXTRAS_CITY_NAME, cityWeather.getCity().getName());
+            intent.putExtra(DetailActivity.EXTRAS_CITY, city);
             startActivity(intent);
         }
     }

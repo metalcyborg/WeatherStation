@@ -6,12 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.WeatherDetails;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String EXTRAS_CITY_ID = "cityId";
-    public static final String EXTRAS_CITY_NAME = "cityName";
+    public static final String EXTRAS_CITY = "city";
     public static final String EXTRAS_WEATHER_DETAILS = "weatherDetails";
     public static final float WRONG_TEMP_VALUE = -1000f;
     private DetailContract.Presenter mPresenter;
@@ -38,11 +38,10 @@ public class DetailActivity extends AppCompatActivity {
         // Extras
         Bundle extras = getIntent().getExtras();
         if(extras != null) {
-            String cityId = extras.getString(EXTRAS_CITY_ID, "");
-            String cityName = extras.getString(EXTRAS_CITY_NAME, "");
+            City city = extras.getParcelable(DetailActivity.EXTRAS_CITY);
             WeatherDetails details = extras.getParcelable(EXTRAS_WEATHER_DETAILS);
 
-            mPresenter.setParameters(cityId, cityName, details);
+            mPresenter.setParameters(city, details);
         }
     }
 }

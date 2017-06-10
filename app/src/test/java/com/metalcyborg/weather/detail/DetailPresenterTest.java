@@ -5,6 +5,7 @@ import android.net.NetworkInfo;
 
 import com.google.common.collect.Lists;
 import com.metalcyborg.weather.ConnectivityReceiver;
+import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
@@ -30,9 +31,9 @@ import static org.mockito.Mockito.when;
 
 public class DetailPresenterTest {
 
-    private static final String CITY_ID = "city_id";
-    private static final String CITY_NAME = "city_name";
-    private static final String ICON = "icon";
+    private static final City CITY = new City("city_id", "cityName", "countryName",
+            10f, 20f, null);
+    private static final String TIME_ZONE = "timeZone";
 
     private static final WeatherDetails WEATHER_DETAILS = new WeatherDetails(100, 100, 100,
             10, 180, 1234, 4321, "icon");
@@ -62,12 +63,12 @@ public class DetailPresenterTest {
         MockitoAnnotations.initMocks(this);
 
         mPresenter = new DetailPresenter(mRepository, mView, mConnectivityManager);
-        mPresenter.setParameters(CITY_ID, CITY_NAME, WEATHER_DETAILS);
+        mPresenter.setParameters(CITY, WEATHER_DETAILS);
         when(mView.isActive()).thenReturn(true);
     }
 
     private void verifyHeaderLoading() {
-        verify(mView).displayCurrentWeatherDetails(CITY_NAME, WEATHER_DETAILS);
+        verify(mView).displayCurrentWeatherDetails(CITY.getName(), WEATHER_DETAILS);
     }
 
     @Test
