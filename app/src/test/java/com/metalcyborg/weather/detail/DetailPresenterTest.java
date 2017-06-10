@@ -86,6 +86,7 @@ public class DetailPresenterTest {
 
     @Test
     public void loadTimeZoneAndWeatherDataOnStart_timeZoneLoaded() {
+        CITY.setTimeZone(null);
         mPresenter.start();
 
         verify(mRepository).loadTimeZone(eq(CITY.getOpenWeatherId()), eq(CITY.getLatitude()),
@@ -104,6 +105,7 @@ public class DetailPresenterTest {
 
     @Test
     public void loadTimeZoneAndWeatherDataOnStart_timeZoneNotAvailable() {
+        CITY.setTimeZone(null);
         mPresenter.start();
 
         verify(mRepository).loadTimeZone(eq(CITY.getOpenWeatherId()), eq(CITY.getLatitude()),
@@ -124,7 +126,8 @@ public class DetailPresenterTest {
         verify(mRepository, never()).loadTimeZone(anyString(), anyFloat(), anyFloat(),
                 any(WeatherDataSource.LoadTimeZoneCallback.class));
 
-        verifyWeatherDataLoading(CITY.getOpenWeatherId(), CITY.getName(), WEATHER_DETAILS, null);
+        verifyWeatherDataLoading(CITY.getOpenWeatherId(), CITY.getName(), WEATHER_DETAILS,
+                TIME_ZONE);
 
         verify(mView).registerConnectivityReceiver(any(ConnectivityReceiver.class));
     }

@@ -42,12 +42,33 @@ public class DetailPresenter implements DetailContract.Presenter,
         EspressoIdlingResource.increment();
 
         NetworkInfo networkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if(networkInfo == null || !networkInfo.isConnected()) {
+        if (networkInfo == null || !networkInfo.isConnected()) {
             mView.showMissingInternetConnectionMessage();
         }
 
-        mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, mCity.getTimeZone());
-        loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
+        if(mCity.getTimeZone() == null) {
+            // Load time zone
+            mRepository.loadTimeZone(mCity.getOpenWeatherId(), mCity.getLatitude(),
+                    mCity.getLongitude(), new WeatherDataSource.LoadTimeZoneCallback() {
+                        @Override
+                        public void onTimeZoneLoaded(String cityId, String timeZone) {
+                            mCity.setTimeZone(timeZone);
+
+                            mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, mCity.getTimeZone());
+                            loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
+                        }
+
+                        @Override
+                        public void onDataNotAvailable() {
+                            mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, null);
+                            loadForecastData(mCity.getOpenWeatherId(), null);
+                        }
+                    });
+        } else {
+            // Time zone already received
+            mView.displayCurrentWeatherDetails(mCity.getName(), mDetails, mCity.getTimeZone());
+            loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
+        }
 
         mConnectivityReceiver = new ConnectivityReceiver();
         mConnectivityReceiver.setConnectivityListener(this);
@@ -66,7 +87,7 @@ public class DetailPresenter implements DetailContract.Presenter,
         mRepository.load3HForecastData(mCity.getOpenWeatherId(), new WeatherDataSource.LoadForecastCallback() {
             @Override
             public void onDataLoaded(List<Weather> forecast) {
-                if(!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
+                if (!EspressoIdlingResource.getIdlingResource().isIdleNow()) {
                     EspressoIdlingResource.decrement();
                 }
 
@@ -103,8 +124,8 @@ public class DetailPresenter implements DetailContract.Presenter,
 
     @Override
     public void onConnectionChanged(boolean connected) {
-        if(connected) {
-            if(!mFirstConnection) {
+        if (connected) {
+            if (!mFirstConnection) {
                 loadForecastData(mCity.getOpenWeatherId(), mCity.getTimeZone());
             } else {
                 mFirstConnection = false;
