@@ -240,4 +240,11 @@ public class CityListPresenterTest {
 
         verify(mView).showMissingInternetConnectionMessage();
     }
+
+    @Test
+    public void clickItem_showForecast() {
+        mPresenter.onWeatherItemClicked(CITY_WEATHER_1);
+
+        verify(mView).showForecast(CITY_WEATHER_1);
+    }
 }
