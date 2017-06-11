@@ -34,6 +34,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private WeatherUtils.TimeUnits mTimeUnits;
     private boolean mDayForecastError = false;
     private boolean m3HForecastError = false;
+    private String mTimeZone = null;
 
     public ForecastAdapter(WeatherUtils.TemperatureUnits temperatureUnits,
                            WeatherUtils.PressureUnits pressureUnits, WeatherUtils.SpeedUnits speedUnits,
@@ -110,26 +111,29 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
     }
 
-    public void setDayForecast(List<Weather> dayForecast) {
+    public void setDayForecast(List<Weather> dayForecast, String timeZone) {
         mDayForecastError = false;
         mDayForecast = dayForecast;
+        mTimeZone = timeZone;
     }
 
     public void showDayForecastError() {
         mDayForecastError = true;
     }
 
-    public void set3HForecast(List<Weather> forecast) {
+    public void set3HForecast(List<Weather> forecast, String timeZone) {
         m3HForecastError = false;
         m3HForecast = forecast;
+        mTimeZone = timeZone;
     }
 
     public void show3HForecastError() {
         m3HForecastError = true;
     }
 
-    public void setWeatherDetails(WeatherDetails details) {
+    public void setWeatherDetails(WeatherDetails details, String timeZone) {
         mCurrentWeatherDetails = details;
+        mTimeZone = timeZone;
     }
 
     public int getDailyForecastCount() {
@@ -145,8 +149,8 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         }
 
         Weather weather = mDayForecast.get(position - 4);
-        String date = WeatherUtils.convertLongToDateString(weather.getDateTime() * 1000);
-        String day = WeatherUtils.convertLongToDayString(weather.getDateTime() * 1000);
+        String date = WeatherUtils.convertLongToDateString(weather.getDateTime() * 1000, mTimeZone);
+        String day = WeatherUtils.convertLongToDayString(weather.getDateTime() * 1000, mTimeZone);
         holder.mDateTextView.setText(date);
         holder.mDayTextView.setText(day);
         if (weather.getMain() != null) {
@@ -181,7 +185,7 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 
         for(int i = 0; i < ThreeHoursForecastViewHolder.FORECAST_COUNT; ++i) {
             String time = WeatherUtils.convertLongToTimeString(m3HForecast.get(i).getDateTime() * 1000,
-                    mTimeUnits);
+                    mTimeUnits, mTimeZone);
             holder.mTimeArray[i].setText(time);
             String temp = WeatherUtils.getTemperatureString(m3HForecast.get(i).getMain().getDayTemp(),
                     mTemperatureUnits);
@@ -213,11 +217,11 @@ public class ForecastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         holder.mWindSpeedTextView.setText(windSpeedStr);
 
         String sunriseTimeStr = WeatherUtils.convertLongToTimeString(mCurrentWeatherDetails.getSunrise() * 1000,
-                mTimeUnits);
+                mTimeUnits, mTimeZone);
         holder.mSunriseTextView.setText(sunriseTimeStr);
 
         String sunsetTimeStr = WeatherUtils.convertLongToTimeString(mCurrentWeatherDetails.getSunset() * 1000,
-                mTimeUnits);
+                mTimeUnits, mTimeZone);
         holder.mSunsetTextView.setText(sunsetTimeStr);
 
         String dayLightStr = WeatherUtils.convertLongToDurationString(

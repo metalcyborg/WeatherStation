@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.TimeZone;
 
 public class WeatherUtils {
 
@@ -62,34 +63,48 @@ public class WeatherUtils {
         SE
     }
 
-    public static String convertLongToDateString(long milliseconds) {
+    public static String convertLongToDateString(long milliseconds, String timeZone) {
         if(milliseconds < 0) {
             return "";
         }
 
-        return new SimpleDateFormat("MMM d", new Locale("en")).format(new Date(milliseconds));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MMM d", new Locale("en"));
+        if(timeZone != null && !timeZone.isEmpty()) {
+            dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
+        return dateFormat.format(new Date(milliseconds));
     }
 
-    public static String convertLongToDayString(long milliseconds) {
+    public static String convertLongToDayString(long milliseconds, String timeZone) {
         if(milliseconds < 0) {
             return "";
         }
 
-        return new SimpleDateFormat("EEE", new Locale("en")).format(new Date(milliseconds));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEE", new Locale("en"));
+        if(timeZone != null && !timeZone.isEmpty()) {
+            dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
+        return dateFormat.format(new Date(milliseconds));
     }
 
-    public static String convertLongToTimeString(long milliseconds, TimeUnits units) {
+    public static String convertLongToTimeString(long milliseconds, TimeUnits units,
+                                                 String timeZone) {
         if(milliseconds < 0) {
             return "";
         }
 
+        SimpleDateFormat dateFormat;
         if(units == TimeUnits.CLOCK_12_H) {
-            return new SimpleDateFormat("h:mm a", new Locale("en")).format(new Date(milliseconds));
+            dateFormat = new SimpleDateFormat("h:mm a", new Locale("en"));
         } else {
             // 24 h
-            return new SimpleDateFormat("H:mm", new Locale("en")).format(new Date(milliseconds));
+            dateFormat = new SimpleDateFormat("H:mm", new Locale("en"));
         }
 
+        if(timeZone != null && !timeZone.isEmpty()) {
+            dateFormat.setTimeZone(TimeZone.getTimeZone(timeZone));
+        }
+        return dateFormat.format(new Date(milliseconds));
     }
 
     public static String convertLongToDurationString(long milliseconds) {
