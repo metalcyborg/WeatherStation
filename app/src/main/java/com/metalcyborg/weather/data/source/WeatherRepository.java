@@ -16,12 +16,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Singleton
 public class WeatherRepository implements WeatherDataSource {
 
     private static final String TAG = "WeatherRepository";
-    private static volatile WeatherRepository mInstance;
     private LocalDataSource mLocalDataSource;
     private RemoteDataSource mRemoteDataSource;
 
@@ -32,27 +35,11 @@ public class WeatherRepository implements WeatherDataSource {
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
     Map<String, List<Weather>> mCached13DForecast;
 
-    private WeatherRepository(@NonNull LocalDataSource localDataSource,
-                              @NonNull RemoteDataSource remoteDataSource) {
+    @Inject
+    public WeatherRepository(LocalDataSource localDataSource,
+                              RemoteDataSource remoteDataSource) {
         mLocalDataSource = checkNotNull(localDataSource);
         mRemoteDataSource = checkNotNull(remoteDataSource);
-    }
-
-    public static WeatherRepository getInstance(LocalDataSource localDataSource,
-                                                RemoteDataSource remoteDataSource) {
-        if (mInstance == null) {
-            synchronized (WeatherRepository.class) {
-                if (mInstance == null) {
-                    mInstance = new WeatherRepository(localDataSource, remoteDataSource);
-                }
-            }
-        }
-
-        return mInstance;
-    }
-
-    public static void destroyInstance() {
-        mInstance = null;
     }
 
     @Override

@@ -9,27 +9,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class FakeWeatherRemoteDataSource implements RemoteDataSource {
+import javax.inject.Inject;
+import javax.inject.Singleton;
 
-    private static volatile FakeWeatherRemoteDataSource mInstance;
+@Singleton
+public class FakeWeatherRemoteDataSource implements RemoteDataSource {
 
     private static final Map<String, Weather> CURRENT_WEATHER = new HashMap<>();
     private static final Map<String, List<Weather>> FORECAST_3H = new HashMap<>();
     private static final Map<String, List<Weather>> FORECAST_DAILY = new HashMap<>();
 
-    private FakeWeatherRemoteDataSource() {
+    @Inject
+    public FakeWeatherRemoteDataSource() {
 
-    }
-
-    public static FakeWeatherRemoteDataSource getInstance() {
-        if(mInstance == null) {
-            synchronized(FakeWeatherRemoteDataSource.class) {
-                if(mInstance == null) {
-                    mInstance = new FakeWeatherRemoteDataSource();
-                }
-            }
-        }
-        return mInstance;
     }
 
     @Override
@@ -57,6 +49,11 @@ public class FakeWeatherRemoteDataSource implements RemoteDataSource {
         } else {
             callback.onDataNotAvailable();
         }
+    }
+
+    @Override
+    public void loadTimeZone(String cityId, float latitude, float longitude, GetTimeZoneCallback callback) {
+
     }
 
     @VisibleForTesting

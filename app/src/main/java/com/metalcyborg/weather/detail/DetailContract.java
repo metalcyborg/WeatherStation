@@ -36,8 +36,6 @@ public interface DetailContract {
 
     interface Presenter extends BasePresenter {
 
-        void setParameters(City city, WeatherDetails details);
-
         void loadForecastData(String cityId, String timeZone);
     }
 }

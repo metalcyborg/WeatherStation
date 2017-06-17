@@ -1,23 +1,26 @@
 package com.metalcyborg.weather.citylist;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 import com.metalcyborg.weather.data.source.local.WeatherDatabaseHelper;
+import com.metalcyborg.weather.util.FragmentScoped;
 import com.metalcyborg.weather.util.WeatherUtils;
 
 import java.io.IOException;
 
+import javax.inject.Inject;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
-
+@FragmentScoped
 public class DbLoader extends AsyncTaskLoader<Boolean> {
 
     private WeatherDataSource mWeatherRepository;
 
-    public DbLoader(Context context, @NonNull WeatherDataSource repository) {
+    @Inject
+    public DbLoader(Context context, WeatherDataSource repository) {
         super(context);
         mWeatherRepository = checkNotNull(repository, "Repository cannot be null");
     }

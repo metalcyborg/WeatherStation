@@ -10,9 +10,12 @@ import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.WeatherDetails;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.source.WeatherRepository;
 import com.metalcyborg.weather.util.EspressoIdlingResource;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -28,12 +31,22 @@ public class DetailPresenter implements DetailContract.Presenter,
     private ConnectivityReceiver mConnectivityReceiver;
     private boolean mFirstConnection = true;
 
-    public DetailPresenter(@NonNull WeatherDataSource repository,
-                           @NonNull DetailContract.View view,
-                           @NonNull ConnectivityManager connectivityManager) {
+    @Inject
+    public DetailPresenter(WeatherRepository repository,
+                           DetailContract.View view,
+                           ConnectivityManager connectivityManager,
+                           City city,
+                           WeatherDetails details) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
         mConnectivityManager = checkNotNull(connectivityManager);
+
+        mCity = city;
+        mDetails = details;
+    }
+
+    @Inject
+    public void setupListeners() {
         mView.setPresenter(this);
     }
 
@@ -114,12 +127,6 @@ public class DetailPresenter implements DetailContract.Presenter,
                 mView.show13DForecastError();
             }
         });
-    }
-
-    @Override
-    public void setParameters(City city, WeatherDetails details) {
-        mCity = city;
-        mDetails = details;
     }
 
     @Override

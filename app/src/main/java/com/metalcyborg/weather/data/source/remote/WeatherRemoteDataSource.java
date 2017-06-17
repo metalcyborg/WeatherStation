@@ -9,15 +9,18 @@ import com.metalcyborg.weather.data.source.remote.models.TimeZone;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+@Singleton
 public class WeatherRemoteDataSource implements RemoteDataSource {
 
-    private static volatile WeatherRemoteDataSource mInstance;
     private static final String API_KEY = "1d948a9f3798dae877b6b919f0301bd5";
     private static final String TIME_ZONE_KEY = "AIzaSyClT3nJePHp6UpgDKV2rZXckY_8jBA56sw";
     private static final String STATUS_OK = "OK";
@@ -27,7 +30,8 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
     private Forecast13DService mForecast13DService;
     private TimeZoneService mTimeZoneService;
 
-    private WeatherRemoteDataSource() {
+    @Inject
+    public WeatherRemoteDataSource() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.openweathermap.org/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -41,18 +45,6 @@ public class WeatherRemoteDataSource implements RemoteDataSource {
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         mTimeZoneService = timeZoneRetrofit.create(TimeZoneService.class);
-    }
-
-    public static WeatherRemoteDataSource getInstance() {
-        if (mInstance == null) {
-            synchronized (WeatherRemoteDataSource.class) {
-                if (mInstance == null) {
-                    mInstance = new WeatherRemoteDataSource();
-                }
-            }
-        }
-
-        return mInstance;
     }
 
     private Weather generateWeatherObject(CurrentWeather currentWeather) {

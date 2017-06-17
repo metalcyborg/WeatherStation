@@ -17,35 +17,27 @@ import com.metalcyborg.weather.data.Weather;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
 import static com.google.common.base.Preconditions.checkNotNull;
 
+@Singleton
 public class WeatherLocalDataSource implements LocalDataSource {
 
     private static final String TAG = "WeatherLocalDataSource";
     private static final String NAME = "com.metalcyborg.weather.SharedPreferences";
     private static final String KEY_CITIES_DATA_ADDED = "com.metalcyborg.weather.key.CitiesDataAdded";
-    private static volatile WeatherLocalDataSource mInstance;
 
     private Context mContext;
     private WeatherDatabaseHelper mDatabaseHelper;
     private SharedPreferences mSharedPreferences;
 
-    private WeatherLocalDataSource(@NonNull Context context) {
+    @Inject
+    public WeatherLocalDataSource(@NonNull Context context) {
         mContext = checkNotNull(context);
         mDatabaseHelper = new WeatherDatabaseHelper(context);
         mSharedPreferences = context.getSharedPreferences(NAME, Context.MODE_PRIVATE);
-    }
-
-    public static WeatherLocalDataSource getInstance(Context context) {
-        if (mInstance == null) {
-            synchronized (WeatherLocalDataSource.class) {
-                if (mInstance == null) {
-                    mInstance = new WeatherLocalDataSource(context);
-                }
-            }
-        }
-
-        return mInstance;
     }
 
     @Override

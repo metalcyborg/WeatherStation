@@ -1,31 +1,31 @@
 package com.metalcyborg.weather.citysearch;
 
-import android.support.annotation.NonNull;
-import android.util.Log;
-
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
 import com.metalcyborg.weather.data.source.WeatherRepository;
+import com.metalcyborg.weather.util.FragmentScoped;
 
 import java.util.List;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import javax.inject.Inject;
 
-/**
- * Created by metalcyborg on 16.04.17.
- */
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class CitySearchPresenter implements CitySearchContract.Presenter {
 
     private static final int QUERY_RESULT_LIMIT = 20;
-    private static final String TAG = "CitySearchPresenter";
     private WeatherRepository mRepository;
     private CitySearchContract.View mView;
 
-    public CitySearchPresenter(@NonNull WeatherRepository repository,
-                               @NonNull CitySearchContract.View view) {
+    @Inject
+    public CitySearchPresenter(WeatherRepository repository,
+                               CitySearchContract.View view) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
+    }
+
+    @Inject
+    public void setupListeners() {
         mView.setPresenter(this);
     }
 

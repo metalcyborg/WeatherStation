@@ -7,13 +7,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 
-import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
+import com.metalcyborg.weather.WeatherApp;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+
+import javax.inject.Inject;
 
 public class CityListActivity extends AppCompatActivity {
 
-    private CityListPresenter mPresenter;
+    @Inject
+    CityListPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,12 +40,12 @@ public class CityListActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().add(R.id.content, fragment).commit();
         }
 
-        WeatherDataSource weatherRepository = Injection.provideWeatherRepository(getApplicationContext());
-        mPresenter = new CityListPresenter(
-                weatherRepository,
-                fragment,
-                new DbLoader(getApplicationContext(), weatherRepository),
-                getSupportLoaderManager(),
-                (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE));
+        DaggerCityListComponent.builder()
+                .weatherRepositoryComponent(((WeatherApp)getApplication()).getWeatherRepositoryComponent())
+                .cityListPresenterModule(new CityListPresenterModule(fragment,
+                        getSupportLoaderManager(),
+                        (ConnectivityManager) getSystemService(CONNECTIVITY_SERVICE)))
+                .build()
+                .inject(this);
     }
 }

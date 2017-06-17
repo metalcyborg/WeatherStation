@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.rule.ActivityTestRule;
 
-import com.metalcyborg.weather.Injection;
 import com.metalcyborg.weather.R;
 import com.metalcyborg.weather.TestUtils;
 import com.metalcyborg.weather.data.City;

@@ -3,20 +3,22 @@ package com.metalcyborg.weather.citylist;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 
 import com.metalcyborg.weather.ConnectivityReceiver;
 import com.metalcyborg.weather.data.City;
 import com.metalcyborg.weather.data.CityWeather;
 import com.metalcyborg.weather.data.Weather;
 import com.metalcyborg.weather.data.source.WeatherDataSource;
+import com.metalcyborg.weather.data.source.WeatherRepository;
 import com.metalcyborg.weather.util.EspressoIdlingResource;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,23 +29,27 @@ public class CityListPresenter implements CityListContract.Presenter,
     private static final String TAG = "CityListPresenter";
     private WeatherDataSource mRepository;
     private CityListContract.View mView;
-    private DbLoader mDbLoader;
     private LoaderManager mLoaderManager;
     private ConnectivityManager mConnectivityManager;
     private ConnectivityReceiver mConnectivityReceiver;
     private boolean mFirstConnection = true;
+    private AsyncTaskLoader<Boolean> mDbLoader;
 
-    public CityListPresenter(@NonNull WeatherDataSource repository,
-                             @NonNull CityListContract.View view,
-                             @NonNull DbLoader dbLoader,
-                             @NonNull LoaderManager loaderManager,
-                             @NonNull ConnectivityManager connectivityManager) {
+    @Inject
+    public CityListPresenter(WeatherRepository repository,
+                             CityListContract.View view,
+                             AsyncTaskLoader<Boolean> dbLoader,
+                             LoaderManager loaderManager,
+                             ConnectivityManager connectivityManager) {
         mRepository = checkNotNull(repository);
         mView = checkNotNull(view);
         mDbLoader = checkNotNull(dbLoader);
         mLoaderManager = checkNotNull(loaderManager);
         mConnectivityManager = checkNotNull(connectivityManager);
+    }
 
+    @Inject
+    public void setupListeners() {
         mView.setPresenter(this);
     }
 
